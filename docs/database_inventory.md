@@ -37,7 +37,7 @@
 | **PIC v1.1.0** | `paediatric-intensive-care-database-1.1.0/` | dictionary / summary-table / figure scripts (`codes/PIC data dictionary`) - *the template the Jinhua scripts mirror* | `PIC.pdf`; `D_ITEMS`, `D_LABITEMS` | full except organ support (none recorded) |
 | **Zigong v1.1** | `Critical care database comprising patients with infection.../DataTables` | dictionary script (`codes/Zigong data dictionary`) | `datDictionary.csv`; paper PDF | full; ICU stays reconstructed |
 | **INSPIRE v1.4.2** (also v1.3, v1.0 present) | `inspire-...-1.4.2/` (gz + csv twins) | dictionary / demographics scripts (`codes/INSPIRE data dictionary`) | `schema.csv`, `parameters.csv`, `CHANGELOG.txt`, `INSPIRE.pdf`, `inspire data dictionary.xlsx` | cohort, outcomes, ICD-10-CM, labs, vitals, ward support |
-| **VitalDB v1.0.0** | `vitaldb-.../` (`clinical_data.csv`, `lab_data.csv`, 6,388 `.vital` waveform files) | `codes/VitalDB/.../scripe analysis.R` | `clinical_parameters.csv`, `lab_parameters.csv`, `track_names.csv`, `Vitaldb.pdf`, `vital DB数据集概要.xlsx` | cohort, outcomes, labs; **waveform vital signs not parsed (v0.1)** |
+| **VitalDB v1.0.0** | `vitaldb-.../` (`clinical_data.csv`, `lab_data.csv`, 6,388 `.vital` files) | `codes/VitalDB/.../scripe analysis.R` | `clinical_parameters.csv`, `lab_parameters.csv`, `track_names.csv`, `Vitaldb.pdf`, `vital DB数据集概要.xlsx` | cohort, outcomes, labs, intra-operative numeric vital signs (waveforms not used) |
 | **MOVER-EPIC v1.0** | `mover/EPIC_EMR.tar(2).gz` (1.1 GB archive, 3.6 GB `patient_labs`) | creatinine export script only | none found | cohort, outcomes, ICD, labs; no vitals, no ICU times |
 | **MOVER-SIS v1.0** | `mover/sis_emr.tar(2).gz` | none | none found | intra-operative vitals + 5 labs only; no outcomes |
 

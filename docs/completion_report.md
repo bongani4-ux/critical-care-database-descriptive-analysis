@@ -12,7 +12,7 @@
 |---|---|---|
 | Jinhua (reference) | analysed, validated | vasopressors; Tables 5-9 not part of the framework; original Table 3 never existed |
 | MIMIC-IV v3.1, eICU-CRD v2.0, NWICU v0.1.0, SICdb v1.0.8, HiRID v1.1.1, PIC v1.1.0, Zigong v1.1 | analysed | see domain availability (e.g. NWICU: no ventilation/vasopressor items; PIC: no organ support; HiRID/SICdb: no hospital outcome/LOS) |
-| INSPIRE | analysed on v1.4.2 **and** v1.3 | **version to be decided by the authors** |
+| INSPIRE | analysed on v1.4.2 (project decision); v1.3 kept as version check | none |
 | VitalDB v1.0.0 | cohort, outcomes, labs, intra-operative numeric vital signs (1.2 M values extracted from 6,388 .vital files, 0 errors) | waveforms, organ support |
 | MOVER-EPIC v1.0 | cohort, outcomes, ICD, labs | no vitals table; ICU flag only |
 | MOVER-SIS v1.0 | demographics, intra-operative vitals, 5 labs | no outcomes by design |
@@ -25,4 +25,4 @@
 
 ## GitHub
 The repository has been prepared locally (git history, audit passed). **It has not been created or pushed**: the Claude-in-Chrome
-extension was not connected and no `gh` CLI is installed. Commands: see the final message / README.
+extension was not connected and no `gh` CLI is installed. Create a private empty repository, then `git remote add origin <url>` and `git push -u origin main`.
