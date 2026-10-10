@@ -5,6 +5,7 @@
 * R >= 4.3 (developed and run on R 4.5.2, Windows 11). Package versions are pinned in `renv.lock`.
 * `renv::restore()` installs them. `arrow` and `dplyr` are *optional* (speed only); without them the engine falls back to `readr`
   (identical results, much slower on the largest tables).
+* VitalDB vital signs need Python 3 (stdlib only): `databases/vitaldb/extract_vital_tracks.py` runs once (~1 h on 10 cores) and caches into `cache_dir`.
 * Windows-friendly: paths use `/`, no shell commands except the system `tar` (bsdtar ships with Windows 10/11) to unpack MOVER/HiRID archives.
 
 ## One-time configuration

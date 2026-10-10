@@ -1,0 +1,13 @@
+track,analyte,source_unit,note
+HR,hr,/min,Solar8000/HR
+PLETH_HR,hr,/min,heart rate from plethysmography
+ART_SBP,sbp,mmHg,invasive
+NIBP_SBP,sbp,mmHg,non-invasive
+ART_DBP,dbp,mmHg,invasive
+NIBP_DBP,dbp,mmHg,non-invasive
+ART_MBP,map,mmHg,invasive
+NIBP_MBP,map,mmHg,non-invasive
+PLETH_SPO2,spo2,%,
+RR,rr,/min,respiratory rate from ECG
+RR_CO2,rr,/min,respiratory rate from capnography
+BT,temp,degC,body temperature

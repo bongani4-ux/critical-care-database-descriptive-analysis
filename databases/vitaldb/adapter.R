@@ -5,13 +5,13 @@
 # release has no separate admission identifier, so patients with several cases (subjectid:
 # 6,090 patients) appear as several 'admissions'. The review's N = 6,388 is therefore a CASE count.
 # Times in clinical_data are SECONDS relative to case start (adm < 0 = admitted before surgery).
-# Vital-sign waveforms (.vital files, 100 GB) are NOT parsed in v0.1: vital signs are
-# reported as unavailable, not as zero.
+# Intra-operative NUMERIC vital-sign tracks are extracted from the .vital files by databases/vitaldb/extract_vital_tracks.py
+# (Python, stdlib only; one-off ~1 h; first 24 h of each recording; index = recording start). Waveforms are not used.
 # =============================================================================
 
 adapter_meta <- list(
   db_id = "vitaldb",
-  required_files = c("clinical_data.csv", "lab_data.csv", "lab_parameters.csv"))
+  required_files = c("clinical_data.csv", "lab_data.csv", "lab_parameters.csv", "track_names.csv"))
 
 VDB_LABS <- data.table::data.table(
   item = c("cr", "hb", "wbc", "plt", "na", "k", "lac", "tbil", "gluc", "alb", "hco3"),
@@ -39,6 +39,7 @@ adapter_build <- function(cfg) {
     cd[!is.na(preop_dm),  .(admission_id = caseid, comorbidity = "DIABETES", value = as.integer(preop_dm))]))
 
   # ---- laboratory results in the first 24 h of hospital admission (relative to case start in seconds) -----------------
+  read_mapping_tracks <- function() data.table::fread(ccdb_path("databases", "vitaldb", "mapping_tracks.csv"), colClasses = "character", encoding = "UTF-8")
   lp <- data.table::fread(db_file("vitaldb", "lab_parameters.csv"))
   stopifnot(all(VDB_LABS$item %in% lp$Parameter))
   win <- cfg$measurements$window_hours; pre <- cfg$measurements$pre_index_hours
@@ -48,7 +49,36 @@ adapter_build <- function(cfg) {
     reduce_chunk_first_in_window(ch[, .(unit_key = caseid, item = name, time_hours = dt / 3600, value = result, unit = NA_character_)],
                                  VDB_LABS, index, win, pre)
   }, col_types = readr::cols_only(caseid = "c", dt = "d", name = "c", result = "d"), label = "VitalDB lab_data")
-  meas <- combine_first_in_window(lb)
+  # ---- intra-operative vital signs from the .vital files (numeric tracks, first 24 h of the recording) -------------------------
+  # Index = start of the recording (= case start, t = 0): the files hold the intra-operative period only, whereas the
+  # laboratory index above is hospital admission (days earlier). The two domains therefore use different, declared indices.
+  vit_csv <- ccdb_cache_dir("vitaldb", "vitals_first24h.csv")
+  if (!file.exists(vit_csv)) {
+    py <- Sys.which("python"); vdir <- db_file("vitaldb", "vital_files")
+    if (nzchar(py)) {
+      log_msg("INFO", "[vitaldb] extracting numeric vital tracks from .vital files (one-off, ~1 h): ", vit_csv)
+      rc <- system2(py, c("-I", shQuote(ccdb_path("databases", "vitaldb", "extract_vital_tracks.py")), shQuote(vdir), shQuote(vit_csv),
+                          as.character(max(1L, parallel::detectCores() - 2L)), as.character(win)))
+      if (rc != 0 || !file.exists(vit_csv)) log_msg("WARN", "[vitaldb] vital-track extraction failed; vital signs unavailable")
+    } else log_msg("WARN", "[vitaldb] python not found; vital signs unavailable (see docs/reproducibility.md)")
+  }
+  vit_red <- NULL; vit_n <- NULL
+  if (file.exists(vit_csv)) {
+    tm <- read_mapping_tracks()
+    vt <- data.table::fread(vit_csv, colClasses = list(character = c("caseid", "track")), showProgress = FALSE)
+    vt <- vt[track %in% tm$track]
+    vindex <- cd[, .(unit_key = caseid, index_hours = 0)]
+    vit_red <- reduce_chunk_first_in_window(
+      vt[, .(unit_key = caseid, item = track, time_hours = time_s / 3600, value = value, unit = NA_character_)],
+      tm[, .(item = track, analyte, source_unit)], vindex, win, pre)
+    # number of values in the window: total count per track (the CSV keeps only the first 20 values), summed over tracks of the analyte
+    vit_n <- merge(unique(vt[, .(caseid, track, n_in_window)]), tm[, .(track, analyte)], by = "track")[, .(n_all = sum(n_in_window)), by = .(unit_key = caseid, analyte)]
+  }
+  meas <- combine_first_in_window(data.table::rbindlist(list(lb, vit_red), use.names = TRUE, fill = TRUE))
+  if (!is.null(vit_n)) {
+    meas <- merge(meas, vit_n, by = c("unit_key", "analyte"), all.x = TRUE, sort = FALSE)
+    meas[!is.na(n_all), n_in_window := as.integer(n_all)][, n_all := NULL]
+  }
   measurements <- meas[, .(admission_id = unit_key, stay_id = NA_character_, analyte, value, hours_from_index, n_in_window)]
 
   flow <- flow_add(flow, "Final cohort", admission = adm, icu_stay = icu)
@@ -56,7 +86,8 @@ adapter_build <- function(cfg) {
     meta = list(
       index_definition = "hospital admission (adm, seconds before/after case start)", measurement_index = "hospital_admission",
       measurement_analytes_available = unique(measurements$analyte), support_available = character(), support_scope = "hospital",
-      support_unavailable_note = "organ-support data exist only as intra-operative waveform tracks, not parsed in v0.1",
+      support_unavailable_note = "organ-support data exist only as intra-operative tracks (not used in v0.1)",
+      measurement_index_note = "laboratory: hospital admission; vital signs: start of the intra-operative recording (case start)",
       hosp_death_definition = "clinical_data.death_inhosp == 1",
       hosp_los_definition = "(dis - adm) / 86400", icu_los_definition = "clinical_data.icu_days (post-operative ICU days)",
       icu_death_definition = NA_character_, surgery_note = "all cases are surgical by construction",
@@ -68,9 +99,9 @@ adapter_build <- function(cfg) {
     availability = data.table::data.table(
       domain = c("Demographics", "Hospital mortality", "ICU stay structure", "ICU mortality", "Comorbidities (coded)",
                  "Vital signs", "Laboratory", "Organ support", "Severity scores", "Microbiology", "Medication", "Surgery/anaesthesia"),
-      status = c("available", "available", "partial", "unavailable", "partial", "BLOCKED_not_implemented", "available", "unavailable",
+      status = c("available", "available", "partial", "unavailable", "partial", "partial", "available", "unavailable",
                  "partial", "unavailable", "unavailable", "available"),
-      note = c("age, sex", "death_inhosp", "icu_days only", "none", "two pre-operative flags", "waveform tracks (.vital) not parsed in v0.1",
+      note = c("age, sex", "death_inhosp", "icu_days only", "none", "two pre-operative flags", "intra-operative numeric monitor tracks (.vital), first 24 h of recording; waveforms not used",
                "lab_data (units from lab_parameters)", "none outside intra-operative tracks", "ASA physical status only", "none",
                "intra-operative drug totals only (clinical_data)", "rich: optype, opname, approach, position, anaesthesia type")))
   ds$admission <- finalize_admission(ds$admission, ds$icu_stay)

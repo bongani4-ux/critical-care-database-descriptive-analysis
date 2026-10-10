@@ -33,9 +33,9 @@ redistribution of derived material, or require small cells to be suppressed. Bef
 | MIMIC-IV, eICU-CRD, NWICU, PIC, INSPIRE, Zigong | PhysioNet credentialed (PIC also owner approval per review Table 2) | credentialed-user DUA: do not redistribute data; follow PhysioNet's rules on sharing derived work |
 | HiRID, SICdb | PhysioNet restricted (owner approval) | as above, plus the data owners' conditions |
 | AmsterdamUMCdb | portal + end-user agreement (practising intensivist on the team) | the local copy is incomplete (see `docs/database_coverage.md`) |
-| MOVER (EPIC, SIS) | UCI portal + DUA (Supplement S3) / PhysioNet credentialed (review Table 1-2) - **the review is internally inconsistent** | confirm the actual agreement before any release |
+| MOVER (EPIC, SIS) | UCI portal + DUA (Supplement S3) / PhysioNet credentialed (review Table 1-2) - the review is internally inconsistent | data-use terms confirmed by the project lead on 2026-10-11; correct the review's host statement |
 | VitalDB | open access (CC BY 4.0) | attribution required |
-| Jinhua | institutional; terms **not documented in the files found** | treat as restricted until the data owner confirms; the repository contains no Jinhua data or tables |
+| Jinhua | institutional | data-use terms confirmed by the project lead on 2026-10-11 (the terms themselves are not stored in the repository); the repository contains no Jinhua data or tables |
 
 ## Secrets and authentication
 

@@ -9,7 +9,7 @@ Statement made by each adapter about what its database does and does not contain
 | ICU stay structure | partial | available | available | available | available | available | available | available | partial | partial | partial | partial | unavailable |
 | ICU mortality | unavailable | partial | available | partial | available | available | available | partial | unavailable | unavailable | unavailable | unavailable | unavailable |
 | Comorbidities (coded) | available | available | partial | available | partial | unavailable | unavailable | available | available | available | partial | partial | unavailable |
-| Vital signs | partial | available | available | partial | partial | BLOCKED_local_data | available | available | available | partial | BLOCKED_not_implemented | unavailable | partial |
+| Vital signs | partial | available | available | partial | partial | BLOCKED_local_data | available | available | available | partial | partial | unavailable | partial |
 | Laboratory | available | available | available | available | available | BLOCKED_local_data | available | available | available | available | available | available | partial |
 | Organ support | partial | available | available | partial | partial | available | partial | unavailable | partial | partial | unavailable | unavailable | unavailable |
 | Severity scores | unavailable | unavailable | available | unavailable | available | BLOCKED_local_data | unavailable | unavailable | unavailable | partial | partial | partial | unavailable |

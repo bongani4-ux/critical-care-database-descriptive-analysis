@@ -18,7 +18,7 @@ code mapping, re-based clocks) - **partially comparable** (an important limitati
 | Hospital LOS / in-hospital death | MIMIC-IV, NWICU, eICU, PIC, Zigong, Jinhua, INSPIRE, VitalDB, MOVER-EPIC | **not** SICdb (no LOS), HiRID, AmsterdamUMCdb, MOVER-SIS; death rules differ (methods section 5) |
 | ICU stay / ICU LOS / ICU death | MIMIC-IV, NWICU, PIC, eICU (incl. step-down), SICdb, HiRID, AmsterdamUMCdb (IC + MC) | reconstructed in Jinhua, Zigong, INSPIRE; flag only in MOVER-EPIC; none in MOVER-SIS/VitalDB(days only) |
 | Comorbidities | ICD-10 databases directly; ICD-9 databases after approximate mapping | principal-diagnosis only (SICdb), patient-level codes (MOVER-EPIC), none (HiRID, AmsterdamUMCdb, MOVER-SIS) |
-| Vital signs (first 24 h) | MIMIC-IV, eICU, HiRID, SICdb (hourly), Zigong, PIC, NWICU (reduced item set) | ward charting (Jinhua), intra-operative (INSPIRE, MOVER-SIS); unavailable: AmsterdamUMCdb (file missing), VitalDB (waveforms), MOVER-EPIC |
+| Vital signs (first 24 h) | MIMIC-IV, eICU, HiRID, SICdb (hourly), Zigong, PIC, NWICU (reduced item set) | ward charting (Jinhua), intra-operative (INSPIRE, MOVER-SIS); unavailable: AmsterdamUMCdb (file missing), MOVER-EPIC |
 | Laboratory (first 24 h) | all but AmsterdamUMCdb (file missing); MOVER-SIS partial | index time differs (ICU vs hospital admission vs OR start); pooled specimen types |
 | Organ support | MIMIC-IV, AmsterdamUMCdb (all five types); eICU, SICdb, Zigong, HiRID, INSPIRE, NWICU, Jinhua partly | definitions differ (events vs orders vs charting vs signals) |
 | Severity | native only: eICU (APACHE IVa), SICdb (SAPS 3), ASA in perioperative databases | never pooled across scores |

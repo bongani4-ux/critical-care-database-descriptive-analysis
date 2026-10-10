@@ -13,17 +13,15 @@
 | Jinhua (reference) | analysed, validated | vasopressors; Tables 5-9 not part of the framework; original Table 3 never existed |
 | MIMIC-IV v3.1, eICU-CRD v2.0, NWICU v0.1.0, SICdb v1.0.8, HiRID v1.1.1, PIC v1.1.0, Zigong v1.1 | analysed | see domain availability (e.g. NWICU: no ventilation/vasopressor items; PIC: no organ support; HiRID/SICdb: no hospital outcome/LOS) |
 | INSPIRE | analysed on v1.4.2 **and** v1.3 | **version to be decided by the authors** |
-| VitalDB v1.0.0 | cohort, outcomes, labs | **vital signs: waveforms not parsed** |
+| VitalDB v1.0.0 | cohort, outcomes, labs, intra-operative numeric vital signs (1.2 M values extracted from 6,388 .vital files, 0 errors) | waveforms, organ support |
 | MOVER-EPIC v1.0 | cohort, outcomes, ICD, labs | no vitals table; ICU flag only |
 | MOVER-SIS v1.0 | demographics, intra-operative vitals, 5 labs | no outcomes by design |
 | AmsterdamUMCdb v1.0.2 | cohort, ICU outcome, organ support | **BLOCKED: `numericitems.csv` absent locally (vitals, labs, APACHE)** |
 
 ## Needs a human decision
-1. INSPIRE v1.3 vs v1.4.2 (review text and review numbers disagree).
-2. Obtain AmsterdamUMCdb `numericitems.csv`.
-3. Jinhua and MOVER data-use terms before any derived aggregate is published.
-4. Whether to parse VitalDB waveforms.
-5. Correct the review's mis-labelled numbers (list in `docs/discrepancy_report.md`).
+1. Update the review for INSPIRE (v1.4.2 analysed per project decision; review numbers were charted on v1.3).
+2. Add AmsterdamUMCdb `numericitems.csv` (project lead, later).
+3. Correct the review's mis-labelled numbers (list in `docs/discrepancy_report.md`).
 
 ## GitHub
 The repository has been prepared locally (git history, audit passed). **It has not been created or pushed**: the Claude-in-Chrome

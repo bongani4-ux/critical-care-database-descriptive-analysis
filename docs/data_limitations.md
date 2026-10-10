@@ -57,6 +57,7 @@ VitalDB and MOVER-EPIC/SIS cannot identify admissions or patients cleanly (case 
 * Known extraction gaps that depress coverage (not properties of the databases): eICU body temperature (9 %) is mostly charted in `nurseCharting`, which is not used;
   HiRID glucose (8 %) and albumin (5 %) use only the mapped variable ids; PIC heart rate/blood pressure coverage reflects the six charted items only;
   INSPIRE and VitalDB first-24-h-of-admission coverage is low because most laboratory values are pre-/post-operative.
+* VitalDB vital signs are the first monitor value after the recording starts (probe placement/stabilisation): e.g. first body temperature median 33.4 C and respiratory rate (ECG-derived) 7/min reflect induction-phase values and must not be compared with ICU first-24-h values.
 * Data anomalies reported, not corrected: negative hospital LOS in 175 MIMIC-IV admissions, 13 eICU hospital stays and 2 PIC admissions; negative ICU LOS in a few eICU, PIC and INSPIRE v1.3 stays (QC WARN).
 * Not implemented in v0.1: vital-sign waveforms (VitalDB `.vital`), eICU nurse charting / past-history text, severity-score derivation (SOFA, APACHE, SAPS) where no native score exists,
   microbiology/medication/imaging harmonisation, and any inferential statistics or adjustment.
@@ -84,7 +85,7 @@ for units with no measurement. Several domains are *structurally* unavailable (s
 ## 8. Access and completeness of the local copies
 
 * **AmsterdamUMCdb**: `numericitems.csv` is missing from the local folder, so vitals, laboratory values and APACHE scores are **blocked** for this database (not absent from the database itself).
-* **VitalDB**: waveform tracks (100 GB) are not parsed; vital signs are unavailable.
+* **VitalDB**: only the intra-operative *numeric* monitor tracks are used (first 24 h of each recording, index = recording start); waveforms are not parsed. Laboratory index is hospital admission, so the two domains use different, declared indices.
 * **MOVER**: tables are unpacked from archives outside the repository; EPIC procedure/medication/post-operative-complication tables are not used.
-* **Jinhua**: the data-use terms are unknown (not in the files); no Jinhua-derived aggregate should be published until the data owner confirms.
+* **Jinhua / MOVER**: data-use terms were confirmed by the project lead (2026-10-11); `outputs/` stays git-ignored until each release is logged in `docs/data_governance.md`.
 * The review itself contains **internal inconsistencies** (INSPIRE version; MOVER host; several Table 1/3 denominators) listed in `docs/discrepancy_report.md`.

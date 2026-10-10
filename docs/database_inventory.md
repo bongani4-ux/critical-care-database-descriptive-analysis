@@ -10,7 +10,7 @@
 |---|---|---|---|
 | MIMIC-IV | yes | v3.1 | Table 1; S3 |
 | eICU-CRD | yes | v2.0 | Table 1; S3 |
-| INSPIRE | yes | **v1.4.2** (S3) - *Table 1 says v1.3* | **discrepancy**: both local copies hold the same 130,960 operations / 99,886 patients; the review's INSPIRE ICU-LOS (1.04 d) reproduces on **v1.3**, not v1.4.2 (1.00 d). **Needs the authors' decision** - see `discrepancy_report.md` |
+| INSPIRE | yes | **v1.4.2** (project decision, 2026-10-11) | review text says v1.3 (Table 1) and v1.4.2 (S3); both local copies hold the same 130,960 operations / 99,886 patients; the review's ICU LOS (1.04 d) reproduces on v1.3 only (v1.4.2: 1.00 d). v1.3 is retained as a version check (`inspire_v1_3`); see `discrepancy_report.md` |
 | MOVER-EPIC, MOVER-SIS | yes (2 entries, 1 resource) | v1.0 | Table 1; S3 (host differs between the two) |
 | HiRID | yes | v1.1.1 | Table 1; S3 |
 | SICdb | yes | v1.0.8 | Table 1; S3 |
@@ -55,9 +55,6 @@
 
 | Need | For | Why |
 |---|---|---|
-| **Decision: INSPIRE v1.3 or v1.4.2** | INSPIRE | review text and review numbers disagree (see discrepancy report) |
 | `numericitems.csv` of AmsterdamUMCdb v1.0.2 (portal; practising-intensivist agreement) | AmsterdamUMCdb | the only source of vitals, labs and APACHE scores |
-| Data-use terms for the Jinhua extract | Jinhua | decides whether *any* Jinhua-derived aggregate may be published |
-| Confirmation of the actual MOVER agreement (UCI portal vs PhysioNet) | MOVER | the review is inconsistent; governs release of derived tables |
-| Optional: a decision on parsing VitalDB waveforms (100 GB) | VitalDB | vital-sign domain currently unavailable there |
+| `numericitems.csv` still pending | AmsterdamUMCdb | to be added by the project lead later |
 | Optional: MOVER-EPIC procedure/medication/post-op tables | MOVER-EPIC | not used in v0.1 |

@@ -25,7 +25,7 @@ Variables that a database cannot support are reported **unavailable**, never as 
 | HiRID | v1.1.1 | adult ICU, Switzerland | PhysioNet restricted (owner approval) |
 | PIC | v1.1.0 | paediatric ICU, China | PhysioNet credentialed (+ owner approval) |
 | Zigong (ZFPH) | v1.1 | adult ICU, infection, China | PhysioNet credentialed |
-| INSPIRE | v1.4.2 *(review text also says v1.3 - see below)* | perioperative, South Korea | PhysioNet credentialed |
+| INSPIRE | v1.4.2 *(project decision; the review text also says v1.3 - see discrepancy report)* | perioperative, South Korea | PhysioNet credentialed |
 | VitalDB | v1.0.0 | perioperative, South Korea | PhysioNet open (CC BY 4.0) |
 | MOVER-EPIC / MOVER-SIS | v1.0 | perioperative, USA | UCI portal + DUA *(review Table 1 says PhysioNet credentialed)* |
 | **Jinhua** (reference, *not* a review entry) | cleaned extract | hospital, neurosurgical-dominant, China | institutional - terms to be confirmed |
@@ -92,7 +92,7 @@ contract and result-table QC; reproduced values are compared with the review at 
 to a specific cause (denominator, unit, field or version) and a few remain **unresolved** - all in
 [docs/discrepancy_report.md](docs/discrepancy_report.md). Several of the review's numbers do not describe what their table captions
 say (MIMIC-IV, MOVER-EPIC, VitalDB, INSPIRE, SICdb, AmsterdamUMCdb) - these are reported, not silently corrected. The INSPIRE
-version question (v1.3 vs v1.4.2) needs the authors' decision.
+version decision (v1.4.2 analysed; the review's numbers were charted on v1.3) is recorded in the registry.
 
 ## Troubleshooting
 
