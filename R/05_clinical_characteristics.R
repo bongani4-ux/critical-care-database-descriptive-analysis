@@ -36,7 +36,7 @@ summarise_clinical <- function(ds) {
       for (sc in unique(sev$score)) {
         v <- sev[score == sc & admission_id %in% a$admission_id]
         out[[length(out) + 1]] <- stat_cont(v$value, db, st, "Severity", sc,
-                                            denominator = sum(a$icu_flag == 1L),
+                                            denominator = N,
                                             note = "native score; not recalculated; not comparable across scores")
       }
     } else {

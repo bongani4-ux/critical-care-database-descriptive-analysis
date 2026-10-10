@@ -1,0 +1,31 @@
+source,item,analyte,source_unit,expect_label,note
+obs,200,hr,/min,^Heart rate$,
+obs,410,temp,degC,^Core body temperature$,core
+obs,7100,temp,degC,^Rectal temperature$,
+obs,400,temp,degC,^Axillary temperature$,site differs - not harmonised
+obs,100,sbp,mmHg,^Invasive systolic arterial pressure$,
+obs,600,sbp,mmHg,^Non-invasive systolic arterial pressure$,
+obs,120,dbp,mmHg,^Invasive diastolic arterial pressure$,
+obs,620,dbp,mmHg,^Non-invasive diastolic arterial pressure$,
+obs,110,map,mmHg,^Invasive mean arterial pressure$,
+obs,610,map,mmHg,^Non-invasive mean arterial pressure$,
+obs,300,rr,/min,^Respiratory rate$,
+obs,310,rr,/min,^Respiratory rate$,
+obs,4000,spo2,%,^Peripheral oxygen saturation$,
+obs,8280,spo2,%,^Peripheral oxygen saturation$,
+obs,20000600,creatinine,umol/L,^Creatinine \[Moles/volume\] in Blood$,
+obs,20000900,hemoglobin,g/L,^Hemoglobin \[Mass/volume\] in Blood$,
+obs,24000548,hemoglobin,g/L,^Hemoglobin \[Mass/volume\] in Arterial blood$,arterial blood gas
+obs,20000700,wbc,G/L,^Leukocytes \[#/volume\] in Blood$,
+obs,20000110,platelets,G/L,^Platelets \[#/volume\] in Blood$,
+obs,20000400,sodium,mmol/L,^Sodium \[Moles/volume\] in Blood$,
+obs,24000519,sodium,mmol/L,^Sodium \[Moles/volume\] in Blood$,
+obs,20000500,potassium,mmol/L,^Potassium \[Moles/volume\] in Blood$,
+obs,24000520,potassium,mmol/L,^Potassium \[Moles/volume\] in Blood$,
+obs,24000524,lactate,mmol/L,^Lactate \[Mass/volume\] in Arterial blood$,arterial
+obs,24000485,lactate,mmol/L,^Lactate \[Moles/volume\] in Venous blood$,venous
+obs,20004300,bilirubin_total,umol/L,^Bilirubin.total \[Moles/volume\] in Serum or Plasma$,
+obs,20005110,glucose,mmol/L,^Glucose \[Moles/volume\] in Serum or Plasma$,
+obs,24000523,glucose,mmol/L,^Glucose \[Moles/volume\] in Serum or Plasma$,
+obs,24000605,albumin,g/L,^Albumin \[Mass/volume\] in Serum or Plasma$,
+obs,20004200,bicarbonate,mmol/L,^Bicarbonate \[Moles/volume\] in Arterial blood$,arterial blood gas

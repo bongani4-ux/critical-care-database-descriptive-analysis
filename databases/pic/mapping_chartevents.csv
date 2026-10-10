@@ -1,0 +1,7 @@
+item,analyte,source_unit,expect_label,note
+1003,hr,bpm,^Heart Rate$,'Pulse' (1002) not pooled
+1004,rr,insp/min,^Respiratory Rate$,
+1006,spo2,%,^Oxygen saturation$,
+1001,temp,°C,^Temperature$,
+1016,sbp,mmHg,^Systolic Pressure$,method (invasive vs non-invasive) not recorded
+1015,dbp,mmHg,^Diastolic Pressure$,method (invasive vs non-invasive) not recorded

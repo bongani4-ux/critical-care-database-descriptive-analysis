@@ -89,6 +89,29 @@ ccdb_output_dir <- function(kind = c("tables", "figures", "logs")) {
   d
 }
 
+
+#' Scratch folder for unpacked archives (git-ignored area OUTSIDE the repository by default).
+#' Unpacked database archives are untrusted/bulky data: they are never written inside the repo.
+ccdb_cache_dir <- function(...) {
+  d <- CCDB$paths$cache_dir
+  if (is.null(d)) d <- file.path(CCDB$paths$data_root, "_extracted_cache")
+  d <- file.path(d, ...)
+  dir.create(d, recursive = TRUE, showWarnings = FALSE)
+  d
+}
+
+#' Extract selected members (or everything) from a .tar.gz with the system tar.
+#' Skips extraction if `dest` already holds the expected marker file.
+untar_cached <- function(archive, dest, marker = NULL, members = NULL) {
+  if (!is.null(marker) && file.exists(file.path(dest, marker))) return(invisible(dest))
+  if (!file.exists(archive)) ccdb_stop("Archive not found: ", archive)
+  dir.create(dest, recursive = TRUE, showWarnings = FALSE)
+  log_msg("INFO", "Extracting ", basename(archive), " -> ", dest)
+  rc <- system2("tar", c("-xzf", shQuote(archive), "-C", shQuote(dest), members))
+  if (rc != 0) ccdb_stop("tar failed (rc=", rc, ") for ", archive)
+  invisible(dest)
+}
+
 # ---- logging ----------------------------------------------------------------
 
 #' Start a per-run log file; messages go to console and file.

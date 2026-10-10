@@ -13,6 +13,8 @@
 #'   urgency_fun, disposition_fun   functions(chr) -> harmonised category
 #'   vent_label, rrt_label, vaso_label   regex on d_items$label (NA = not ascertainable)
 #'   vent_scope, rrt_scope ("procedureevents") ; vaso_source ("inputevents" or NA)
+#'   hosp_death_fun           function(admissions+patients table `a`) -> integer 0/1 in-hospital death
+#'   hosp_death_definition    text for the table notes
 #'   notes                    list copied into meta
 build_mimic_like <- function(db_id, opts, cfg) {
   flow <- flow_new()
@@ -38,7 +40,7 @@ build_mimic_like <- function(db_id, opts, cfg) {
   adm <- a[, .(db_id = db_id, patient_id = as.character(subject_id), admission_id = as.character(hadm_id),
                age_years = as.numeric(age_calc), sex = harmonize_sex(gender),
                hosp_los_days = as.numeric(difftime(disch_t, admit_t, units = "days")),
-               hosp_death = as.integer(hospital_expire_flag),
+               hosp_death = opts$hosp_death_fun(a),
                admit_sort_key = as.numeric(admit_t),
                admission_urgency = opts$urgency_fun(admission_type),
                admission_source = admission_type,
@@ -89,25 +91,30 @@ build_mimic_like <- function(db_id, opts, cfg) {
   idx <- index_tbl
 
   cm <- opts$chart_map[, .(item, analyte, source_unit)]
+  chart_ids <- cm$item
   red[[1]] <- stream_file(P(opts$icu_sub, "chartevents.csv"), function(ch) {
-    ch <- ch[itemid %in% cm$item]
+    ch <- ch[itemid %in% chart_ids]
     if (!nrow(ch)) return(NULL)
     ch <- merge(ch, adm_of_stay, by = "stay_id", sort = FALSE)
+    ch[, th := fast_ts_hours(charttime)]
     reduce_chunk_first_in_window(
-      ch[, .(unit_key = admission_id, item = itemid, time_hours = as.numeric(ts(charttime)) / 3600,
+      ch[, .(unit_key = admission_id, item = itemid, time_hours = th,
              value = suppressWarnings(as.numeric(valuenum)), unit = valueuom)], cm, idx, win, pre)
-  }, col_types = readr::cols_only(stay_id = "c", itemid = "c", charttime = "c", valuenum = "c", valueuom = "c"),
-  label = paste(db_id, "chartevents"))
+  }, col_types = readr::cols_only(stay_id = "c", itemid = "c", charttime = "c", valuenum = "d", valueuom = "c"),
+  label = paste(db_id, "chartevents"),
+  arrow_filter = function(d) dplyr::filter(d, itemid %in% chart_ids))
 
   lm <- opts$lab_map[, .(item, analyte, source_unit)]
+  lab_ids <- lm$item
   red[[2]] <- stream_file(P(opts$hosp_sub, "labevents.csv"), function(ch) {
-    ch <- ch[itemid %in% lm$item & !is.na(hadm_id)]
+    ch <- ch[itemid %in% lab_ids & !is.na(hadm_id)]
     if (!nrow(ch)) return(NULL)
     reduce_chunk_first_in_window(
-      ch[, .(unit_key = hadm_id, item = itemid, time_hours = as.numeric(ts(charttime)) / 3600,
+      ch[, .(unit_key = hadm_id, item = itemid, time_hours = fast_ts_hours(charttime),
              value = suppressWarnings(as.numeric(valuenum)), unit = valueuom)], lm, idx, win, pre)
-  }, col_types = readr::cols_only(hadm_id = "c", itemid = "c", charttime = "c", valuenum = "c", valueuom = "c"),
-  label = paste(db_id, "labevents"))
+  }, col_types = readr::cols_only(hadm_id = "c", itemid = "c", charttime = "c", valuenum = "d", valueuom = "c"),
+  label = paste(db_id, "labevents"),
+  arrow_filter = function(d) dplyr::filter(d, itemid %in% lab_ids))
 
   meas <- combine_first_in_window(data.table::rbindlist(red, use.names = TRUE, fill = TRUE))
   measurements <- meas[, .(admission_id = unit_key, stay_id = NA_character_, analyte, value, hours_from_index, n_in_window)]
@@ -119,7 +126,8 @@ build_mimic_like <- function(db_id, opts, cfg) {
     if (!length(ids)) return(NULL)
     log_msg("INFO", "[", db_id, "] ", label, " items: ", paste(ids, collapse = ","))
     hit <- stream_file(P(opts$icu_sub, paste0(src_file, ".csv")), function(ch) ch[itemid %in% ids, .(stay_id)],
-                       col_types = readr::cols_only(stay_id = "c", itemid = "c"), label = paste(db_id, src_file))
+                       col_types = readr::cols_only(stay_id = "c", itemid = "c"), label = paste(db_id, src_file),
+                       arrow_filter = function(d) dplyr::filter(d, itemid %in% ids))
     if (is.null(hit)) return(data.table::data.table(admission_id = character(), support_type = character(), value = integer()))
     adm_ids <- unique(merge(unique(hit), adm_of_stay, by = "stay_id")$admission_id)
     data.table::data.table(admission_id = adm_ids, support_type = label, value = 1L)
@@ -141,12 +149,14 @@ build_mimic_like <- function(db_id, opts, cfg) {
       measurement_index = "first_icu_admission",
       measurement_analytes_available = unique(measurements$analyte),
       support_available = sup_av, support_scope = "icu",
-      hosp_death_definition = "admissions.hospital_expire_flag == 1",
+      hosp_death_definition = opts$hosp_death_definition %||% "admissions.hospital_expire_flag == 1",
       hosp_los_definition = "dischtime - admittime",
       icu_los_definition = "sum over ICU stays of (outtime - intime)",
       icu_death_definition = "hospital death with deathtime inside [intime, outtime] of the ICU stay",
       age_note = sprintf("anchor_age + (admission year - anchor_year); %d patients with anchor_age >= 90 are censored and kept at the censoring value", n_cens),
       followup_note = "patients.dod (state death records; limited post-discharge window) or in-hospital death",
+      extra_metrics = list(n_patients_table_rows = nrow(pt), age_median_patients_table = stats::median(pt$anchor_age),
+                           hosp_death_over_patients_table_pct = 100 * sum(adm$hosp_death == 1L, na.rm = TRUE) / nrow(pt)),
       icu_by_construction = FALSE), opts$notes),
     flow = flow, admission = adm, icu_stay = icu[, .(db_id, patient_id, admission_id, stay_id, stay_seq, icu_los_days, icu_unit, icu_death)],
     diagnosis = diagnosis,
@@ -155,12 +165,4 @@ build_mimic_like <- function(db_id, opts, cfg) {
     availability = opts$availability)
   ds$admission <- finalize_admission(ds$admission, ds$icu_stay)
   ds
-}
-
-# Read a mapping CSV shipped with an adapter (editable without touching code).
-read_mapping <- function(db_id, file) {
-  f <- ccdb_path("databases", db_id, file)
-  m <- data.table::fread(f, colClasses = "character", encoding = "UTF-8", na.strings = c("", "NA"))
-  m[, item := as.character(item)]
-  m
 }

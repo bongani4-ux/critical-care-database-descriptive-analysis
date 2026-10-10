@@ -28,6 +28,8 @@ qc_results_table <- function(ds, results) {
       all(ct[!grepl("measurements in window", variable)]$n +
           ct[!grepl("measurements in window", variable)]$n_missing ==
           ct[!grepl("measurements in window", variable)]$denominator))
+  chk("n <= denominator in every continuous row", all(ct$n <= ct$denominator + 1e-9, na.rm = TRUE),
+      paste(sum(ct$n > ct$denominator + 1e-9, na.rm = TRUE), "violations"))
   chk("quartiles ordered (q1 <= median <= q3)", all(ct$q1 <= ct$median + 1e-9 & ct$median <= ct$q3 + 1e-9, na.rm = TRUE))
   a1 <- results[stratum == "admission" & variable == "Admissions", n]
   chk("results 'Admissions' equals admission table rows", identical(as.numeric(a1), as.numeric(nrow(adm))))
@@ -75,8 +77,12 @@ decimals_of <- function(txt) {
 #' Compute one review metric from the harmonised dataset. Returns NA_real_ if the
 #' metric cannot be computed from this database (reported as NOT_COMPUTABLE).
 compute_review_metric <- function(ds, metric, level) {
+  # database-specific diagnostic metrics computed by the adapter from raw fields (e.g. INSPIRE first-operation flag)
+  if (!is.null(ds$meta$extra_metrics[[metric]])) return(as.numeric(ds$meta$extra_metrics[[metric]]))
   adm <- ds$admission; icu <- ds$icu_stay
-  base <- if (level == "patient") adm[is_first_admission == 1L] else adm
+  # levels: patient = first admission per patient; patient_any = patients with >= 1 event over ALL their
+  # admissions; admission = every admission; icu_stay = every ICU stay
+  base <- if (level %in% c("patient", "patient_any")) adm[is_first_admission == 1L] else adm
   hd <- adm[, .(admission_id, hosp_death)]
   icu2 <- merge(icu, hd, by = "admission_id", all.x = TRUE)
   switch(metric,
@@ -88,8 +94,10 @@ compute_review_metric <- function(ds, metric, level) {
     age_median      = stats::median(base$age_years, na.rm = TRUE),
     male_pct        = 100 * mean(base[sex %in% c("M", "F")]$sex == "M"),
     female_pct      = 100 * mean(base[sex %in% c("M", "F")]$sex == "F"),
-    hosp_death_n    = sum(base$hosp_death == 1L, na.rm = TRUE),
+    hosp_death_n    = if (level == "patient_any") adm[, .(d = any(hosp_death == 1L, na.rm = TRUE)), by = patient_id][, sum(d)]
+                      else sum(base$hosp_death == 1L, na.rm = TRUE),
     hosp_death_pct  = if (level == "icu_stay") 100 * mean(icu2$hosp_death == 1L, na.rm = TRUE)
+                      else if (level == "patient_any") 100 * adm[, .(d = any(hosp_death == 1L, na.rm = TRUE)), by = patient_id][, mean(d)]
                       else 100 * mean(base$hosp_death == 1L, na.rm = TRUE),
     icu_death_pct   = if (!"icu_death" %in% names(icu) || all(is.na(icu$icu_death))) NA_real_
                       else if (level == "icu_stay") 100 * mean(icu$icu_death == 1L, na.rm = TRUE)
@@ -99,6 +107,8 @@ compute_review_metric <- function(ds, metric, level) {
                                   .(d = as.integer(any(icu_death == 1L, na.rm = TRUE))), by = admission_id]
                         100 * mean(ad$d)
                       },
+    icu_los_median_hours = if (level == "icu_stay") 24 * stats::median(icu$icu_los_days, na.rm = TRUE)
+                           else 24 * stats::median(base[icu_flag == 1L]$icu_los_days, na.rm = TRUE),
     hosp_los_median_days = stats::median(base$hosp_los_days, na.rm = TRUE),
     icu_los_median_days  = if (level == "icu_stay") stats::median(icu$icu_los_days, na.rm = TRUE)
                            else stats::median(base[icu_flag == 1L]$icu_los_days, na.rm = TRUE),
@@ -117,14 +127,24 @@ compare_to_review <- function(ds) {
   if (!nrow(ref)) return(data.table::data.table())
   res <- lapply(seq_len(nrow(ref)), function(i) {
     x <- ref[i]
-    val <- tryCatch(compute_review_metric(ds, x$metric, x$level), error = function(e) NA_real_)
     refv <- as.numeric(x$value)
     dec <- decimals_of(x$value)
-    status <- if (is.na(val)) "NOT_COMPUTABLE"
-              else if (x$tolerance_type == "exact") { if (isTRUE(all.equal(val, refv))) "MATCH" else "DISCREPANCY" }
-              else { if (isTRUE(all.equal(round(val, dec), refv))) "MATCH" else "DISCREPANCY" }
+    matches <- function(val) {
+      if (is.na(val)) return(FALSE)
+      if (x$tolerance_type == "exact") isTRUE(all.equal(val, refv)) else isTRUE(all.equal(round(val, dec), refv))
+    }
+    val <- tryCatch(compute_review_metric(ds, x$metric, x$level), error = function(e) NA_real_)
+    status <- if (is.na(val)) "NOT_COMPUTABLE" else if (matches(val)) "MATCH" else "DISCREPANCY"
+    # Does the reported value match at a DIFFERENT unit of analysis? (the review's captions and its
+    # numbers do not always agree on the denominator; this is reported, never silently adopted)
+    other <- setdiff(c("patient", "patient_any", "admission", "icu_stay"), x$level)
+    alt <- vapply(other, function(lv) {
+      v <- tryCatch(compute_review_metric(ds, x$metric, lv), error = function(e) NA_real_)
+      if (matches(v)) lv else NA_character_
+    }, character(1))
     data.table::data.table(db_id = db, metric = x$metric, level = x$level, review_value = refv,
                            reproduced_value = val, abs_diff = val - refv, status = status,
+                           also_matches_at_level = paste(stats::na.omit(alt), collapse = ";"),
                            review_confidence = x$confidence, review_source = x$source, review_note = x$note)
   })
   data.table::rbindlist(res)

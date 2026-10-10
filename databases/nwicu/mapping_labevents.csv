@@ -1,0 +1,15 @@
+item,analyte,source_unit,expect_label,note
+100002,creatinine,mg/dL,^Creatinine$,
+100007,hemoglobin,g/dL,^Hemoglobin$,
+100016,wbc,K/uL,^White Blood Cells$,
+100014,platelets,K/uL,^Platelet Count$,
+100010,sodium,mEq/L,^Sodium$,chemistry
+100050,sodium,mEq/L,"^Sodium, Whole Blood$",blood gas
+100011,potassium,mEq/L,^Potassium$,chemistry
+100047,potassium,mEq/L,"^Potassium, Whole Blood$",blood gas
+100031,lactate,mmol/L,^Lactate$,blood gas
+100020,bilirubin_total,mg/dL,"^Bilirubin, Total$",
+100001,glucose,mg/dL,^Glucose$,chemistry
+100045,glucose,mg/dL,^Glucose$,blood gas
+100021,albumin,g/dL,^Albumin$,
+100013,bicarbonate,mmol/L,^Total CO2$,serum total CO2 (not calculated HCO3)

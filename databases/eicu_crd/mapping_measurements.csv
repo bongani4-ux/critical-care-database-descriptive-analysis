@@ -1,0 +1,23 @@
+source,item,analyte,source_unit,note
+vitalperiodic,heartrate,hr,/min,5-minute charted/monitor values
+vitalperiodic,respiration,rr,/min,
+vitalperiodic,sao2,spo2,%,
+vitalperiodic,temperature,temp,degC,
+vitalperiodic,systemicsystolic,sbp,mmHg,invasive
+vitalperiodic,systemicdiastolic,dbp,mmHg,invasive
+vitalperiodic,systemicmean,map,mmHg,invasive
+vitalaperiodic,noninvasivesystolic,sbp,mmHg,non-invasive
+vitalaperiodic,noninvasivediastolic,dbp,mmHg,non-invasive
+vitalaperiodic,noninvasivemean,map,mmHg,non-invasive
+lab,creatinine,creatinine,mg/dL,
+lab,Hgb,hemoglobin,g/dL,
+lab,WBC x 1000,wbc,K/mcL,
+lab,platelets x 1000,platelets,K/mcL,
+lab,sodium,sodium,mmol/L,
+lab,potassium,potassium,mmol/L,
+lab,lactate,lactate,mmol/L,
+lab,total bilirubin,bilirubin_total,mg/dL,
+lab,glucose,glucose,mg/dL,laboratory glucose; bedside (point-of-care) glucose deliberately excluded
+lab,albumin,albumin,g/dL,
+lab,bicarbonate,bicarbonate,mmol/L,
+lab,HCO3,bicarbonate,mmol/L,blood-gas

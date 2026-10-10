@@ -16,8 +16,20 @@
 #' `fn(chunk)` is called once per chunk and must return a data.table (or NULL);
 #' results are row-bound. Memory use is bounded by `chunk_rows`.
 #' Select columns with readr::cols_only(...) in `col_types`; unlisted columns are skipped.
+#'
+#' Two engines with identical callback semantics:
+#'   * readr (default): single-threaded, robust, ~1-2 M rows/min on gzipped CSV.
+#'   * arrow (if installed AND `arrow_filter` is supplied): multi-threaded C++ scan with the
+#'     filter applied BEFORE rows reach R - two orders of magnitude faster on the
+#'     multi-billion-row tables (e.g. MIMIC chartevents, eICU vitalPeriodic).
+#' `arrow_filter` is function(dataset) -> dplyr query (filter/select); the callback `fn`
+#' must still apply its own filters so both engines give the same result.
 stream_file <- function(path, fn, col_types = readr::cols(.default = "c"),
-                        delim = ",", chunk_rows = ccdb_cfg()$io$chunk_rows, label = basename(path)) {
+                        delim = ",", chunk_rows = ccdb_cfg()$io$chunk_rows, label = basename(path),
+                        arrow_filter = NULL) {
+  use_arrow <- is.function(arrow_filter) && isTRUE(ccdb_cfg()$io$use_arrow) &&
+    requireNamespace("arrow", quietly = TRUE) && requireNamespace("dplyr", quietly = TRUE)
+  if (use_arrow) return(stream_file_arrow(path, fn, col_types, delim, label, arrow_filter, min_rows = chunk_rows / 2))
   opt_pkg("readr")
   res <- list(); k <- 0L; nread <- 0
   cb <- readr::DataFrameCallback$new(function(x, pos) {
@@ -30,6 +42,76 @@ stream_file <- function(path, fn, col_types = readr::cols(.default = "c"),
   readr::read_delim_chunked(path, cb, delim = delim, chunk_size = chunk_rows,
                             col_types = col_types, progress = FALSE, na = c("", "NA"))
   log_msg("INFO", "  [", label, "] done: ", fmt_int(nread), " rows in ", k, " chunk(s)")
+  if (length(res)) data.table::rbindlist(res, use.names = TRUE, fill = TRUE) else NULL
+}
+
+#' Fast "YYYY-MM-DD HH:MM:SS" (UTC) -> hours since 1970-01-01. Parses each distinct date once, so it is
+#' ~10x faster than as.POSIXct on hundreds of millions of rows; identical to as.numeric(POSIXct, UTC)/3600.
+fast_ts_hours <- function(x) {
+  d <- substr(x, 1L, 10L); ud <- unique(d)
+  days <- as.numeric(as.Date(ud, format = "%Y-%m-%d"))[match(d, ud)]
+  days * 24 + as.integer(substr(x, 12L, 13L)) + as.integer(substr(x, 15L, 16L)) / 60 + as.integer(substr(x, 18L, 19L)) / 3600
+}
+
+#' arrow engine for stream_file(). Columns named in `col_types` are typed (string/double);
+#' every other column of the file is read as string and dropped by the select in `arrow_filter`.
+stream_file_arrow <- function(path, fn, col_types, delim, label, arrow_filter, min_rows = 1e6) {
+  con <- if (grepl("[.]gz$", path, ignore.case = TRUE)) gzfile(path, "rt") else file(path, "rt")
+  hdr <- readLines(con, n = 1L, warn = FALSE); close(con)
+  hdr <- gsub("\"", "", sub("^﻿", "", strsplit(hdr, delim, fixed = TRUE)[[1]]), fixed = TRUE)
+  spec <- col_types$cols
+  atype <- function(cl) switch(class(cl)[1], collector_double = arrow::float64(), collector_integer = arrow::int32(),
+                               collector_logical = arrow::boolean(), arrow::string())
+  types <- stats::setNames(lapply(hdr, function(h) if (h %in% names(spec)) atype(spec[[h]]) else arrow::string()), hdr)
+  keep <- if (length(spec)) names(spec) else hdr
+  chr_cols <- keep[vapply(keep, function(h) !is.null(spec[[h]]) && identical(class(spec[[h]])[1], "collector_character"), logical(1))]
+  ds <- arrow::open_csv_dataset(path, schema = arrow::schema(types), skip = 1,
+                                  convert_options = arrow::CsvConvertOptions$create(check_utf8 = FALSE))   # some tables hold Latin-1 bytes
+  q <- arrow_filter(ds)
+  q <- dplyr::select(q, dplyr::all_of(keep))
+  rdr <- arrow::as_record_batch_reader(q)
+  res <- list(); buf <- list(); nbuf <- 0; nread <- 0; k <- 0L
+  flush <- function() {
+    if (!nbuf) return(invisible())
+    d <- data.table::rbindlist(buf); buf <<- list(); nbuf <<- 0
+    for (cl in chr_cols) data.table::set(d, which(d[[cl]] == ""), cl, NA_character_)   # readr semantics: empty = NA
+    r <- fn(d); k <<- k + 1L
+    if (!is.null(r) && nrow(r)) res[[length(res) + 1L]] <<- r
+    log_msg("INFO", "  [", label, "] ", fmt_int(nread), " pre-filtered rows processed")
+  }
+  while (!is.null(b <- rdr$read_next_batch())) {
+    d <- data.table::as.data.table(as.data.frame(b))
+    if (!nrow(d)) next
+    buf[[length(buf) + 1L]] <- d; nbuf <- nbuf + nrow(d); nread <- nread + nrow(d)
+    if (nbuf >= min_rows) flush()
+  }
+  flush()
+  log_msg("INFO", "  [", label, "] done (arrow): ", fmt_int(nread), " pre-filtered rows in ", k, " chunk(s)")
+  if (length(res)) data.table::rbindlist(res, use.names = TRUE, fill = TRUE) else NULL
+}
+
+#' Stream a directory of parquet part-files in filtered chunks (arrow required).
+#' `arrow_filter(dataset)` must return a dplyr query that selects the needed columns.
+stream_parquet_dir <- function(dir, fn, arrow_filter, label = basename(dir), min_rows = ccdb_cfg()$io$chunk_rows / 2) {
+  opt_pkg("arrow"); opt_pkg("dplyr")
+  files <- list.files(dir, pattern = "[.]parquet$", recursive = TRUE, full.names = TRUE)
+  if (!length(files)) ccdb_stop("No parquet files under ", dir)
+  q <- arrow_filter(arrow::open_dataset(files))
+  rdr <- arrow::as_record_batch_reader(q)
+  res <- list(); buf <- list(); nbuf <- 0; nread <- 0
+  flush <- function() {
+    if (!nbuf) return(invisible())
+    d <- data.table::rbindlist(buf); buf <<- list(); nbuf <<- 0
+    r <- fn(d); if (!is.null(r) && nrow(r)) res[[length(res) + 1L]] <<- r
+    log_msg("INFO", "  [", label, "] ", fmt_int(nread), " pre-filtered rows processed")
+  }
+  while (!is.null(b <- rdr$read_next_batch())) {
+    d <- data.table::as.data.table(as.data.frame(b))
+    if (!nrow(d)) next
+    buf[[length(buf) + 1L]] <- d; nbuf <- nbuf + nrow(d); nread <- nread + nrow(d)
+    if (nbuf >= min_rows) flush()
+  }
+  flush()
   if (length(res)) data.table::rbindlist(res, use.names = TRUE, fill = TRUE) else NULL
 }
 

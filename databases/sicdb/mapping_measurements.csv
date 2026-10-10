@@ -1,0 +1,28 @@
+source,item,analyte,source_unit,expect_label,note
+float,707,hr,/min,^HeartRateEKG$,hourly aggregate (Val) of the monitor signal
+float,701,sbp,mmHg,^BloodPressureArterialSystolic$,invasive; hourly aggregate
+float,704,sbp,mmHg,^BloodPressureNISystolic$,non-invasive; hourly aggregate
+float,702,dbp,mmHg,^BloodPressureArterialDiastolic$,invasive
+float,705,dbp,mmHg,^BloodPressureNIDiastolic$,non-invasive
+float,703,map,mmHg,^BloodPressureArterialMAP$,invasive
+float,706,map,mmHg,^BloodPressureNIMAP$,non-invasive
+float,719,rr,/min,^RespRate$,
+float,2274,rr,/min,^RespRateEKG$,
+float,709,temp,degC,^Temperature$,
+float,710,spo2,%,^SPO2$,
+lab,367,creatinine,mg/dl,^Kreatinin \(ZL\)$,
+lab,368,creatinine,mg/dl,^Kreatinin enzymatisch \(ZL\)$,
+lab,289,hemoglobin,g/dl,^Hämoglobin \(ZL\)$,
+lab,658,hemoglobin,g/dl,^Hämoglobin \(BGA\)$,
+lab,301,wbc,g/L,^Leukocyten \(ZL\)$,
+lab,314,platelets,g/L,^Thrombocyten \(ZL\)$,
+lab,469,sodium,mmol/L,^Natrium \(ZL\)$,Natrium (BGA) 686 excluded: documented unreliable sensor
+lab,463,potassium,mmol/L,^Kalium \(ZL\)$,
+lab,685,potassium,mmol/L,^Kalium \(BGA\)$,
+lab,465,lactate,mmol/L,^Lactat \(ZL\)$,
+lab,657,lactate,mmol/L,^Lactat \(BGA\)$,
+lab,333,bilirubin_total,mg/dl,^Bilirubin \(gesamt\) \(ZL\)$,
+lab,348,glucose,mg/dl,^Glukose \(ZL\)$,
+lab,656,glucose,mg/dl,^Glukose \(BGA\)$,
+lab,287,albumin,g/dl,^Serum-Albumin \(ZL\)$,very sparsely measured
+lab,666,bicarbonate,mmol/L,^HCO3 act \(BGA\)$,

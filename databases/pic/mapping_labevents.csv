@@ -1,0 +1,18 @@
+item,analyte,source_unit,expect_label,note
+5041,creatinine,umol/L,^Creatinine$,
+5032,creatinine,umol/L,^Creatinine$,
+5099,hemoglobin,g/L,^Hemoglobin$,unit recorded per row
+5257,hemoglobin,g/L,^Hemoglobin$,mixed g/L and g/dL per row
+5141,wbc,10^9/L,^WBC Count$,
+5129,platelets,10^9/L,^Platelet Count$,
+5230,sodium,mmol/L,"^Sodium, Whole Blood$",blood gas; no chemistry sodium item in blood
+5226,potassium,mmol/L,^Potassium$,blood gas (fluid mislabelled Other Body Fluid in the dictionary; values are blood potassium)
+5227,lactate,mmol/L,^Lactate$,
+5075,bilirubin_total,umol/L,"^Bilirubin, Total$",
+5255,bilirubin_total,umol/L,"^Bilirubin, Total$",
+5223,glucose,mmol/L,^Glucose$,chemistry
+5047,glucose,mmol/L,^Glucose$,blood gas
+5024,albumin,g/L,^Albumin$,
+6465,albumin,g/L,^Serum Albumin$,
+5248,bicarbonate,mmol/L,^Bicarbonate$,
+5224,bicarbonate,mmol/L,"^Calculated Bicarbonate, Whole Blood$",

@@ -113,6 +113,13 @@ finalize_admission <- function(admission, icu_stay, cfg = ccdb_cfg()) {
   adm[, is_first_admission := as.integer(patient_admission_seq == 1L)]
 
   adm[, age_band := age_band(age_years, cfg)]
+  # Databases that release only age GROUPS (e.g. AmsterdamUMCdb) supply `age_band_given` with labels that
+  # already nest inside the harmonised bands; it is used only where a numeric age is not available.
+  if ("age_band_given" %in% names(adm)) {
+    lv <- levels(adm$age_band)
+    adm[is.na(age_years) & !is.na(age_band_given), age_band := factor(age_band_given, levels = lv)]
+    adm[, age_band_given := NULL]
+  }
   p <- cfg$cohort$prolonged_stay
   adm[, prolonged_hosp_los := as.integer(!is.na(hosp_los_days) & hosp_los_days > p$hospital_days)]
   adm[, prolonged_icu_los  := as.integer(!is.na(icu_los_days)  & icu_los_days  > p$icu_days)]

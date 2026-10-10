@@ -1,0 +1,26 @@
+source,item,analyte,source_unit,note
+chart,temperature,temp,degC,nursing chart (charted values)
+chart,heart_rate,hr,/min,
+chart,breathing,rr,/min,
+chart,Blood_oxygen_saturation,spo2,%,
+chart,Blood_pressure_high,sbp,mmHg,non-invasive
+chart,Blood_pressure_low,dbp,mmHg,non-invasive
+chart,Invasive_SBP,sbp,mmHg,invasive
+chart,Invasive_diastolic_blood_pressure,dbp,mmHg,invasive
+chart,MAP,map,mmHg,method not stated
+lab,Creatinine (enzymatic method) (CRE),creatinine,umol/L,
+lab,Hemoglobin (Hgb),hemoglobin,g/L,'Hemoglobin concentration (THB)' excluded: labelled g/L but values are g/dL
+lab,White blood cell (WBC),wbc,10^9/L,
+lab,Platelet (PLT),platelets,10^9/L,
+lab,Sodium (NA),sodium,mmol/L,electrolyte panel
+lab,Sodium ion (Na +),sodium,mmol/L,blood gas
+lab,Potassium (k),potassium,mmol/L,electrolyte panel
+lab,Potassium ion (K +),potassium,mmol/L,blood gas
+lab,Lactic acid (LAC),lactate,mmol/L,blood gas
+lab,Lactic acid concentration (CLAC),lactate,mmol/L,EICU / ED blood gas
+lab,Total bilirubin (TBIL),bilirubin_total,umol/L,
+lab,Glucose (Glu),glucose,mmol/L,
+lab,Glucose concentration (cglu),glucose,mmol/L,blood gas
+lab,Albumin (ALB),albumin,g/L,
+lab,Measured bicarbonate (hco3act),bicarbonate,mmol/L,blood gas
+lab,HCO3 - measured bicarbonate (HCO3 -),bicarbonate,mmol/L,blood gas

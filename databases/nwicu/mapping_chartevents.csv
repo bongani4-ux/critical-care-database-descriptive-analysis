@@ -1,0 +1,9 @@
+item,analyte,source_unit,expect_label,note
+320045,hr,bpm,^PULSE$,
+320050,sbp,mmHg,^R ARTERIAL LINE BLOOD PRESSURE,invasive (two line labels share the id)
+320179,sbp,mmHg,^BP SYSTOLIC$,non-invasive
+320051,dbp,mmHg,^R ARTERIAL LINE BLOOD PRESSURE,invasive (two line labels share the id)
+320180,dbp,mmHg,^BP DIASTOLIC$,non-invasive
+320210,rr,insp/min,^RESPIRATIONS$,
+320277,spo2,%,^PULSE OXIMETRY$,
+323761,temp,F,^TEMPERATURE$,Fahrenheit only; converted

@@ -1,0 +1,16 @@
+item,analyte,source_unit,expect_label,note
+2160-0,creatinine,mg/dL,^Creatinine$,
+30350-3,hemoglobin,g/dL,^Hemoglobin$,
+33256-9,wbc,THOUS/MCL,^Leukocytes,corrected for nucleated erythrocytes
+26515-7,platelets,THOUS/MCL,^Platelets$,
+2951-2,sodium,mmol/L,^Sodium$,serum/plasma
+2947-0,sodium,mmol/L,^Sodium$,whole blood
+2823-3,potassium,mmol/L,^Potassium$,serum/plasma
+6298-4,potassium,mmol/L,^Potassium$,whole blood
+2520-5,lactate,mmol/L,^Lactate$,sparse; item 14045-9 labelled 'D-lactate' is NOT used (label looks mis-assigned)
+1975-2,bilirubin_total,mg/dL,^Bilirubin$,
+2345-7,glucose,mg/dL,^Glucose$,
+2339-0,glucose,mg/dL,^Glucose$,
+1751-7,albumin,g/dL,^Albumin$,
+1960-4,bicarbonate,mmol/L,^Bicarbonate$,
+1959-6,bicarbonate,mmol/L,^Bicarbonate$,

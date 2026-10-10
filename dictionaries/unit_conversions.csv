@@ -76,3 +76,19 @@ temp,°f,0.5555556,-17.77778,
 temp,f,0.5555556,-17.77778,
 hr,次/分,1,0,Chinese times-per-minute unit (Jinhua)
 rr,次/分,1,0,Chinese times-per-minute unit (Jinhua)
+hemoglobin,gm/dl,1,0,
+albumin,gm/dl,10,0,
+sodium,mmoles/l,1,0,
+potassium,mmoles/l,1,0,
+bicarbonate,mmoles/l,1,0,
+lactate,mmoles/l,1,0,
+wbc,k/cumm,1,0,
+wbc,k/mcl,1,0,
+wbc,x10e3/ul,1,0,
+platelets,k/cumm,1,0,
+platelets,k/mcl,1,0,
+platelets,x10e3/ul,1,0,
+wbc,x10^9/l,1,0,PIC style
+platelets,x10^9/l,1,0,PIC style
+wbc,thous/mcl,1,0,MOVER style
+platelets,thous/mcl,1,0,MOVER style

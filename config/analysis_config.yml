@@ -70,11 +70,12 @@ statistics:
 # ---- performance -------------------------------------------------------------
 io:
   chunk_rows: 2000000            # rows per chunk for large long tables
+  use_arrow: true                # optional multi-threaded scan (needs the 'arrow' + 'dplyr' packages); falls back to readr
   show_progress: false
 
 # ---- reference values from the Critical Care Database Review ----------------
 validation:
   review_reference_file: config/review_reference_values.csv
   jinhua_reference_dir: null     # set in paths.local.yml if reference tables should be compared
-  tolerance_pct_points: 0.15     # allowed absolute difference for review percentages
-  tolerance_relative: 0.005      # allowed relative difference for review counts/medians
+  # match rule: a reproduced value MATCHES when, rounded to the review's own printed precision, it equals the
+  # review's value ('exact' rows must be identical). The unit of analysis that matches is also reported.

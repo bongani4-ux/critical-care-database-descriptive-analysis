@@ -1,0 +1,30 @@
+source,item,analyte,source_unit,note
+vitals,hr,hr,/min,intra-operative monitor
+vitals,rr,rr,/min,
+vitals,spo2,spo2,%,
+vitals,bt,temp,degC,
+vitals,nibp_sbp,sbp,mmHg,non-invasive
+vitals,art_sbp,sbp,mmHg,invasive
+vitals,nibp_dbp,dbp,mmHg,non-invasive
+vitals,art_dbp,dbp,mmHg,invasive
+vitals,nibp_mbp,map,mmHg,non-invasive
+vitals,art_mbp,map,mmHg,invasive
+ward,hr,hr,/min,ward vital signs
+ward,rr,rr,/min,
+ward,spo2,spo2,%,
+ward,bt,temp,degC,
+ward,nibp_sbp,sbp,mmHg,non-invasive
+ward,art_sbp,sbp,mmHg,invasive
+ward,nibp_dbp,dbp,mmHg,non-invasive
+ward,nibp_mbp,map,mmHg,non-invasive
+lab,creatinine,creatinine,mg/dL,
+lab,hb,hemoglobin,g/dL,
+lab,wbc,wbc,/nL,
+lab,platelet,platelets,/nL,
+lab,sodium,sodium,mmol/L,
+lab,potassium,potassium,mmol/L,
+lab,lacate,lactate,mmol/L,item name is spelt 'lacate' in the database
+lab,total_bilirubin,bilirubin_total,mg/dL,
+lab,glucose,glucose,mg/dL,
+lab,albumin,albumin,g/dL,
+lab,hco3,bicarbonate,mmol/L,arterial blood gas HCO3

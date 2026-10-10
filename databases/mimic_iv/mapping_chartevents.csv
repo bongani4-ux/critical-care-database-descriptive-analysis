@@ -1,0 +1,12 @@
+item,analyte,source_unit,expect_label,note
+220045,hr,bpm,^Heart Rate$,
+220050,sbp,mmHg,^Arterial Blood Pressure systolic$,invasive
+220179,sbp,mmHg,^Non Invasive Blood Pressure systolic$,non-invasive
+220051,dbp,mmHg,^Arterial Blood Pressure diastolic$,invasive
+220180,dbp,mmHg,^Non Invasive Blood Pressure diastolic$,non-invasive
+220052,map,mmHg,^Arterial Blood Pressure mean$,invasive
+220181,map,mmHg,^Non Invasive Blood Pressure mean$,non-invasive
+220210,rr,insp/min,^Respiratory Rate$,
+220277,spo2,%,^O2 saturation pulseoxymetry$,
+223762,temp,°C,^Temperature Celsius$,
+223761,temp,°F,^Temperature Fahrenheit$,converted

@@ -29,6 +29,8 @@ norm_unit <- function(x) {
   x <- gsub("[µμ]", "u", x)
   x <- gsub("×", "x", x)
   x <- gsub("℃", "degc", x)          # single-glyph degree-Celsius sign
+  x <- gsub("ˆ", "^", x)             # modifier circumflex used as a caret (e.g. "10ˆ3/uL")
+  x <- gsub("ˆ", "^", x)             # modifier circumflex used as a caret, e.g. "10<U+02C6>3/uL"
   x <- gsub("°", "deg", x)
   x <- gsub("\\s+", "", x)
   x
@@ -49,7 +51,7 @@ to_canonical <- function(dt, assume_canonical = character()) {
   uc <- unique(uc[, .(analyte, from_norm, factor, offset)], by = c("analyte", "from_norm"))
   d <- data.table::copy(dt)
   d[, unit_norm := norm_unit(unit)]
-  d[unit_norm %in% c("", "na", "nan"), unit_norm := NA_character_]
+  d[unit_norm %in% c("", "na", "nan", "null"), unit_norm := NA_character_]
   d <- merge(d, uc, by.x = c("analyte", "unit_norm"), by.y = c("analyte", "from_norm"),
              all.x = TRUE, sort = FALSE)
   d[, unit_status := data.table::fcase(
@@ -233,3 +235,13 @@ empty_measurements <- function() data.table::data.table(admission_id = character
 empty_support      <- function() data.table::data.table(admission_id = character(), support_type = character(), value = integer())
 empty_severity     <- function() data.table::data.table(admission_id = character(), score = character(), value = numeric())
 empty_icu_stay     <- function() data.table::data.table(db_id = character(), patient_id = character(), admission_id = character(), stay_id = character(), stay_seq = integer(), icu_los_days = numeric(), icu_unit = character(), icu_death = integer())
+
+#' Read an item-mapping CSV shipped with an adapter (editable without touching code).
+#' The `item` column is always read as character so numeric ids and labels are handled alike.
+read_mapping <- function(db_id, file) {
+  f <- ccdb_path("databases", db_id, file)
+  if (!file.exists(f)) ccdb_stop("Mapping file not found: ", f)
+  m <- data.table::fread(f, colClasses = "character", encoding = "UTF-8", na.strings = c("", "NA"))
+  m[, item := as.character(item)]
+  m[]
+}
