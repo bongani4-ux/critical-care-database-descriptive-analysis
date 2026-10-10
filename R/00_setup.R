@@ -64,6 +64,9 @@ ccdb_cfg <- function() {
 #' Read config/paths.local.yml; fail with an actionable message if absent.
 ccdb_read_paths <- function() {
   f <- ccdb_path("config", "paths.local.yml")
+  # unit tests run on synthetic data only and need no database folders
+  if (!file.exists(f) && identical(Sys.getenv("CCDB_TESTING"), "true"))
+    return(list(data_root = tempdir(), derived_dir = file.path(tempdir(), "ccdb_derived"), overrides = list()))
   if (!file.exists(f))
     stop("config/paths.local.yml not found. Copy config/paths.example.yml to ",
          "config/paths.local.yml and set data_root.", call. = FALSE)

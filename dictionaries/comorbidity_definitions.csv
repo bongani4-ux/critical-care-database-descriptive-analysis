@@ -16,7 +16,7 @@ VALVULAR_DISEASE,Valvular disease,^I3[4-9],^(I3[4-9]),^(39[4-7]|424),ICD-9-CM 39
 STROKE_ISCHEMIC,Ischaemic stroke / TIA / occlusion,^(I63|I64|I65|I66|G45),^(I63|I64|I65|I66|G45),^43[3-6],ICD-9-CM 433-436
 ICH,Intracerebral / other non-traumatic ICH,^(I61|I62),^(I61|I62),^43[12],ICD-9-CM 431-432
 SAH,Subarachnoid haemorrhage,^I60,^(I60),^430,ICD-9-CM 430
-CEREBRAL_ANEURYSM,Cerebral / other aneurysm,^(I671|I72),^(I67\\.1|I72),^(4373|442),ICD-9-CM 437.3 and 442
+CEREBRAL_ANEURYSM,Cerebral / other aneurysm,^(I671|I72),^(I67\.1|I72),^(4373|442),ICD-9-CM 437.3 and 442
 TBI,Intracranial injury,^S06,^(S06),^85[0-4],ICD-9-CM 850-854
 SKULL_FRACTURE,Skull fracture,^S02,^(S02),^80[0-4],ICD-9-CM 800-804
 HYDROCEPHALUS,Hydrocephalus (acquired),^G91,^(G91),^331[345],ICD-9-CM 331.3-331.5

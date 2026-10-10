@@ -58,7 +58,9 @@ qc_recompute <- function(ds, results) {
     if (!is.null(stat_)) x <- x[stat == stat_]
     x[1]
   }
-  cmp("hospital deaths", sum(adm$hosp_death == 1L, na.rm = TRUE), r("In-hospital death")$n)
+  if (any(!is.na(adm$hosp_death))) cmp("hospital deaths", sum(adm$hosp_death == 1L, na.rm = TRUE), r("In-hospital death")$n)
+  else R[[length(R) + 1]] <- qc_result(db, "recompute: hospital deaths", if (identical(r("In-hospital death")$availability, "unavailable")) "PASS" else "FAIL",
+                                       "hospital death not recorded: must be reported as unavailable")
   cmp("median hospital LOS", stats::median(adm$hosp_los_days, na.rm = TRUE), r("Hospital LOS, days")$median)
   cmp("ICU admissions", sum(adm$icu_flag), r("ICU admission")$n)
   cmp("male count", sum(adm$sex == "M", na.rm = TRUE), r("Male sex")$n)
@@ -123,7 +125,8 @@ compute_review_metric <- function(ds, metric, level) {
 compare_to_review <- function(ds) {
   db <- ds$meta$db_id
   f <- ccdb_path("config", "review_reference_values.csv")
-  ref <- data.table::fread(f, colClasses = list(character = "value"), encoding = "UTF-8")[db_id == db]
+  db_ref <- sub("_v[0-9_]+$", "", db)          # version-check runs (e.g. inspire_v1_3) are compared with their review entry
+  ref <- data.table::fread(f, colClasses = list(character = "value"), encoding = "UTF-8")[db_id == db_ref]
   if (!nrow(ref)) return(data.table::data.table())
   res <- lapply(seq_len(nrow(ref)), function(i) {
     x <- ref[i]

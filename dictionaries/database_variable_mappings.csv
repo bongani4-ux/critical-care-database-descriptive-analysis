@@ -1,0 +1,287 @@
+db_id,variable,source_table_and_field,comparability,note
+jinhua,patient_id,medical_record_front_page.subject_id,directly comparable,
+jinhua,admission_id,medical_record_front_page.hadm_id,directly comparable,one row per admission
+jinhua,age_years,front_page.age,directly comparable,integer years
+jinhua,sex,front_page.patient_gender_en,directly comparable,
+jinhua,admission_urgency,front_page.admission_route_en,partially comparable,Emergency -> emergency; outpatient-clinic route cannot be classed elective
+jinhua,hosp_los_days,front_page.dischtime_base / 1440,comparable after harmonization,*_base fields are minutes from admission
+jinhua,hosp_death,front_page.discharge_type_en == 'Die',directly comparable,expire_flag is patient-level and is NOT used
+jinhua,icu_flag_and_stay,"transfer.csv (ICU departments), reconstructed",partially comparable,no ICU stay table
+jinhua,icu_los_days,transfer.csv episodes,partially comparable,summed per admission
+jinhua,icu_death,-,unavailable,
+jinhua,death_any_followup,-,unavailable,
+jinhua,discharge_disposition,front_page.discharge_type_en,comparable after harmonization,6 categories mapped to home/facility/death/other
+jinhua,comorbidities_coded,diagnosis.icd10_code + front_page.discharge_diagnosis_code,directly comparable,Chinese-extended ICD-10; reference definition
+jinhua,vital_signs_first24h,"vital_signs (Temperature, Pulse, Respiratory, Sbp, Dbp, Spo2)",partially comparable,ward charting; index = hospital admission; no MAP
+jinhua,laboratory_first24h,laboratory_test.inspection_subproject_name_en / test_results_quantitative / inspection_entity,comparable after harmonization,blood specimens; units from inspection_entity; index = hospital admission
+jinhua,mech_vent,surgical_record_front_page.surgery_name_norm_en ~ 'ventilat',partially comparable,"procedure-record based, hospital-wide"
+jinhua,rrt,surgical_record_front_page (dialysis/haemofiltration names),partially comparable,procedure-record based
+jinhua,vasopressor,-,unavailable,medication.csv not processed in v0.1
+jinhua,intubation,surgical_record_front_page (endotracheal intubation),partially comparable,
+jinhua,tracheostomy,surgical_record_front_page (tracheostomy),partially comparable,
+jinhua,severity_score,-,unavailable,
+jinhua,surgery_flag,basic_info_operation_anesthesia / operation (named operation),partially comparable,extension beyond the reference tables
+mimic_iv,patient_id,hosp.admissions.subject_id,directly comparable,
+mimic_iv,admission_id,hosp.admissions.hadm_id,directly comparable,
+mimic_iv,age_years,hosp.patients.anchor_age + (admit year - anchor_year),comparable after harmonization,age > 89 censored at 91
+mimic_iv,sex,hosp.patients.gender,directly comparable,
+mimic_iv,admission_urgency,hosp.admissions.admission_type,comparable after harmonization,EW EMER./URGENT/DIRECT EMER. -> emergency; ELECTIVE/SURGICAL SAME DAY -> elective; observation types -> other
+mimic_iv,hosp_los_days,dischtime - admittime,directly comparable,
+mimic_iv,hosp_death,hosp.admissions.hospital_expire_flag,directly comparable,
+mimic_iv,icu_flag_and_stay,icu.icustays,directly comparable,
+mimic_iv,icu_los_days,icustays outtime - intime,directly comparable,
+mimic_iv,icu_death,"admissions.deathtime within [intime, outtime]",comparable after harmonization,derived
+mimic_iv,death_any_followup,patients.dod or hospital death,partially comparable,state records; limited post-discharge window
+mimic_iv,discharge_disposition,admissions.discharge_location,comparable after harmonization,"blank for 149,818 admissions"
+mimic_iv,comorbidities_coded,hosp.diagnoses_icd (ICD-9 and ICD-10),comparable after harmonization,ICD-9 via analyst-defined equivalents
+mimic_iv,vital_signs_first24h,icu.chartevents (itemids in mapping_chartevents.csv),directly comparable,index = first ICU admission
+mimic_iv,laboratory_first24h,hosp.labevents (itemids in mapping_labevents.csv),directly comparable,hospital-wide labs; units converted
+mimic_iv,mech_vent,icu.procedureevents 'Invasive Ventilation',directly comparable,
+mimic_iv,rrt,icu.procedureevents (CRRT/CVVHD/CVVHDF/SCUF/haemodialysis/PD),directly comparable,
+mimic_iv,vasopressor,"icu.inputevents (norepinephrine, epinephrine, vasopressin, phenylephrine, dopamine, dobutamine, milrinone)",directly comparable,
+mimic_iv,intubation,-,unavailable,not coded separately from ventilation
+mimic_iv,tracheostomy,-,unavailable,
+mimic_iv,severity_score,-,unavailable,no native score; SOFA derivation not implemented
+mimic_iv,surgery_flag,-,unavailable,
+eicu_crd,patient_id,patient.uniquepid,directly comparable,
+eicu_crd,admission_id,patient.patienthealthsystemstayid (hospital stay),directly comparable,
+eicu_crd,age_years,patient.age,comparable after harmonization,'> 89' set to 90
+eicu_crd,sex,patient.gender,directly comparable,Other/Unknown/blank -> missing
+eicu_crd,admission_urgency,-,unavailable,"hospitaladmitsource is a SOURCE (ED/floor/OR...), not urgency"
+eicu_crd,hosp_los_days,(hospitaldischargeoffset - hospitaladmitoffset)/1440,directly comparable,
+eicu_crd,hosp_death,patient.hospitaldischargestatus == 'Expired',directly comparable,"1,751 blank = missing"
+eicu_crd,icu_flag_and_stay,patient (patientunitstayid; incl. step-down/transfer unit stays),comparable after harmonization,all hospital stays contain >= 1 unit stay by construction
+eicu_crd,icu_los_days,patient.unitdischargeoffset/1440,comparable after harmonization,step-down unit stays included
+eicu_crd,icu_death,patient.unitdischargestatus == 'Expired',directly comparable,
+eicu_crd,death_any_followup,-,unavailable,
+eicu_crd,discharge_disposition,patient.hospitaldischargelocation,comparable after harmonization,
+eicu_crd,comorbidities_coded,"diagnosis.icd9code (ICD-9 and/or ICD-10-CM, comma separated)",partially comparable,populated for a subset of diagnosis rows; pastHistory free text not used
+eicu_crd,vital_signs_first24h,vitalPeriodic / vitalAperiodic,directly comparable,index = first unit-stay admission
+eicu_crd,laboratory_first24h,lab (labname/labresult/labmeasurenamesystem),directly comparable,bedside glucose excluded
+eicu_crd,mech_vent,"treatment ('mechanical ventilation', non-invasive excluded)",comparable after harmonization,"documented treatment, not delivery"
+eicu_crd,rrt,treatment (dialysis therapies),comparable after harmonization,
+eicu_crd,vasopressor,treatment ('|vasopressors'),comparable after harmonization,
+eicu_crd,intubation,-,unavailable,
+eicu_crd,tracheostomy,-,unavailable,
+eicu_crd,severity_score,apachePatientResult.apachescore (IVa),directly comparable,native APACHE IVa
+eicu_crd,surgery_flag,-,unavailable,
+nwicu,patient_id,nw_hosp.admissions.subject_id,directly comparable,
+nwicu,admission_id,nw_hosp.admissions.hadm_id,directly comparable,
+nwicu,age_years,patients.anchor_age + (admit year - anchor_year),comparable after harmonization,age > 89 censored
+nwicu,sex,nw_hosp.patients.gender,directly comparable,
+nwicu,admission_urgency,admissions.admission_type,comparable after harmonization,
+nwicu,hosp_los_days,dischtime - admittime,directly comparable,
+nwicu,hosp_death,discharge_location starts 'EXPIRED' OR deathtime within admission,comparable after harmonization,"hospital_expire_flag incomplete (105 of ~3,558)"
+nwicu,icu_flag_and_stay,nw_icu.icustays,directly comparable,
+nwicu,icu_los_days,icustays outtime - intime,directly comparable,
+nwicu,icu_death,hospital death with deathtime in ICU window,comparable after harmonization,
+nwicu,death_any_followup,patients.dod or hospital death,partially comparable,
+nwicu,discharge_disposition,admissions.discharge_location,comparable after harmonization,
+nwicu,comorbidities_coded,nw_hosp.diagnoses_icd,comparable after harmonization,
+nwicu,vital_signs_first24h,nw_icu.chartevents (8 items; no MAP; Fahrenheit),partially comparable,
+nwicu,laboratory_first24h,nw_hosp.labevents,directly comparable,item ids differ from MIMIC-IV
+nwicu,mech_vent,-,unavailable,no ventilation item in the NWICU dictionary
+nwicu,rrt,nw_icu.procedureevents 'HEMODIALYSIS' (order),partially comparable,"an order, not a delivery record"
+nwicu,vasopressor,-,unavailable,
+nwicu,intubation,-,unavailable,
+nwicu,tracheostomy,-,unavailable,
+nwicu,severity_score,-,unavailable,
+nwicu,surgery_flag,-,unavailable,
+sicdb,patient_id,cases.PatientID,directly comparable,
+sicdb,admission_id,cases.CaseID,directly comparable,case = hospital admission with an ICU stay
+sicdb,age_years,cases.AgeOnAdmission,partially comparable,5-year bins
+sicdb,sex,cases.Sex (735 male / 736 female per d_references),directly comparable,
+sicdb,admission_urgency,-,unavailable,
+sicdb,hosp_los_days,-,unavailable,only ICU time recorded
+sicdb,hosp_death,cases.HospitalDischargeType == 2028 (Deceased),directly comparable,
+sicdb,icu_flag_and_stay,cases (one ICU stay per case),directly comparable,
+sicdb,icu_los_days,cases.TimeOfStay / 86400,directly comparable,
+sicdb,icu_death,cases.DischargeState == 2215 (verstorben),directly comparable,
+sicdb,death_any_followup,cases.OffsetOfDeath non-missing,partially comparable,6-month / 1-year observation
+sicdb,discharge_disposition,-,unavailable,
+sicdb,comorbidities_coded,"cases.ICD10Main (principal diagnosis only) + data_ref Yes/No flags (diabetes, hypertension)",partially comparable,not comorbid history
+sicdb,vital_signs_first24h,data_float_h (hourly aggregates),partially comparable,"hourly aggregate, not instantaneous"
+sicdb,laboratory_first24h,laboratory (LaboratoryID via d_references),directly comparable,
+sicdb,mech_vent,data_float_h PEEP / peak pressure signals,partially comparable,"signal-based proxy, first 24 h only"
+sicdb,rrt,cases.HoursOfCRRT > 0,partially comparable,CRRT only
+sicdb,vasopressor,medication (DrugID list),directly comparable,
+sicdb,intubation,"data_range (EndotrachealTube, DataID 720)",partially comparable,
+sicdb,tracheostomy,"data_range (TrachealCannula, 3041)",partially comparable,
+sicdb,severity_score,cases.saps3,directly comparable,native SAPS 3
+sicdb,surgery_flag,-,unavailable,
+amsterdamumcdb,patient_id,admissions.patientid,directly comparable,
+amsterdamumcdb,admission_id,admissions.admissionid,directly comparable,
+amsterdamumcdb,age_years,-,unavailable,age groups only
+amsterdamumcdb,sex,admissions.gender (Man/Vrouw),directly comparable,
+amsterdamumcdb,admission_urgency,admissions.urgency,comparable after harmonization,1 = unplanned
+amsterdamumcdb,hosp_los_days,-,unavailable,lengthofstay is ICU/MC hours
+amsterdamumcdb,hosp_death,-,unavailable,destination 'Overleden' = death during ICU/MC admission
+amsterdamumcdb,icu_flag_and_stay,"admissions.location (IC, IC&MC, MC&IC; MC-only excluded)",comparable after harmonization,
+amsterdamumcdb,icu_los_days,admissions.lengthofstay / 24 (HOURS in source),comparable after harmonization,
+amsterdamumcdb,icu_death,admissions.destination == 'Overleden',directly comparable,
+amsterdamumcdb,death_any_followup,admissions.dateofdeath non-missing,partially comparable,registry follow-up up to ~14 years
+amsterdamumcdb,discharge_disposition,-,unavailable,destination is an ICU discharge destination (coded)
+amsterdamumcdb,comorbidities_coded,-,unavailable,APACHE diagnosis categories in listitems; not harmonised
+amsterdamumcdb,vital_signs_first24h,numericitems (MISSING from local copy),unavailable,BLOCKED: obtain numericitems.csv
+amsterdamumcdb,laboratory_first24h,numericitems (MISSING from local copy),unavailable,BLOCKED: obtain numericitems.csv
+amsterdamumcdb,mech_vent,processitems 'Beademen',directly comparable,
+amsterdamumcdb,rrt,processitems 'CVVH',directly comparable,
+amsterdamumcdb,vasopressor,"drugitems (noradrenaline, dopamine, dobutamine, adrenaline, phenylephrine, terlipressin)",directly comparable,
+amsterdamumcdb,intubation,processitems 'Tube',partially comparable,
+amsterdamumcdb,tracheostomy,processitems 'Tracheostoma',partially comparable,
+amsterdamumcdb,severity_score,-,unavailable,APACHE scores in numericitems (missing)
+amsterdamumcdb,surgery_flag,admissions.specialty,unavailable,specialty only
+hirid,patient_id,reference_data/general_table.patientid,directly comparable,one admission per patient
+hirid,admission_id,general_table.patientid,directly comparable,
+hirid,age_years,general_table.age,partially comparable,5-year bins
+hirid,sex,general_table.sex,directly comparable,
+hirid,admission_urgency,-,unavailable,
+hirid,hosp_los_days,-,unavailable,
+hirid,hosp_death,-,unavailable,discharge_status is ICU status
+hirid,icu_flag_and_stay,general_table,directly comparable,
+hirid,icu_los_days,last observation - admissiontime,comparable after harmonization,derived
+hirid,icu_death,general_table.discharge_status == 'dead',directly comparable,239 blank
+hirid,death_any_followup,-,unavailable,
+hirid,discharge_disposition,-,unavailable,
+hirid,comorbidities_coded,-,unavailable,no diagnosis codes
+hirid,vital_signs_first24h,raw_stage observation_tables,directly comparable,
+hirid,laboratory_first24h,raw_stage observation_tables,directly comparable,
+hirid,mech_vent,observation 'Ventilator mode' (3845),partially comparable,invasive and non-invasive modes mixed
+hirid,rrt,-,unavailable,
+hirid,vasopressor,pharma_records,directly comparable,
+hirid,intubation,-,unavailable,
+hirid,tracheostomy,-,unavailable,
+hirid,severity_score,-,unavailable,APACHE group is categorical
+hirid,surgery_flag,-,unavailable,
+pic,patient_id,ADMISSIONS.SUBJECT_ID,directly comparable,
+pic,admission_id,ADMISSIONS.HADM_ID,directly comparable,
+pic,age_years,(ADMITTIME - PATIENTS.DOB)/365.25,comparable after harmonization,paediatric; tiny negatives clamped to 0
+pic,sex,PATIENTS.GENDER,directly comparable,
+pic,admission_urgency,-,unavailable,
+pic,hosp_los_days,DISCHTIME - ADMITTIME,directly comparable,
+pic,hosp_death,ADMISSIONS.HOSPITAL_EXPIRE_FLAG,directly comparable,
+pic,icu_flag_and_stay,ICUSTAYS,directly comparable,
+pic,icu_los_days,ICUSTAYS OUTTIME - INTIME,directly comparable,
+pic,icu_death,hospital death with DEATHTIME in ICU window,comparable after harmonization,
+pic,death_any_followup,-,unavailable,
+pic,discharge_disposition,-,unavailable,
+pic,comorbidities_coded,DIAGNOSES_ICD.ICD10_CODE_CN,comparable after harmonization,Chinese-extended ICD-10; 3-character prefix
+pic,vital_signs_first24h,CHARTEVENTS (6 items; BP method not recorded),partially comparable,
+pic,laboratory_first24h,LABEVENTS,directly comparable,
+pic,mech_vent,-,unavailable,
+pic,rrt,-,unavailable,
+pic,vasopressor,-,unavailable,
+pic,intubation,-,unavailable,
+pic,tracheostomy,-,unavailable,
+pic,severity_score,-,unavailable,
+pic,surgery_flag,-,unavailable,SURGERY_INFO not harmonised
+zigong,patient_id,dtBaseline.PATIENT_ID,directly comparable,
+zigong,admission_id,dtBaseline.INP_NO,directly comparable,one admission per patient
+zigong,age_years,dtBaseline.Age,directly comparable,
+zigong,sex,dtBaseline.SEX,directly comparable,
+zigong,admission_urgency,-,unavailable,
+zigong,hosp_los_days,DISCHARGE_DATE_TIME / 24,comparable after harmonization,hours in source
+zigong,hosp_death,dtICD.Status_Discharge == 'Dead',directly comparable,
+zigong,icu_flag_and_stay,"dtTransfer (ICU-type departments), reconstructed",partially comparable,
+zigong,icu_los_days,dtTransfer stop - start,partially comparable,
+zigong,icu_death,-,unavailable,
+zigong,death_any_followup,dtOutCome.Follow_Vital,partially comparable,553 missing
+zigong,discharge_disposition,-,unavailable,
+zigong,comorbidities_coded,dtICD.ICD_Code,comparable after harmonization,Chinese-extended ICD-10; discharge diagnoses
+zigong,vital_signs_first24h,dtNursingChart,directly comparable,charted
+zigong,laboratory_first24h,dtLab,directly comparable,
+zigong,mech_vent,-,unavailable,ventilator mode charted but invasive vs NIV not separable
+zigong,rrt,-,unavailable,
+zigong,vasopressor,dtDrugs,directly comparable,
+zigong,intubation,dtNursingChart (airway documentation),partially comparable,
+zigong,tracheostomy,dtNursingChart (oxygen mode),partially comparable,
+zigong,severity_score,-,unavailable,
+zigong,surgery_flag,-,unavailable,
+inspire,patient_id,operations.subject_id,directly comparable,
+inspire,admission_id,operations.hadm_id,directly comparable,built from operations
+inspire,age_years,operations.age,directly comparable,at operation
+inspire,sex,operations.sex,directly comparable,
+inspire,admission_urgency,operations.emop,partially comparable,urgency of surgery
+inspire,hosp_los_days,(discharge_time - admission_time)/1440,directly comparable,
+inspire,hosp_death,operations.inhosp_death_time within the admission,comparable after harmonization,raw field propagated across a patient's admissions
+inspire,icu_flag_and_stay,operations.icuin_time / icuout_time,partially comparable,no ICU stay table
+inspire,icu_los_days,icuout - icuin,partially comparable,
+inspire,icu_death,-,unavailable,
+inspire,death_any_followup,operations.allcause_death_time,partially comparable,variable follow-up
+inspire,discharge_disposition,-,unavailable,
+inspire,comorbidities_coded,diagnosis.icd10_cm up to discharge,comparable after harmonization,3-character resolution
+inspire,vital_signs_first24h,vitals + ward_vitals,partially comparable,first 24 h of admission is mostly intra-operative
+inspire,laboratory_first24h,labs,directly comparable,
+inspire,mech_vent,ward_vitals 'vent',partially comparable,ward charting
+inspire,rrt,ward_vitals 'crrt',partially comparable,
+inspire,vasopressor,vitals (intra-operative infusion rates),partially comparable,intra-operative only
+inspire,intubation,-,unavailable,
+inspire,tracheostomy,-,unavailable,
+inspire,severity_score,operations.asa,partially comparable,ASA physical status
+inspire,surgery_flag,all operations,directly comparable,
+vitaldb,patient_id,clinical_data.subjectid,directly comparable,
+vitaldb,admission_id,clinical_data.caseid,partially comparable,case stands in for admission
+vitaldb,age_years,clinical_data.age,directly comparable,'>89' set to 90
+vitaldb,sex,clinical_data.sex,directly comparable,
+vitaldb,admission_urgency,clinical_data.emop,partially comparable,
+vitaldb,hosp_los_days,(dis - adm)/86400,directly comparable,
+vitaldb,hosp_death,clinical_data.death_inhosp,directly comparable,
+vitaldb,icu_flag_and_stay,clinical_data.icu_days > 0,partially comparable,
+vitaldb,icu_los_days,clinical_data.icu_days,partially comparable,
+vitaldb,icu_death,-,unavailable,
+vitaldb,death_any_followup,-,unavailable,
+vitaldb,discharge_disposition,-,unavailable,
+vitaldb,comorbidities_coded,clinical_data.preop_htn / preop_dm,partially comparable,two flags only
+vitaldb,vital_signs_first24h,.vital waveform tracks,unavailable,not parsed in v0.1
+vitaldb,laboratory_first24h,lab_data,directly comparable,index = hospital admission; coverage low (labs mostly pre-/post-operative)
+vitaldb,mech_vent,-,unavailable,
+vitaldb,rrt,-,unavailable,
+vitaldb,vasopressor,-,unavailable,
+vitaldb,intubation,-,unavailable,
+vitaldb,tracheostomy,-,unavailable,
+vitaldb,severity_score,clinical_data.asa,partially comparable,
+vitaldb,surgery_flag,all cases,directly comparable,
+mover_epic,patient_id,patient_information.MRN,directly comparable,
+mover_epic,admission_id,MRN + HOSP_ADMSN_TIME,partially comparable,"65,728 rows are surgical records"
+mover_epic,age_years,patient_information.BIRTH_DATE (holds age),directly comparable,top-coded 90
+mover_epic,sex,patient_information.SEX,directly comparable,
+mover_epic,admission_urgency,-,unavailable,
+mover_epic,hosp_los_days,HOSP_DISCH_TIME - HOSP_ADMSN_TIME,directly comparable,
+mover_epic,hosp_death,"DISCH_DISP in {Expired, Coroner}",directly comparable,
+mover_epic,icu_flag_and_stay,ICU_ADMIN_FLAG (no times),partially comparable,
+mover_epic,icu_los_days,-,unavailable,
+mover_epic,icu_death,-,unavailable,
+mover_epic,death_any_followup,-,unavailable,
+mover_epic,discharge_disposition,DISCH_DISP,comparable after harmonization,
+mover_epic,comorbidities_coded,"patient_coding (ICD-10-CM / ICD-9-CM, MRN level)",partially comparable,not encounter-specific
+mover_epic,vital_signs_first24h,-,unavailable,none in EPIC_EMR
+mover_epic,laboratory_first24h,patient_labs (LOINC),directly comparable,
+mover_epic,mech_vent,-,unavailable,
+mover_epic,rrt,-,unavailable,
+mover_epic,vasopressor,-,unavailable,
+mover_epic,intubation,-,unavailable,
+mover_epic,tracheostomy,-,unavailable,
+mover_epic,severity_score,patient_information.ASA_RATING,partially comparable,
+mover_epic,surgery_flag,all records,directly comparable,
+mover_sis,patient_id,patient_information.PID,partially comparable,no separate patient identifier
+mover_sis,admission_id,patient_information.PID,partially comparable,surgical record
+mover_sis,age_years,patient_information.Age,directly comparable,
+mover_sis,sex,patient_information.Gender,directly comparable,
+mover_sis,admission_urgency,-,unavailable,
+mover_sis,hosp_los_days,-,unavailable,
+mover_sis,hosp_death,-,unavailable,
+mover_sis,icu_flag_and_stay,-,unavailable,
+mover_sis,icu_los_days,-,unavailable,
+mover_sis,icu_death,-,unavailable,
+mover_sis,death_any_followup,-,unavailable,
+mover_sis,discharge_disposition,-,unavailable,
+mover_sis,comorbidities_coded,-,unavailable,
+mover_sis,vital_signs_first24h,patient_vitals (intra-operative minute data; NIBP only),partially comparable,index = OR start
+mover_sis,laboratory_first24h,patient_labs (5 analytes; units assumed),partially comparable,
+mover_sis,mech_vent,-,unavailable,
+mover_sis,rrt,-,unavailable,
+mover_sis,vasopressor,-,unavailable,
+mover_sis,intubation,-,unavailable,
+mover_sis,tracheostomy,-,unavailable,
+mover_sis,severity_score,-,unavailable,
+mover_sis,surgery_flag,all records,directly comparable,

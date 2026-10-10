@@ -16,8 +16,10 @@ summarise_outcomes <- function(ds) {
     Nicu <- sum(a$icu_flag == 1L)
     s <- icu[admission_id %in% a$admission_id]
     out <- list()
-    out[[1]] <- stat_binary(a$hosp_death, db, st, "Mortality", "In-hospital death", denominator = N,
-                            note = ds$meta$hosp_death_definition %||% "")
+    out[[1]] <- if (any(!is.na(a$hosp_death)))
+      stat_binary(a$hosp_death, db, st, "Mortality", "In-hospital death", denominator = N,
+                  note = ds$meta$hosp_death_definition %||% "")
+    else stat_unavailable(db, st, "Mortality", "In-hospital death", ds$meta$hosp_death_definition %||% "hospital outcome not recorded")
     out[[2]] <- if ("icu_death" %in% names(s) && any(!is.na(s$icu_death)))
       stat_binary(s$icu_death, db, st, "Mortality", "Death during ICU stay (per ICU stay)",
                   denominator = nrow(s), note = ds$meta$icu_death_definition %||% "")
@@ -30,17 +32,22 @@ summarise_outcomes <- function(ds) {
                           "no post-discharge vital status")
     out[[4]] <- stat_cont(a$hosp_los_days, db, st, "Length of stay", "Hospital LOS, days", N, digits = 1,
                           note = ds$meta$hosp_los_definition %||% "")
-    out[[5]] <- stat_binary(a$prolonged_hosp_los, db, st, "Length of stay",
-                            sprintf("Hospital LOS > %d days", ccdb_cfg()$cohort$prolonged_stay$hospital_days),
-                            denominator = sum(!is.na(a$hosp_los_days)))
+    out[[5]] <- if (any(!is.na(a$hosp_los_days)))
+      stat_binary(a$prolonged_hosp_los, db, st, "Length of stay",
+                  sprintf("Hospital LOS > %d days", ccdb_cfg()$cohort$prolonged_stay$hospital_days),
+                  denominator = sum(!is.na(a$hosp_los_days)))
+    else stat_unavailable(db, st, "Length of stay", sprintf("Hospital LOS > %d days", ccdb_cfg()$cohort$prolonged_stay$hospital_days),
+                          "hospital LOS not recorded")
     out[[6]] <- stat_cont(a[icu_flag == 1L]$icu_los_days, db, st, "Length of stay",
                           "ICU LOS, days (summed per ICU admission)", Nicu, digits = 2,
                           note = ds$meta$icu_los_definition %||% "")
     out[[7]] <- stat_cont(s$icu_los_days, db, st, "Length of stay", "ICU LOS, days (per ICU stay)",
                           nrow(s), digits = 2)
-    out[[8]] <- stat_binary(a[icu_flag == 1L]$prolonged_icu_los, db, st, "Length of stay",
-                            sprintf("ICU LOS > %d days", ccdb_cfg()$cohort$prolonged_stay$icu_days),
-                            denominator = sum(!is.na(a[icu_flag == 1L]$icu_los_days)))
+    out[[8]] <- if (any(!is.na(a[icu_flag == 1L]$icu_los_days)))
+      stat_binary(a[icu_flag == 1L]$prolonged_icu_los, db, st, "Length of stay",
+                  sprintf("ICU LOS > %d days", ccdb_cfg()$cohort$prolonged_stay$icu_days),
+                  denominator = sum(!is.na(a[icu_flag == 1L]$icu_los_days)))
+    else stat_unavailable(db, st, "Length of stay", sprintf("ICU LOS > %d days", ccdb_cfg()$cohort$prolonged_stay$icu_days), "ICU LOS not recorded")
     out[[9]] <- stat_binary(as.integer(a[icu_flag == 1L]$n_icu_stays > 1L), db, st, "Readmission",
                             "More than one ICU stay in the admission", denominator = Nicu,
                             note = "Jinhua definition of ICU readmission (>1 ICU episode)")

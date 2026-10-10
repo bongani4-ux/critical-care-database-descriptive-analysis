@@ -47,6 +47,13 @@ outputs/logs/*
 !outputs/figures/.gitkeep
 !outputs/logs/.gitkeep
 
+
+# ---- generated documentation tables: those derived from RESULTS are aggregate data -> hold back until the DUA
+# review in docs/data_governance.md; the two that contain only dictionary/adapter statements are safe to commit.
+docs/generated/*
+!docs/generated/variable_comparability.md
+!docs/generated/domain_availability.md
+
 # ---- spreadsheets and docs that may embed data
 *.xlsx
 *.xls

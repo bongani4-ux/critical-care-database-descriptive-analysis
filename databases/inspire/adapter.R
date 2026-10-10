@@ -22,7 +22,7 @@ INSPIRE_VASO_ITEMS <- c("nepi", "epii", "dopai", "pepi", "vaso")
 
 adapter_build <- function(cfg) {
   flow <- flow_new()
-  rd <- function(f, ...) data.table::fread(db_file_any("inspire", f), showProgress = FALSE, ...)
+  rd <- function(f, ...) data.table::fread(db_file_any(adapter_meta$db_id, f), showProgress = FALSE, ...)
   o <- rd("operations.csv", colClasses = list(character = c("subject_id", "hadm_id", "op_id")))
   assert_unique(o, "op_id", "INSPIRE operations"); assert_no_missing(o, c("subject_id", "hadm_id"), "INSPIRE operations")
   flow <- flow_add(flow, "Operations", n_admissions = data.table::uniqueN(o$hadm_id), n_patients = data.table::uniqueN(o$subject_id),
@@ -40,7 +40,7 @@ adapter_build <- function(cfg) {
              emop = as.integer(any(emop == 1L, na.rm = TRUE)), asa = suppressWarnings(as.numeric(max(asa, na.rm = TRUE))),
              dth = any(dth_in), dept = department[1], allcause = any(!is.na(allcause_death_time))), by = hadm_id]
   h[is.infinite(asa), asa := NA_real_]; h[is.infinite(age_years), age_years := NA_real_]
-  adm <- h[, .(db_id = "inspire", patient_id, admission_id = hadm_id, age_years, sex = harmonize_sex(sex),
+  adm <- h[, .(db_id = adapter_meta$db_id, patient_id, admission_id = hadm_id, age_years, sex = harmonize_sex(sex),
                hosp_los_days = (dis - adm) / 1440, hosp_death = as.integer(dth), admit_sort_key = adm,
                admission_urgency = data.table::fifelse(emop == 1L, "emergency", "elective"),
                admission_source = dept, discharge_disposition = NA_character_, period = NA_character_,
@@ -49,7 +49,7 @@ adapter_build <- function(cfg) {
 
   icu_rows <- unique(o[!is.na(icuin_time), .(subject_id, hadm_id, icuin_time, icuout_time)])
   data.table::setorder(icu_rows, hadm_id, icuin_time); icu_rows[, stay_seq := seq_len(.N), by = hadm_id]
-  icu <- icu_rows[, .(db_id = "inspire", patient_id = subject_id, admission_id = hadm_id, stay_id = paste0(hadm_id, "_ICU", stay_seq),
+  icu <- icu_rows[, .(db_id = adapter_meta$db_id, patient_id = subject_id, admission_id = hadm_id, stay_id = paste0(hadm_id, "_ICU", stay_seq),
                       stay_seq, icu_los_days = (icuout_time - icuin_time) / 1440, icu_unit = NA_character_, icu_death = NA_integer_)]
   severity <- h[!is.na(asa), .(admission_id = hadm_id, score = "ASA physical status (max of the admission's operations)", value = asa)]
 
@@ -64,14 +64,19 @@ adapter_build <- function(cfg) {
   par <- rd("parameters.csv")
   unit_check <- merge(mp, par[, .(source = Table, item = Label, par_unit = Unit)][, source := c(labs = "lab", vitals = "vitals", ward_vitals = "ward")[source]],
                       by = c("source", "item"), all.x = TRUE)
-  if (anyNA(unit_check$par_unit)) ccdb_stop("[inspire] mapped item(s) missing from parameters.csv: ", paste(unit_check[is.na(par_unit), item], collapse = ", "))
+  if (anyNA(unit_check$par_unit)) {
+    # an item that this VERSION does not contain (e.g. ward art_sbp was added in v1.4.2) is dropped with a warning
+    miss <- unit_check[is.na(par_unit), paste(source, item)]
+    log_msg("WARN", "[", adapter_meta$db_id, "] mapped item(s) absent from this version's parameters.csv, dropped: ", paste(miss, collapse = ", "))
+    mp <- mp[!paste(source, item) %in% miss]
+  }
   win <- cfg$measurements$window_hours; pre <- cfg$measurements$pre_index_hours
   win24 <- h[, .(subject_id = patient_id, admission_id = hadm_id, lo = adm - pre * 60, hi = adm + win * 60, adm)]
   index <- h[, .(unit_key = hadm_id, index_hours = adm / 60)]
   run_src <- function(file, src, cols) {
     m <- mp[source == src, .(item, analyte, source_unit)]
     items <- m$item
-    stream_file(db_file_any("inspire", file), function(ch) {
+    stream_file(db_file_any(adapter_meta$db_id, file), function(ch) {
       ch <- ch[item_name %in% items]
       if (!nrow(ch)) return(NULL)
       j <- win24[ch, on = .(subject_id, lo <= chart_time, hi >= chart_time), nomatch = 0L,
@@ -90,13 +95,13 @@ adapter_build <- function(cfg) {
 
   # ---- support flags over the whole admission window ----------------------------------------------------------------------------
   win_adm <- h[, .(subject_id = patient_id, admission_id = hadm_id, adm, dis)]
-  wv <- stream_file(db_file_any("inspire", "ward_vitals.csv"), function(ch) {
+  wv <- stream_file(db_file_any(adapter_meta$db_id, "ward_vitals.csv"), function(ch) {
     ch <- ch[item_name %in% c("vent", "crrt") & value > 0]
     if (!nrow(ch)) return(NULL)
     win_adm[ch, on = .(subject_id, adm <= chart_time, dis >= chart_time), nomatch = 0L, .(admission_id, support_type = data.table::fifelse(item_name == "vent", "mech_vent", "rrt"))]
   }, col_types = readr::cols_only(subject_id = "c", chart_time = "d", item_name = "c", value = "d"), label = "INSPIRE ward_vitals (support)",
   arrow_filter = function(d) dplyr::filter(d, item_name %in% c("vent", "crrt") & value > 0))
-  vv <- stream_file(db_file_any("inspire", "vitals.csv"), function(ch) {
+  vv <- stream_file(db_file_any(adapter_meta$db_id, "vitals.csv"), function(ch) {
     ch <- ch[item_name %in% INSPIRE_VASO_ITEMS & value > 0]
     if (!nrow(ch)) return(NULL)
     win_adm[ch, on = .(subject_id, adm <= chart_time, dis >= chart_time), nomatch = 0L, .(admission_id, support_type = "vasopressor")]

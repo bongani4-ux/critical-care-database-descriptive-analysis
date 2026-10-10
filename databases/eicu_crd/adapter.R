@@ -36,12 +36,12 @@ adapter_build <- function(cfg) {
   p[, stay_seq := seq_len(.N), by = patienthealthsystemstayid]
   first <- p[stay_seq == 1L]
 
-  sex <- harmonize_sex(first$gender)
+  sex_h <- harmonize_sex(first$gender)
   age_raw <- first$age
-  age <- data.table::fcase(age_raw == "> 89", 90, grepl("^[0-9]+$", age_raw), suppressWarnings(as.numeric(age_raw)),
-                           default = NA_real_)       # ages >89 are de-identified; treated as 90 (as in the review)
+  age_num <- data.table::fcase(age_raw == "> 89", 90, grepl("^[0-9]+$", age_raw), suppressWarnings(as.numeric(age_raw)),
+                               default = NA_real_)   # ages >89 are de-identified; treated as 90 (as in the review)
   adm <- first[, .(db_id = "eicu_crd", patient_id = uniquepid, admission_id = patienthealthsystemstayid,
-                   age_years = age, sex = sex,
+                   age_years = age_num, sex = sex_h,
                    hosp_los_days = (as.numeric(hospitaldischargeoffset) - hao) / 1440,
                    hosp_death = data.table::fcase(hospitaldischargestatus == "Expired", 1L,
                                                   hospitaldischargestatus == "Alive", 0L, default = NA_integer_),

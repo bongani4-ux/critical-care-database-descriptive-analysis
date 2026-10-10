@@ -1,0 +1,22 @@
+Package: criticalcaredescriptive
+Title: Harmonised Descriptive Analysis Across Critical Care Databases
+Version: 0.1.0
+Description: Reproducible R workflows for harmonised descriptive analysis across critical care databases and versions
+    included in the authors' database review. This DESCRIPTION file exists only to declare dependencies for renv;
+    the project is run with the scripts in scripts/, not installed as a package.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Depends: R (>= 4.3.0)
+Imports:
+    data.table,
+    yaml,
+    readr,
+    ggplot2,
+    gt,
+    scales
+Suggests:
+    arrow,
+    dplyr,
+    testthat (>= 3.0.0),
+    openxlsx,
+    renv
