@@ -1,0 +1,33 @@
+comorbidity,label,icd10_regex,jinhua_original_regex,icd9_regex,icd9_basis
+HYPERTENSION,Hypertension,^(I10|I11|I12|I13|I15),^(I10|I11|I12|I13|I15),^40[1-5],ICD-9-CM 401-405
+DIABETES,Diabetes mellitus,^(E10|E11|E12|E13|E14),^(E10|E11|E12|E13|E14),^250,ICD-9-CM 250
+HYPERLIPIDEMIA,Hyperlipidaemia,^E78,^(E78),^272,ICD-9-CM 272
+OBESITY,Obesity,^E66,^(E66),^2780,ICD-9-CM 278.0
+THYROID_DISORDER,Thyroid disorder,^(E03|E04|E05|E06|E07),^(E03|E04|E05|E06|E07),^24[0-6],ICD-9-CM 240-246
+CKD,Chronic kidney disease (incl. unspecified kidney failure),^(N18|N19|N03|N05),^(N18|N19|N03|N05),^(585|586|582|583),ICD-9-CM 582/583/585/586
+AKI_CODED,Acute kidney failure (coded),^N17,^(N17),^584,ICD-9-CM 584
+ANEMIA,Anaemia,^(D5[0-9]|D6[0-4]),^(D5[0-9]|D6[0-4]),^28[0-5],ICD-9-CM 280-285
+COAGULOPATHY,Coagulation defect,^D6[5-9],^(D6[5-9]),^28[67],ICD-9-CM 286-287
+LIVER_DISEASE,Liver disease,^K7[0-7],^(K7[0-7]),^57[0-3],ICD-9-CM 570-573
+HEART_FAILURE,Heart failure,^I50,^(I50),^428,ICD-9-CM 428
+ISCHEMIC_HEART,Ischaemic heart disease,^I2[0-5],^(I2[0-5]),^41[0-4],ICD-9-CM 410-414
+ARRHYTHMIA,Conduction disorder / arrhythmia,^I4[4-9],^(I4[4-9]),^42[67],ICD-9-CM 426-427
+VALVULAR_DISEASE,Valvular disease,^I3[4-9],^(I3[4-9]),^(39[4-7]|424),ICD-9-CM 394-397 and 424
+STROKE_ISCHEMIC,Ischaemic stroke / TIA / occlusion,^(I63|I64|I65|I66|G45),^(I63|I64|I65|I66|G45),^43[3-6],ICD-9-CM 433-436
+ICH,Intracerebral / other non-traumatic ICH,^(I61|I62),^(I61|I62),^43[12],ICD-9-CM 431-432
+SAH,Subarachnoid haemorrhage,^I60,^(I60),^430,ICD-9-CM 430
+CEREBRAL_ANEURYSM,Cerebral / other aneurysm,^(I671|I72),^(I67\\.1|I72),^(4373|442),ICD-9-CM 437.3 and 442
+TBI,Intracranial injury,^S06,^(S06),^85[0-4],ICD-9-CM 850-854
+SKULL_FRACTURE,Skull fracture,^S02,^(S02),^80[0-4],ICD-9-CM 800-804
+HYDROCEPHALUS,Hydrocephalus (acquired),^G91,^(G91),^331[345],ICD-9-CM 331.3-331.5
+EPILEPSY,Epilepsy / status epilepticus,^G4[01],^(G4[01]),^345,ICD-9-CM 345
+DEMENTIA,Dementia,^(F0[0-3]|G30),^(F0[0-3]|G30),^(290|3310|2941),ICD-9-CM 290; 331.0; 294.1
+BRAIN_TUMOUR,Brain / meningeal tumour,^(C71|D3[23]|D4[23]),^(C71|D3[23]|D4[23]),^(191|225[0-2]|2375|2376|2396),ICD-9-CM 191; 225.0-225.2; 237.5-237.6; 239.6
+MALIGNANCY_ANY,Any malignancy,^C[0-9],^(C[0-9]),^(1[4-9][0-9]|20[0-8]),ICD-9-CM 140-208
+COPD,COPD,^J4[0-4],^(J4[0-4]),^(49[0-2]|496),ICD-9-CM 490-492; 496
+ASTHMA,Asthma,^J4[56],^(J4[56]),^493,ICD-9-CM 493
+PNEUMONIA,Pneumonia,^(J1[2-8]|J69),^(J1[2-8]|J69),^(48[0-6]|507),ICD-9-CM 480-486; 507
+RESP_FAILURE,Respiratory failure,^J96,^(J96),^(5188[1-4]|7991),ICD-9-CM 518.81-518.84; 799.1
+SEPSIS,Sepsis / SIRS,^(A40|A41|R65),^(A40|A41|R65),^(038|99591|99592|78552),ICD-9-CM 038; 995.91-995.92; 785.52
+SHOCK,Shock,^R57,^(R57),^7855,ICD-9-CM 785.5x
+ELECTROLYTE_DISORDER,Electrolyte / fluid disorder,^E87,^(E87),^276,ICD-9-CM 276

@@ -1,0 +1,58 @@
+db_id,metric,level,value,tolerance_type,source,confidence,note
+mimic_iv,n_patients,patient,364627,exact,Review Table 1,published,"Not independently queried in the review"
+mimic_iv,hosp_death_pct,admission,3.2,pct_points,Review Table 3,published,"Admission cohort; denominator not stated in the review"
+mimic_iv,hosp_los_median_days,admission,2.0,relative,Review Table 3,published,"Median"
+mimic_iv,icu_los_median_days,icu_stay,3.0,relative,Review Table 3,published,"Median"
+mimic_iv,age_median,patient,48,relative,Review Results text,published,
+eicu_crd,n_patients,patient,139367,exact,Review Table 1,queried,"First admission retained; 200,859 unit-stay encounters deduplicated"
+eicu_crd,n_unit_stays,icu_stay,200859,exact,Review Table 1,queried,
+eicu_crd,age_median,patient,65,relative,Review Results text,queried,"IQR 53-76; ages >89 treated as 90; 3.9% censored"
+eicu_crd,male_pct,patient,54.0,pct_points,Review Results text,queried,"Of patients with recorded sex (Male+Female)"
+eicu_crd,icu_death_pct,patient,2.3,pct_points,Review Table 3,queried,
+eicu_crd,hosp_death_pct,patient,3.9,pct_points,Review Table 3,queried,
+eicu_crd,icu_los_median_days,patient,1.66,relative,Review Table 3,queried,
+eicu_crd,hosp_los_median_days,patient,6.5,relative,Review Table 3,queried,
+hirid,n_patients,patient,33905,exact,Review Table 1,queried,"33,905 admissions = 33,905 unique patients"
+hirid,age_median,patient,65,relative,Review Results text,queried,"IQR 55-75"
+hirid,male_pct,patient,64.2,pct_points,Review Results text,queried,"21,767/33,905"
+hirid,icu_death_pct,patient,6.1,pct_points,Review Table 3,queried,"2,062 deaths among 33,666 admissions with recorded discharge status"
+hirid,icu_los_median_days,patient,0.94,relative,Review Table 3,queried,
+sicdb,n_patients,patient,21583,exact,Review Table 1,queried,
+sicdb,n_cases,admission,27386,exact,Review Table 1,queried,"cases = hospital admissions"
+sicdb,male_pct,admission,62.4,pct_points,Review Results text,queried,"17,098/27,386; code 735 = male, 736 = female"
+sicdb,icu_death_pct,admission,3.8,pct_points,Review Table 3,queried,
+nwicu,n_patients,patient,25923,exact,Review Table 1,queried,
+nwicu,n_admissions,admission,61843,exact,Review Table 1,queried,
+nwicu,n_icu_stays,icu_stay,28612,exact,Review Table 1,queried,
+nwicu,hosp_death_pct,icu_stay,11.9,pct_points,Review Table 3,queried,"3,401/28,612 ICU stays, in-hospital"
+nwicu,icu_death_pct,icu_stay,7.9,pct_points,Review Table 3,queried,"2,275/28,612 in-ICU"
+nwicu,hosp_death_pct,patient,13.7,pct_points,Review Table 3,queried,"3,554/25,923 patient-level"
+nwicu,hosp_death_pct,admission,5.8,pct_points,Review Table 3,queried,"3,558/61,843 admission-level"
+nwicu,icu_los_median_days,icu_stay,1.9,relative,Review Table 3,queried,
+nwicu,hosp_los_median_days,admission,4.1,relative,Review Table 3,queried,
+amsterdamumcdb,n_patients,patient,20109,exact,Review Table 1,queried,
+amsterdamumcdb,n_admissions,admission,23106,exact,Review Table 1,queried,
+amsterdamumcdb,male_pct,patient,65.2,pct_points,Review Results text,queried,"Patient level, first admission retained"
+amsterdamumcdb,deceased_last_followup_pct,patient,31.0,pct_points,Review Table 3,queried,"Patient-level; mixture of in-hospital and post-discharge deaths"
+amsterdamumcdb,hosp_los_median_days,patient,25.0,relative,Review Table 3,queried,"Patient level; IQR 20-73 reported in review text"
+pic,n_patients,patient,12881,exact,Review Table 1,queried,
+pic,n_admissions,admission,13449,exact,Review Table 1,queried,
+pic,hosp_death_pct,patient,7.2,pct_points,Review Table 3,queried,
+pic,icu_los_median_days,patient,2.8,relative,Review Table 3,queried,
+pic,hosp_los_median_days,patient,12.3,relative,Review Table 3,queried,
+zigong,n_patients,patient,2790,exact,Review Table 1,queried,
+zigong,hosp_death_pct,patient,5.8,pct_points,Review Table 3,queried,"Index in-hospital"
+zigong,icu_los_median_days,patient,2.96,relative,Review Table 3,queried,
+zigong,hosp_los_median_days,patient,11.0,relative,Review Table 3,queried,
+inspire,n_patients,patient,99886,exact,Review Table 1,queried,
+inspire,hosp_death_n,patient,923,exact,Review Table 3,queried,"923/99,886 = 0.9%"
+inspire,icu_los_median_days,patient,1.04,relative,Review Table 3,queried,
+inspire,hosp_los_median_days,patient,6.0,relative,Review Table 3,queried,
+inspire,female_pct,patient,56.7,pct_points,Review Results text,queried,
+vitaldb,n_patients,patient,6388,exact,Review Table 1,queried,
+vitaldb,age_median,patient,59,relative,Review Results text,queried,"IQR 48-68; confirmed against VitalDB Table 1"
+vitaldb,male_pct,patient,51,pct_points,Review Results text,queried,
+mover_epic,n_patients,patient,65728,exact,Review Table 1,published,"Reported as in source publication; not independently queried"
+mover_epic,hosp_death_pct,patient,1.5,pct_points,Review Table 3,published,
+mover_epic,hosp_los_median_days,patient,2.0,relative,Review Table 3,published,
+mover_sis,n_patients,patient,19114,exact,Review Table 1,published,"Reported as in source publication; not independently queried"

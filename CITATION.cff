@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite it as below, and cite each database you analyse using the primary citations in docs/database_coverage.md."
+title: "critical-care-database-descriptive-analysis: reproducible R workflows for harmonized descriptive analysis across critical care databases"
+type: software
+authors:
+  - family-names: Mbambara
+    given-names: Bongani
+    affiliation: "China Pharmaceutical University"
+license: MIT
+version: 0.1.0
+date-released: "2026-10-11"
+# repository-code: set after the GitHub repository is created

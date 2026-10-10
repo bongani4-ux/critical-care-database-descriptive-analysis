@@ -1,0 +1,21 @@
+# Copy to config/paths.local.yml (git-ignored) and edit.
+# Absolute paths live ONLY in paths.local.yml. Never commit it.
+#
+# data_root: folder that holds every database folder named in
+#            config/database_registry.csv (column local_root).
+# A database whose folder is missing is reported as BLOCKED, not skipped silently.
+data_root: "D:/path/to/critical-care-databases"
+
+# Optional per-database override of the registry's local_root
+overrides:
+  # mimic_iv: "D:/elsewhere/mimic-iv-3.1"
+
+# Where MOVER's .tar.gz archives are unpacked (only the small tables are read)
+mover_cache_dir: "D:/path/to/scratch/mover_extract"
+
+# Scratch/derived data. Must NOT be inside a folder that is synced to GitHub.
+derived_dir: "derived"
+
+# Folder with the ORIGINAL Jinhua descriptive tables (Table1_demographics.csv, Table2_comorbidities.csv,
+# Table4_outcomes.csv). Read-only; used to validate the reproduction. Optional.
+# jinhua_reference_dir: "D:/path/to/jinhua/output/tables"

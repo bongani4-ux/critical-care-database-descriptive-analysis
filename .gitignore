@@ -1,0 +1,66 @@
+# =============================================================================
+# DATA GOVERNANCE: this repository holds CODE and DOCUMENTATION only.
+# PhysioNet / institutional data-use agreements prohibit redistributing
+# patient-level data or database extracts. Nothing below may ever be committed.
+# =============================================================================
+
+# ---- local machine configuration (contains absolute paths / may hold secrets)
+config/paths.local.yml
+config/*.local.yml
+.Renviron
+.Rprofile.local
+*.pem
+*.key
+*.token
+credentials*
+secrets*
+
+# ---- patient-level and derived data (never commit)
+derived/
+data/
+raw/
+cache/
+*.rds
+*.RData
+*.rda
+*.parquet
+*.feather
+*.fst
+*.sqlite
+*.duckdb
+*.db
+*.csv.gz
+*.csv.bz2
+*.tar
+*.tar.gz
+*.zip
+*.7z
+*.vital
+
+# ---- generated outputs: aggregate results derived from restricted data.
+# Review each database's DUA (docs/data_governance.md) before releasing any of
+# these, then copy the approved files to outputs/shareable/ and commit those.
+outputs/tables/*
+outputs/figures/*
+outputs/logs/*
+!outputs/tables/.gitkeep
+!outputs/figures/.gitkeep
+!outputs/logs/.gitkeep
+
+# ---- spreadsheets and docs that may embed data
+*.xlsx
+*.xls
+# allow dictionaries that are CSV only (xlsx is ignored on purpose)
+
+# ---- R / RStudio / OS
+.Rhistory
+.Rproj.user/
+.Rapp.history
+*.Rproj.user
+.DS_Store
+Thumbs.db
+~$*
+*.tmp
+renv/library/
+renv/staging/
+renv/local/

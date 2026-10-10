@@ -1,0 +1,80 @@
+# =============================================================================
+# analysis_config.yml - every analytical choice that is a parameter, not code.
+# Choices inherited from the Jinhua reference analysis are marked [JINHUA].
+# Choices introduced for cross-database harmonisation are marked [HARMONISED].
+# =============================================================================
+project:
+  name: critical-care-database-descriptive-analysis
+  schema_version: "1.0"          # version of the harmonised dataset contract
+  seed: 20261011                 # set before any stochastic step (none are used in v0.1)
+
+# Databases processed by scripts/run_all.R (ids from config/database_registry.csv)
+databases:
+  reference: jinhua
+  eligible:                      # exactly the review's entries (see docs/database_coverage.md)
+    - mimic_iv
+    - eicu_crd
+    - nwicu
+    - sicdb
+    - amsterdamumcdb
+    - hirid
+    - pic
+    - zigong
+    - inspire
+    - vitaldb
+    - mover_epic
+    - mover_sis
+
+# ---- cohort / unit of analysis ---------------------------------------------
+cohort:
+  # [HARMONISED] Primary unit = hospital admission (encounter). ICU stays are a
+  # second level. Databases that only contain ICU admissions have icu_flag = 1
+  # for every row by construction; this is reported, never hidden.
+  primary_unit: hospital_admission
+  adult_age_bands:               # [JINHUA] age bands (left-closed, right-open)
+    breaks: [0, 18, 40, 60, 70, 80, .inf]
+    labels: ["<18", "18-39", "40-59", "60-69", "70-79", ">=80"]
+  prolonged_stay:                # [JINHUA]
+    hospital_days: 14
+    icu_days: 3
+
+# ---- measurement windows ----------------------------------------------------
+measurements:
+  # [HARMONISED] First value in the window [0, window_hours] from the index
+  # time. Index = first ICU admission for ICU-based databases; hospital
+  # admission for databases without ICU stays. Jinhua's own reference tables
+  # used a different convention (see docs/methods.md) and are reproduced
+  # separately in the reference-validation step.
+  window_hours: 24
+  pre_index_hours: 0             # no look-back by default
+  analytes: [hr, sbp, dbp, map, rr, spo2, temp,
+             creatinine, hemoglobin, wbc, platelets, sodium, potassium,
+             lactate, bilirubin_total, glucose, albumin, bicarbonate]
+
+# ---- AKI (Jinhua KDIGO creatinine rule, reproduced only for the reference) --
+aki_reference:                   # [JINHUA]
+  window_days: 7
+  mgdl_to_umol: 88.4
+  implausible_umol_min: 5
+  implausible_umol_max: 3000
+  unitless_mgdl_below: 25
+
+# ---- statistics --------------------------------------------------------------
+statistics:
+  continuous_default: median_iqr # median (Q1-Q3); mean (SD) also reported for age
+  digits: 1
+  # Cells with n below this are flagged (not suppressed) so that the release
+  # decision under each DUA can be made explicitly (docs/data_governance.md).
+  small_cell_flag: 10
+
+# ---- performance -------------------------------------------------------------
+io:
+  chunk_rows: 2000000            # rows per chunk for large long tables
+  show_progress: false
+
+# ---- reference values from the Critical Care Database Review ----------------
+validation:
+  review_reference_file: config/review_reference_values.csv
+  jinhua_reference_dir: null     # set in paths.local.yml if reference tables should be compared
+  tolerance_pct_points: 0.15     # allowed absolute difference for review percentages
+  tolerance_relative: 0.005      # allowed relative difference for review counts/medians

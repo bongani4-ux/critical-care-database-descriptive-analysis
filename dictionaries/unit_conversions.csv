@@ -1,0 +1,78 @@
+analyte,from_unit,factor,offset,note
+creatinine,umol/l,1,0,canonical
+creatinine,µmol/l,1,0,canonical (micro sign)
+creatinine,mg/dl,88.4,0,
+hemoglobin,g/dl,1,0,canonical
+hemoglobin,g/l,0.1,0,
+hemoglobin,mmol/l,1.6114,0,Hb (Fe) basis
+wbc,10^9/l,1,0,canonical
+wbc,10*9/l,1,0,
+wbc,10e9/l,1,0,
+wbc,k/ul,1,0,
+wbc,k/µl,1,0,
+wbc,x10^3/ul,1,0,
+wbc,x10^3/µl,1,0,
+wbc,1000/mcl,1,0,
+wbc,x1000/mcl,1,0,
+wbc,×1000/mcl,1,0,
+wbc,10^3/ul,1,0,
+wbc,10^3/µl,1,0,
+wbc,10*3/ul,1,0,
+wbc,10*3/µl,1,0,
+wbc,g/l,1,0,
+wbc,/nl,1,0,
+wbc,k/mm3,1,0,
+wbc,1000/mm3,1,0,
+platelets,10^9/l,1,0,canonical
+platelets,10*9/l,1,0,
+platelets,k/ul,1,0,
+platelets,k/µl,1,0,
+platelets,x10^3/ul,1,0,
+platelets,x10^3/µl,1,0,
+platelets,1000/mcl,1,0,
+platelets,x1000/mcl,1,0,
+platelets,×1000/mcl,1,0,
+platelets,10^3/ul,1,0,
+platelets,10^3/µl,1,0,
+platelets,10*3/ul,1,0,
+platelets,10*3/µl,1,0,
+platelets,g/l,1,0,
+platelets,/nl,1,0,
+platelets,k/mm3,1,0,
+platelets,1000/mm3,1,0,
+sodium,mmol/l,1,0,canonical
+sodium,meq/l,1,0,monovalent: mEq = mmol
+potassium,mmol/l,1,0,canonical
+potassium,meq/l,1,0,monovalent: mEq = mmol
+lactate,mmol/l,1,0,canonical
+lactate,mg/dl,0.111,0,
+bilirubin_total,umol/l,1,0,canonical
+bilirubin_total,µmol/l,1,0,canonical (micro sign)
+bilirubin_total,mg/dl,17.1,0,
+glucose,mmol/l,1,0,canonical
+glucose,mg/dl,0.0555,0,
+albumin,g/l,1,0,canonical
+albumin,g/dl,10,0,
+bicarbonate,mmol/l,1,0,canonical
+bicarbonate,meq/l,1,0,monovalent: mEq = mmol
+hr,/min,1,0,canonical
+hr,bpm,1,0,
+hr,beats/min,1,0,
+hr,count/min,1,0,
+sbp,mmhg,1,0,canonical
+dbp,mmhg,1,0,canonical
+map,mmhg,1,0,canonical
+rr,/min,1,0,canonical
+rr,insp/min,1,0,
+rr,breaths/min,1,0,
+rr,bpm,1,0,
+rr,count/min,1,0,
+spo2,%,1,0,canonical
+temp,degc,1,0,canonical
+temp,°c,1,0,
+temp,c,1,0,
+temp,degf,0.5555556,-17.77778,"(F - 32) * 5/9 = F*0.5555556 - 17.77778"
+temp,°f,0.5555556,-17.77778,
+temp,f,0.5555556,-17.77778,
+hr,次/分,1,0,Chinese times-per-minute unit (Jinhua)
+rr,次/分,1,0,Chinese times-per-minute unit (Jinhua)

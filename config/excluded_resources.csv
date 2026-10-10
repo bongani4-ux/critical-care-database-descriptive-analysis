@@ -1,0 +1,6 @@
+resource,version,reason_excluded,evidence
+MIMIC-BR,v1.0.1,Not charted in the review (credentialing pending at close of charting),Supplement S3 row 'MIMIC-BR (not included)'
+Zhejiang PPH,v1.0,Not charted in the review (files withdrawn from PhysioNet),Supplement S3 row 'Zhejiang PPH (not included)'
+K-MIMIC,not released,Not charted in the review (under development; not publicly released),Review Table 4
+MIMIC-IV,v2.2,"Not the version named in the review (v3.1). A local archive MIMIC4_2.2_.zip exists but is out of scope.",Review Table 1 / Supplement S3
+INSPIRE,v1.0,Superseded; not the version named in the review. Local copy exists but is out of scope.,Review Table 1 / Supplement S3

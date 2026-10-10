@@ -1,0 +1,19 @@
+analyte,label,category,canonical_unit,plausible_min,plausible_max,notes
+hr,Heart rate,vital,/min,20,300,Any monitor/charted source; first value in window
+sbp,Systolic blood pressure,vital,mmHg,40,300,"Invasive and non-invasive pooled; source mix reported in the mapping file"
+dbp,Diastolic blood pressure,vital,mmHg,10,200,Invasive and non-invasive pooled
+map,Mean arterial pressure,vital,mmHg,20,250,Measured MAP only; not derived from SBP/DBP
+rr,Respiratory rate,vital,/min,4,80,
+spo2,Peripheral oxygen saturation,vital,%,20,100,Fractions (0-1) are NOT rescaled; see adapter notes
+temp,Body temperature,vital,degC,30,45,Fahrenheit converted; site (core/axillary/rectal) not harmonised
+creatinine,Creatinine (serum/plasma),lab,umol/L,5,3000,1 mg/dL = 88.4 umol/L
+hemoglobin,Haemoglobin,lab,g/dL,2,25,
+wbc,White blood cell count,lab,10^9/L,0.1,500,
+platelets,Platelet count,lab,10^9/L,1,2000,
+sodium,Sodium,lab,mmol/L,90,190,
+potassium,Potassium,lab,mmol/L,1.5,10,
+lactate,Lactate,lab,mmol/L,0.1,30,Arterial/venous not separated
+bilirubin_total,Total bilirubin,lab,umol/L,0.5,1500,1 mg/dL = 17.1 umol/L
+glucose,Glucose,lab,mmol/L,1,80,1 mmol/L = 18.016 mg/dL
+albumin,Albumin,lab,g/L,5,60,1 g/dL = 10 g/L
+bicarbonate,Bicarbonate,lab,mmol/L,3,60,Serum/plasma or blood-gas HCO3 pooled
