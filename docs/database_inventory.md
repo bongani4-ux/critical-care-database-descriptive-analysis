@@ -32,7 +32,7 @@
 | **eICU-CRD v2.0** | `eicu-collaborative-research-database-2.0/` (30 CSV, of which `eicu biomarkers.csv` is a stray non-eICU file; `vitalPeriodic` 7.9 GB) | AKI/AKD script only | `data dictionaries/eicu data dictionary.xlsx` | full; admission = hospital stay, times re-based |
 | **NWICU v0.1.0** | `northwestern-icu-nwicu-database-0.1.0/.../data/{nw_hosp,nw_icu}` | AKI/AKD script only | none found beyond its own `d_items` (344 items) / `d_labitems` | full except ventilation, vasopressors, MAP |
 | **SICdb v1.0.8** | `SICdb/SICdb/` | AKI/AKD script only | `Documentation.pdf`; `d_references` (all codes decoded) | full; no hospital LOS |
-| **AmsterdamUMCdb v1.0.2** | `Amsterdamumc/` - 6 tables as CSV + `numericitems(1).zip` (7.87 GB, **truncated: ~35% populated**) | creatinine export script only | `fpubh-10-852410.pdf` (paper), `arfeula_v1.6.pdf` (end-user licence); no data dictionary | cohort, outcomes, support; **vitals/labs/severity implemented but BLOCKED** until a complete `numericitems` is supplied |
+| **AmsterdamUMCdb v1.0.2** | `Amsterdamumc/` - 6 tables as CSV + `numericitems.zip` (7.87 GB; extracted to an 80.2 GB CSV outside the repo) | creatinine export script only | `fpubh-10-852410.pdf` (paper), `arfeula_v1.6.pdf` (end-user licence); no data dictionary | cohort, outcomes, support, vitals, labs (18 analytes); severity for only ~1.5% of ICU admissions |
 | **HiRID v1.1.1** | `hirid-.../` (archives) + `hirid_extracted/observation_tables` (250 parquet parts, 33,904 patients) | data-dictionary + figure scripts (`codes/HiRID data dictionary`) | `reference_data/hirid_variable_reference.csv`, `schemata.pdf` | full for what exists; no hospital outcome, no ICD |
 | **PIC v1.1.0** | `paediatric-intensive-care-database-1.1.0/` | dictionary / summary-table / figure scripts (`codes/PIC data dictionary`) - *the template the Jinhua scripts mirror* | `PIC.pdf`; `D_ITEMS`, `D_LABITEMS` | full except organ support (none recorded) |
 | **Zigong v1.1** | `Critical care database comprising patients with infection.../DataTables` | dictionary script (`codes/Zigong data dictionary`) | `datDictionary.csv`; paper PDF | full; ICU stays reconstructed |
@@ -55,5 +55,4 @@
 
 | Need | For | Why |
 |---|---|---|
-| A **complete** copy of `numericitems.zip` of AmsterdamUMCdb v1.0.2 (the supplied `numericitems(1).zip` is truncated; re-download / re-copy and verify size and checksum) | AmsterdamUMCdb | the only source of vitals, labs and APACHE scores |
 | Optional: MOVER-EPIC procedure/medication/post-op tables | MOVER-EPIC | not used in v0.1 |

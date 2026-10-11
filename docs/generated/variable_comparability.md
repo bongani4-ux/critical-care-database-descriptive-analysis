@@ -17,13 +17,13 @@ D = directly comparable; A = comparable after harmonization (documented transfor
 | death_any_followup | — | P | — | P | P | P | — | — | P | P | — | — | — |
 | discharge_disposition | A | A | A | A | — | — | — | — | — | — | — | A | — |
 | comorbidities_coded | D | A | P | A | P | — | — | A | A | A | P | P | — |
-| vital_signs_first24h | P | D | D | P | P | — | D | P | D | P | — | — | P |
-| laboratory_first24h | A | D | D | D | D | — | D | D | D | D | D | D | P |
+| vital_signs_first24h | P | D | D | P | P | P | D | P | D | P | — | — | P |
+| laboratory_first24h | A | D | D | D | D | D | D | D | D | D | D | D | P |
 | mech_vent | P | D | A | — | P | D | P | — | — | P | — | — | — |
 | rrt | P | D | A | P | P | D | — | — | — | P | — | — | — |
 | vasopressor | — | D | A | — | D | D | D | — | D | P | — | — | — |
 | intubation | P | — | — | — | P | P | — | — | P | — | — | — | — |
 | tracheostomy | P | — | — | — | P | P | — | — | P | — | — | — | — |
-| severity_score | — | — | D | — | D | — | — | — | — | P | P | P | — |
+| severity_score | — | — | D | — | D | P | — | — | — | P | P | P | — |
 | surgery_flag | P | — | — | — | — | — | — | — | — | D | D | D | D |
 

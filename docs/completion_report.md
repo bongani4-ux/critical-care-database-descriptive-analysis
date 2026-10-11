@@ -16,11 +16,11 @@
 | VitalDB v1.0.0 | cohort, outcomes, labs, intra-operative numeric vital signs (1.2 M values extracted from 6,388 .vital files, 0 errors) | waveforms, organ support |
 | MOVER-EPIC v1.0 | cohort, outcomes, ICD, labs | no vitals table; ICU flag only |
 | MOVER-SIS v1.0 | demographics, intra-operative vitals, 5 labs | no outcomes by design |
-| AmsterdamUMCdb v1.0.2 | cohort, ICU outcome, organ support | **BLOCKED (input): the supplied `numericitems(1).zip` is truncated (~35% populated); the vitals/labs/APACHE code is implemented and waits for a complete file** |
+| AmsterdamUMCdb v1.0.2 | cohort, ICU outcome, organ support | vitals (88% of ICU admissions) and labs added; severity covers only ~1.5% of ICU admissions |
 
 ## Needs a human decision
 1. Update the review for INSPIRE (v1.4.2 analysed per project decision; review numbers were charted on v1.3).
-2. Supply a complete AmsterdamUMCdb `numericitems.zip`, then run `python -I databases/amsterdamumcdb/extract_numericitems.py <zip> <cache_dir>/amsterdam_numericitems/numericitems.csv` and `Rscript scripts/run_database.R amsterdamumcdb --rebuild`.
+2. Decide whether to report AmsterdamUMCdb severity (NICE-registry scores cover ~1.5% of ICU admissions).
 3. Correct the review's mis-labelled numbers (list in `docs/discrepancy_report.md`).
 
 ## GitHub

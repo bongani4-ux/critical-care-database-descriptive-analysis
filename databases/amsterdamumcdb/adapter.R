@@ -200,7 +200,7 @@ adapter_build <- function(cfg) {
                if (num_ok) "bedside-monitor numeric items (invasive + non-invasive pressures pooled; core temperature sites only)" else blocked_note,
                if (num_ok) "laboratory numeric items (islabresult); Hb in mmol/L converted" else blocked_note,
                "processitems / drugitems",
-               if (num_ok) sprintf("NICE-registry APACHE II / APACHE IV / SAPS II numericitems; %d ICU admissions have a score", sev_adm)
+               if (num_ok) sprintf("NICE-registry APACHE II / APACHE IV / SAPS II numericitems; only %d ICU admissions (%.1f%%) have a score - very sparse", sev_adm, 100 * sev_adm / nrow(icu))
                else "APACHE scores live in numericitems; numericitems missing",
                "none", "drugitems; not harmonised in v0.1", "specialty only")))
   if (num_ok && isTRUE(num$incomplete_override)) ds$meta$data_warning <- "INCOMPLETE numericitems INPUT (development override) - NOT FOR REPORTING"
