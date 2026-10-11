@@ -163,28 +163,155 @@ build_data_dictionary <- function(ds) {
 # have >= 1 value ("most recent value" wide tables). This reproduces those counts by streaming the raw long tables once; the
 # patient-level wide tables are not materialised.
 
+has_value <- function(v) if (is.character(v)) !is.na(v) & nzchar(v) else !is.na(v)
+#' Numeric result present (text results such as '<0.5' or 'POSITIVE' do not count, as in the team's `as.numeric(VALUE)` wide tables).
+has_num <- function(v) if (is.character(v)) !is.na(suppressWarnings(as.numeric(v))) else !is.na(v)
+
+#' Accumulates (pid, item, n, nv) counts chunk by chunk and compacts them, so memory stays bounded.
+new_pair_accumulator <- function() {
+  acc <- NULL; pending <- list(); np <- 0
+  compact <- function() {
+    if (!length(pending)) return(invisible())
+    acc <<- data.table::rbindlist(c(list(acc), pending))[, .(n = sum(n), nv = sum(nv)), by = .(pid, item)]
+    pending <<- list(); np <<- 0
+  }
+  list(add = function(d) { if (is.null(d) || !nrow(d)) return(invisible()); pending[[length(pending) + 1L]] <<- d; np <<- np + nrow(d)
+                           if (np > 4e6) compact() },
+       result = function() { compact(); acc })
+}
+
 #' Stream a long table and return the patient x item counts (pid, item, n = rows, nv = rows with a value).
-audit_long_items <- function(path, pid, item, value = NULL, label = basename(path)) {
+#' `where`: optional dplyr filter expression (string) applied by arrow before rows reach R.
+audit_long_items <- function(path, pid, item, value = NULL, label = basename(path), where = NULL, engine = "arrow") {
   cols <- c(pid, item, value)
   ct <- do.call(readr::cols_only, stats::setNames(rep(list("c"), length(cols)), cols))
-  res <- stream_file(path, function(ch) {
+  ac <- new_pair_accumulator()
+  flt <- if (identical(engine, "arrow")) function(d) { if (!is.null(where)) d <- dplyr::filter(d, !!rlang::parse_expr(where)); d } else NULL
+  stream_file(path, function(ch) {
     data.table::setnames(ch, cols, c("pid", "item", if (!is.null(value)) "val"))
     if (is.null(value)) ch[, val := "1"]
-    ch[!is.na(item), .(n = .N, nv = sum(!is.na(val) & nzchar(val))), by = .(pid, item)]
-  }, col_types = ct, label = label, arrow_filter = function(d) d)
-  res[, .(n = sum(n), nv = sum(nv)), by = .(pid, item)]
+    ac$add(ch[!is.na(item) & !is.na(pid), .(n = .N, nv = sum(has_num(val))), by = .(pid, item)])
+    NULL
+  }, col_types = ct, label = label, arrow_filter = flt)
+  ac$result()
+}
+
+#' Wide table: every column in `cols` (default: all columns except `pid` and `exclude`) is an item.
+audit_wide_items <- function(path, pid, cols = NULL, exclude = character(), label = basename(path), engine = "arrow") {
+  hdr <- names(data.table::fread(path, nrows = 0L))
+  hdr <- hdr[nzchar(hdr)]
+  if (is.null(cols)) cols <- setdiff(hdr, c(pid, exclude, "V1"))
+  cols <- intersect(cols, hdr)
+  allc <- c(pid, cols)
+  ct <- do.call(readr::cols_only, stats::setNames(rep(list("c"), length(allc)), allc))
+  ac <- new_pair_accumulator()
+  stream_file(path, function(ch) {
+    out <- lapply(cols, function(cl) ch[!is.na(get(pid)) & has_value(get(cl)), .(item = cl, n = .N, nv = .N), by = .(pid = get(pid))])
+    ac$add(data.table::rbindlist(out)[, .(pid, item, n, nv)])
+    NULL
+  }, col_types = ct, label = label, arrow_filter = if (identical(engine, "arrow")) function(d) d else NULL)
+  ac$result()
+}
+
+#' Parquet dataset (HiRID observation / pharma tables).
+audit_parquet_items <- function(dir, pid, item, value = NULL, label = basename(dir)) {
+  cols <- c(pid, item, value)
+  ac <- new_pair_accumulator()
+  stream_parquet_dir(dir, function(ch) {
+    data.table::setnames(ch, cols, c("pid", "item", if (!is.null(value)) "val"))
+    if (is.null(value)) ch[, val := 1L]
+    ch[, `:=`(pid = as.character(pid), item = as.character(item))]
+    ac$add(ch[!is.na(item) & !is.na(pid), .(n = .N, nv = sum(has_num(val))), by = .(pid, item)])
+    NULL
+  }, arrow_filter = function(d) dplyr::select(d, dplyr::all_of(cols)), label = label)
+  ac$result()
 }
 
 #' Dictionary rows (INSPIRE layout) for items: `agg` = pid x item counts, `N` = denominator (patients), `info` = item, description, unit.
 items_dictionary <- function(agg, N, info = NULL, upper = TRUE) {
+  fix_utf8 <- function(x) { bad <- !is.na(x) & !validUTF8(x); if (any(bad)) x[bad] <- iconv(x[bad], "latin1", "UTF-8", sub = "?"); x }
+  agg[, item := fix_utf8(item)]
   s <- agg[, .(n_records = sum(n), n_patients = sum(nv > 0), med = as.numeric(stats::median(nv[nv > 0]))), by = item][order(-n_patients, item)]
-  if (!is.null(info)) s <- merge(s, info, by = "item", all.x = TRUE, sort = FALSE)[order(-n_patients, item)]
+  if (!is.null(info)) { info <- data.table::copy(info)[, `:=`(item = fix_utf8(item), description = fix_utf8(description), unit = fix_utf8(unit))]; s <- merge(s, info, by = "item", all.x = TRUE, sort = FALSE)[order(-n_patients, item)] }
   if (is.null(info)) s[, `:=`(description = NA_character_, unit = NA_character_)]
   s[, .(`Variable Name` = if (upper) toupper(item) else item, `Variable Type` = "numeric",
         `Variable Description` = data.table::fifelse(is.na(description), item, description),
         `Missing Values (n)` = N - n_patients, `Valid (n)` = n_patients, `Completeness (%)` = round(100 * n_patients / N, 2),
         Notes = sprintf("Records = %s; median records per patient with data = %s", format(n_records, big.mark = ","), format(round(med, 1), nsmall = 1)),
         Unit = data.table::fifelse(is.na(unit) | !nzchar(unit), "-", unit))]
+}
+
+# ---- spec-driven item audit (dictionaries/item_audit_specs.csv) ----------------------------------------------------------------
+audit_resolve <- function(db_id, root, rel) {
+  if (identical(root, "db")) return(db_file_any(db_id, rel))
+  if (startsWith(root, "cfg:")) { d <- CCDB$paths[[sub("^cfg:", "", root)]]; if (is.null(d)) ccdb_stop("config path '", sub("^cfg:", "", root), "' is not set"); return(if (nzchar(rel)) file.path(d, rel) else d) }
+  if (identical(root, "cache")) {
+    cd <- CCDB$paths$cache_dir %||% file.path(CCDB$paths$data_root, "_extracted_cache")
+    p <- file.path(cd, rel)
+    if (!file.exists(p) && !dir.exists(p)) ccdb_stop("cached source not found: ", p)
+    return(p)
+  }
+  ccdb_stop("unknown root '", root, "'")
+}
+
+audit_labels <- function(db_id, sp, root_for_labels = sp$root) {
+  if (!nzchar(sp$label_table)) return(NULL)
+  p <- tryCatch(audit_resolve(db_id, "db", sp$label_table), error = function(e) tryCatch(audit_resolve(db_id, "cache", sp$label_table), error = function(e2) NULL))
+  if (is.null(p)) return(NULL)
+  want <- c(sp$label_key, sp$label_text, if (nzchar(sp$label_unit)) sp$label_unit)
+  lb <- data.table::fread(p, select = want, colClasses = "character", encoding = "UTF-8", showProgress = FALSE)
+  data.table::setnames(lb, want, c("item", "description", if (nzchar(sp$label_unit)) "unit"))
+  if (!"unit" %in% names(lb)) lb[, unit := NA_character_]
+  unique(lb, by = "item")
+}
+
+audit_denominator <- function(db_id, den, ds) {
+  if (startsWith(den, "units:")) {
+    z <- strsplit(sub("^units:", "", den), ":")[[1]]
+    return(data.table::uniqueN(data.table::fread(audit_resolve(db_id, "cache", z[1]), select = z[2], colClasses = "character", showProgress = FALSE)[[1]]))
+  }
+  switch(den, admissions = nrow(ds$admission), patients = data.table::uniqueN(ds$admission$patient_id),
+         icu_admissions = sum(ds$admission$icu_flag == 1L), icu_stays = nrow(ds$icu_stay), ccdb_stop("unknown denominator '", den, "'"))
+}
+
+#' Item-level audit of the raw tables listed in dictionaries/item_audit_specs.csv for this database.
+run_item_audit <- function(ds, only = NULL) {
+  db <- sub("_v[0-9_]+$", "", ds$meta$db_id)
+  spf <- ccdb_path("dictionaries", "item_audit_specs.csv")
+  sp <- data.table::fread(spf, colClasses = "character", na.strings = NULL, encoding = "UTF-8")[db_id == db]
+  if (!is.null(only)) sp <- sp[sheet %in% only]
+  if (!nrow(sp)) return(NULL)
+  sheets <- list(); src <- character(); nr <- numeric()
+  for (i in seq_len(nrow(sp))) {
+    s <- sp[i]
+    cf <- file.path(ccdb_derived_dir(ds$meta$db_id), paste0("item_audit_", gsub("[^A-Za-z0-9]+", "_", s$sheet), ".rds"))
+    fi <- tryCatch(file.info(audit_resolve(db, s$root, s$table)), error = function(e) NULL)
+    key <- paste(unlist(s), if (!is.null(fi)) paste(fi$size, as.numeric(fi$mtime)), collapse = "|")
+    if (file.exists(cf) && !identical(Sys.getenv("CCDB_REFRESH_AUDIT"), "1")) {
+      old <- readRDS(cf)
+      if (identical(old$key, key)) {
+        sheets[[s$sheet]] <- old$d; src[s$sheet] <- s$table; nr[s$sheet] <- old$N
+        log_msg("INFO", "[", db, "] item audit '", s$sheet, "': reused cached result (", nrow(old$d), " items)")
+        next
+      }
+    }
+    r <- tryCatch({
+      path <- audit_resolve(db, s$root, s$table)
+      lbl <- paste(db, s$sheet)
+      agg <- if (identical(s$format, "parquet")) audit_parquet_items(path, s$pid, s$item, if (nzchar(s$value)) s$value, lbl)
+             else if (identical(s$kind, "wide")) audit_wide_items(path, s$pid, if (nzchar(s$cols)) strsplit(s$cols, ",")[[1]], if (nzchar(s$exclude)) strsplit(s$exclude, ",")[[1]] else character(), lbl, s$engine)
+             else audit_long_items(path, s$pid, s$item, if (nzchar(s$value)) s$value, lbl, if (nzchar(s$where)) s$where, s$engine)
+      N <- audit_denominator(db, s$denominator, ds)
+      d <- items_dictionary(agg, N, audit_labels(db, s), upper = FALSE)
+      if (nzchar(s$note)) d[, Notes := paste0(Notes, "; ", s$note)]
+      list(d = d, N = N)
+    }, error = function(e) { log_msg("WARN", "[", db, "] item audit '", s$sheet, "' failed: ", conditionMessage(e)); NULL })
+    if (is.null(r)) next
+    sheets[[s$sheet]] <- r$d; src[s$sheet] <- s$table; nr[s$sheet] <- r$N
+    safe_save_rds(list(key = key, d = r$d, N = r$N), cf)
+    log_msg("INFO", "[", db, "] item audit '", s$sheet, "': ", nrow(r$d), " items")
+  }
+  list(sheets = sheets, source = src, n_rows = nr)
 }
 
 #' Write the dictionary: one xlsx (Overview + one sheet per table, like the INSPIRE workbook) and a long CSV.
@@ -198,7 +325,15 @@ write_data_dictionary <- function(ds, item_audit = FALSE) {
       dd$overview <- rbind(dd$overview, data.table::data.table(`#` = nrow(dd$overview) + seq_along(ex$sheets), `Sheet Name` = names(ex$sheets),
                                                                Source = ex$source[names(ex$sheets)], `N Rows` = ex$n_rows[names(ex$sheets)],
                                                                Variables = vapply(ex$sheets, nrow, integer(1))))
-    } else log_msg("INFO", "[", ds$meta$db_id, "] no item-level audit defined for this database")
+    } else {
+      ex <- run_item_audit(ds)
+      if (!is.null(ex) && length(ex$sheets)) {
+        for (nm in names(ex$sheets)) dd$sheets[[nm]] <- ex$sheets[[nm]]
+        dd$overview <- rbind(dd$overview, data.table::data.table(`#` = nrow(dd$overview) + seq_along(ex$sheets), `Sheet Name` = names(ex$sheets),
+                                                                 Source = ex$source[names(ex$sheets)], `N Rows` = ex$n_rows[names(ex$sheets)],
+                                                                 Variables = vapply(ex$sheets, nrow, integer(1))))
+      } else log_msg("INFO", "[", ds$meta$db_id, "] no item-level audit defined for this database")
+    }
   }
   od <- ccdb_output_dir("dictionaries")
   long <- data.table::rbindlist(c(list(), lapply(names(dd$sheets), function(nm) cbind(Sheet = nm, dd$sheets[[nm]]))), use.names = TRUE)

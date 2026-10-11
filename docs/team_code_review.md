@@ -48,5 +48,29 @@ an adapter defines one (INSPIRE: labs, monitoring items, drugs, ATC classes, ICD
 | Medications - drug (v1.3) | 1,140 matched names (2 more differ only in spelling) | 1,139 (METFORMIN differs: 3,638 vs 3,507) |
 | Medications - ATC (v1.3) | 989 codes | 989 of 989 |
 
+### Item-level audits for every reviewed database (`dictionaries/item_audit_specs.csv`)
+
+One declarative spec row per raw table (path, patient key, item column, value column, label dictionary, denominator) drives a single engine
+(`run_item_audit()` in `R/15_data_dictionary.R`; arrow-streamed, bounded memory, per-sheet cache under `derived/`). "Valid (n)" = units with >= 1 numeric
+result (text-only results do not count, as in the team's `as.numeric()` wide tables).
+
+| Database | Audited tables | Items listed |
+|---|---|---|
+| MIMIC-IV | labevents, chartevents, inputs, outputs, procedures, prescriptions, ICD codes | 43,252 |
+| NWICU | labs, chartevents, procedures, prescriptions, ICD codes | 12,397 |
+| eICU-CRD | lab, vital (periodic, aperiodic), nurse and respiratory charting, intake/output, medication, infusion, admission drugs, diagnoses, treatments | 19,332 |
+| SICdb | signals, labs, medications, intervals, reference fields | 1,252 |
+| AmsterdamUMCdb | numericitems (monitor / lab), list, drug, process, procedure-order items | 4,077 |
+| HiRID | observation variables, pharma records | 681 |
+| PIC | labs, chartevents, surgery vitals, outputs, prescriptions, ICD, symptoms | 2,976 |
+| Zigong | labs, nursing chart, drugs, ICD codes | 4,439 |
+| INSPIRE | labs, monitoring, drugs, ATC, ICD codes | ~2,900 |
+| VitalDB | lab_data, clinical_data | 106 |
+| MOVER-EPIC / MOVER-SIS | labs, diagnoses, complications / observations, vitals, ventilator, labs, drugs, events, I/O | 4,873 / 295 |
+
+Replication check against the team's workbooks (items in both): PIC medications **638 of 638 identical**; PIC labs 508 of 557 identical (the 49 differences are lab
+names that map to several ITEMIDs - the team groups by name, the audit by item id); Zigong labs 100 of 101 identical; INSPIRE as above.
+VitalDB's waveform/track inventory (which of the 6,388 `.vital` files hold which track) is not part of this audit; `track_names.csv` is the dictionary.
+
 Outputs go to `outputs/dictionaries/` (git-ignored: counts are results-derived aggregates, `docs/data_governance.md`).
-Item-level audits for the other databases (PIC, Zigong, HiRID, eICU, MIMIC-IV, SICdb, ...) follow the same `adapter_item_audit()` pattern and are listed as open work in `docs/completion_report.md`.
+Rebuild with `Rscript scripts/build_data_dictionaries.R <db_id>` (set `CCDB_REFRESH_AUDIT=1` to ignore the per-sheet cache).

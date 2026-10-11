@@ -1,0 +1,60 @@
+db_id,sheet,root,table,format,kind,engine,pid,item,value,cols,exclude,label_table,label_key,label_text,label_unit,where,denominator,note
+mimic_iv,Labs (all items),db,hosp/labevents.csv,csv,long,arrow,hadm_id,itemid,valuenum,,,hosp/d_labitems.csv,itemid,label,,,admissions,numeric results only (valuenum); rows without hadm_id (outpatient) ignored
+mimic_iv,Charted items (ICU),db,icu/chartevents.csv,csv,long,arrow,hadm_id,itemid,valuenum,,,icu/d_items.csv,itemid,label,unitname,,icu_admissions,numeric results only (valuenum)
+mimic_iv,Inputs (ICU),db,icu/inputevents.csv,csv,long,arrow,hadm_id,itemid,amount,,,icu/d_items.csv,itemid,label,unitname,,icu_admissions,
+mimic_iv,Outputs (ICU),db,icu/outputevents.csv,csv,long,arrow,hadm_id,itemid,value,,,icu/d_items.csv,itemid,label,unitname,,icu_admissions,
+mimic_iv,Procedures (ICU),db,icu/procedureevents.csv,csv,long,arrow,hadm_id,itemid,value,,,icu/d_items.csv,itemid,label,unitname,,icu_admissions,
+mimic_iv,Medications (drug),db,hosp/prescriptions.csv,csv,long,arrow,hadm_id,drug,,,,,,,,,admissions,patients with >= 1 prescription row
+mimic_iv,Diagnosis (ICD codes),db,hosp/diagnoses_icd.csv,csv,long,arrow,hadm_id,icd_code,,,,hosp/d_icd_diagnoses.csv,icd_code,long_title,,,admissions,ICD-9 and ICD-10 codes pooled
+nwicu,Labs (all items),db,data/nw_hosp/labevents.csv,csv,long,arrow,hadm_id,itemid,valuenum,,,data/nw_hosp/d_labitems.csv,itemid,label,,,admissions,numeric results only (valuenum)
+nwicu,Charted items (ICU),db,data/nw_icu/chartevents.csv,csv,long,arrow,hadm_id,itemid,valuenum,,,data/nw_icu/d_items.csv,itemid,label,unitname,,icu_admissions,numeric results only (valuenum)
+nwicu,Procedures (ICU),db,data/nw_icu/procedureevents.csv,csv,long,arrow,hadm_id,itemid,value,,,data/nw_icu/d_items.csv,itemid,label,unitname,,icu_admissions,
+nwicu,Medications (drug),db,data/nw_hosp/prescriptions.csv,csv,long,arrow,hadm_id,drug,,,,,,,,,admissions,
+nwicu,Diagnosis (ICD codes),db,data/nw_hosp/diagnoses_icd.csv,csv,long,arrow,hadm_id,icd_code,,,,data/nw_hosp/d_icd_diagnoses.csv,icd_code,long_title,,,admissions,ICD-9 and ICD-10 codes pooled
+eicu_crd,Labs (all items),db,lab.csv,csv,long,arrow,patientunitstayid,labname,labresult,,,,,,,,icu_stays,unit: patientunitstayid
+eicu_crd,Vitals periodic,db,vitalPeriodic.csv,csv,wide,arrow,patientunitstayid,,,"temperature,sao2,heartrate,respiration,cvp,etco2,systemicsystolic,systemicdiastolic,systemicmean,pasystolic,padiastolic,pamean,st1,st2,st3,icp",,,,,,,icu_stays,5-minute median values
+eicu_crd,Vitals aperiodic,db,vitalAperiodic.csv,csv,wide,arrow,patientunitstayid,,,"noninvasivesystolic,noninvasivediastolic,noninvasivemean,paop,cardiacoutput,cardiacinput,svr,svri,pvr,pvri",,,,,,,icu_stays,
+eicu_crd,Nurse charting,db,nurseCharting.csv,csv,long,arrow,patientunitstayid,nursingchartcelltypevallabel,nursingchartvalue,,,,,,,,icu_stays,
+eicu_crd,Respiratory charting,db,respiratoryCharting.csv,csv,long,arrow,patientunitstayid,respchartvaluelabel,respchartvalue,,,,,,,,icu_stays,
+eicu_crd,Intake/output,db,intakeOutput.csv,csv,long,arrow,patientunitstayid,celllabel,cellvaluenumeric,,,,,,,,icu_stays,
+eicu_crd,Medications (drug),db,medication.csv,csv,long,arrow,patientunitstayid,drugname,,,,,,,,,icu_stays,
+eicu_crd,Infusion drugs,db,infusionDrug.csv,csv,long,arrow,patientunitstayid,drugname,drugrate,,,,,,,,icu_stays,
+eicu_crd,Admission drugs,db,admissionDrug.csv,csv,long,arrow,patientunitstayid,drugname,,,,,,,,,icu_stays,
+eicu_crd,Diagnoses,db,diagnosis.csv,csv,long,arrow,patientunitstayid,diagnosisstring,,,,,,,,,icu_stays,
+eicu_crd,Treatments,db,treatment.csv,csv,long,arrow,patientunitstayid,treatmentstring,,,,,,,,,icu_stays,
+sicdb,Monitor signals (data_float_h),db,data_float_h.csv,csv,long,arrow,CaseID,DataID,Val,,,d_references.csv,ReferenceGlobalID,ReferenceValue,ReferenceUnit,,admissions,hourly aggregates
+sicdb,Labs,db,laboratory.csv,csv,long,arrow,CaseID,LaboratoryID,LaboratoryValue,,,d_references.csv,ReferenceGlobalID,ReferenceValue,ReferenceUnit,,admissions,
+sicdb,Medications,db,medication.csv,csv,long,arrow,CaseID,DrugID,Amount,,,d_references.csv,ReferenceGlobalID,ReferenceValue,ReferenceUnit,,admissions,
+sicdb,Interval data (data_range),db,data_range.csv,csv,long,arrow,CaseID,DataID,,,,d_references.csv,ReferenceGlobalID,ReferenceValue,ReferenceUnit,,admissions,airway / ventilation intervals
+sicdb,Reference fields (data_ref),db,data_ref.csv,csv,long,arrow,CaseID,FieldID,RefID,,,d_references.csv,ReferenceGlobalID,ReferenceValue,,,admissions,
+amsterdamumcdb,Monitor items (numericitems),cache,amsterdam_numericitems/numericitems.csv,csv,long,arrow,admissionid,item,value,,,,,,,islabresult == '0',admissions,numeric monitor / charted values
+amsterdamumcdb,Labs (numericitems),cache,amsterdam_numericitems/numericitems.csv,csv,long,arrow,admissionid,item,value,,,,,,,islabresult == '1',admissions,
+amsterdamumcdb,List items,db,listitems.csv,csv,long,arrow,admissionid,item,,,,,,,,,admissions,categorical charting
+amsterdamumcdb,Drug items,db,drugitems.csv,csv,long,arrow,admissionid,item,dose,,,,,,,,admissions,
+amsterdamumcdb,Process items,db,processitems.csv,csv,long,arrow,admissionid,item,,,,,,,,,admissions,
+amsterdamumcdb,Procedure orders,db,procedureorderitems.csv,csv,long,arrow,admissionid,item,,,,,,,,,admissions,
+hirid,Observation variables,cfg:hirid_parquet_dir,,parquet,long,arrow,patientid,variableid,value,,,reference_data/hirid_variable_reference.csv,ID,Variable Name,Unit,,admissions,raw_stage observation_tables
+hirid,Pharma records,cache,hirid_pharma/pharma_records/parquet,parquet,long,arrow,patientid,pharmaid,givendose,,,reference_data/hirid_variable_reference.csv,ID,Variable Name,Unit,,admissions,raw_stage pharma_records
+pic,Labs (all items),db,LABEVENTS.csv,csv,long,arrow,HADM_ID,ITEMID,VALUENUM,,,D_LABITEMS.csv,ITEMID,LABEL,,,admissions,numeric results only (VALUENUM)
+pic,Charted items (ICU),db,CHARTEVENTS.csv,csv,long,arrow,HADM_ID,ITEMID,VALUENUM,,,D_ITEMS.csv,ITEMID,LABEL,UNITNAME,,icu_admissions,numeric results only (VALUENUM)
+pic,Surgery vital signs,db,SURGERY_VITAL_SIGNS.csv,csv,long,arrow,HADM_ID,ITEMID,VALUE,,,D_ITEMS.csv,ITEMID,LABEL,UNITNAME,,admissions,
+pic,Outputs,db,OUTPUTEVENTS.csv,csv,long,arrow,HADM_ID,ITEMID,VALUE,,,D_ITEMS.csv,ITEMID,LABEL,UNITNAME,,icu_admissions,
+pic,Medications (drug),db,PRESCRIPTIONS.csv,csv,long,arrow,HADM_ID,DRUG_NAME_EN,,,,,,,,,admissions,
+pic,Diagnosis (ICD-10 CN codes),db,DIAGNOSES_ICD.csv,csv,long,arrow,HADM_ID,ICD10_CODE_CN,,,,D_ICD_DIAGNOSES.csv,ICD10_CODE_CN,TITLE,,,admissions,
+pic,EMR symptoms,db,EMR_SYMPTOMS.csv,csv,long,arrow,HADM_ID,SYMPTOM_NAME,,,,,,,,,admissions,
+zigong,Labs (all items),db,dtLab.csv,csv,long,arrow,INP_NO,Item,LabValue,,,,,,,,admissions,
+zigong,Nursing chart (all columns),db,dtNursingChart.csv,csv,wide,readr,INP_NO,,,,"V1,ChartTime,Rhythm",,,,,,admissions,all charted columns; text columns counted as non-empty
+zigong,Medications (drug),db,dtDrugs.csv,csv,long,arrow,PATIENT_ID,DrugName,,,,,,,,,admissions,keyed by PATIENT_ID (one admission per patient)
+zigong,Diagnosis (ICD codes),db,dtICD.csv,csv,long,arrow,INP_NO,ICD_Code,,,,,,,,,admissions,
+vitaldb,Labs (all items),db,lab_data.csv,csv,long,arrow,caseid,name,result,,,lab_parameters.csv,Parameter,Description,Unit,,admissions,
+vitaldb,Clinical data (all columns),db,clinical_data.csv,csv,wide,arrow,caseid,,,,"caseid,subjectid",clinical_parameters.csv,Parameter,Description,Unit,,admissions,pre-operative and peri-operative case variables
+mover_epic,Labs (all items),cache,mover_epic/EPIC_EMR/EMR/patient_labs.csv,csv,long,arrow,LOG_ID,Lab Name,Observation Value,,,,,,,,units:mover_epic/EPIC_EMR/EMR/patient_information.csv:LOG_ID,
+mover_epic,Diagnosis (visit),cache,mover_epic/EPIC_EMR/EMR/patient_visit.csv,csv,long,arrow,LOG_ID,diagnosis_code,,,,mover_epic/EPIC_EMR/EMR/patient_visit.csv,diagnosis_code,dx_name,,,units:mover_epic/EPIC_EMR/EMR/patient_information.csv:LOG_ID,
+mover_epic,Post-operative complications,cache,mover_epic/EPIC_EMR/EMR/patient_post_op_complications.csv,csv,long,arrow,LOG_ID,Element_Name,SMRTDTA_ELEM_VALUE,,,,,,,,units:mover_epic/EPIC_EMR/EMR/patient_information.csv:LOG_ID,
+mover_sis,Observations (wide),cache,mover_sis/EMR/patient_observations.csv,csv,wide,arrow,PID,,,,"PID,Obs_time",,,,,,units:mover_sis/EMR/patient_information.csv:PID,
+mover_sis,Vitals (wide),cache,mover_sis/EMR/patient_vitals.csv,csv,wide,arrow,PID,,,,"PID,Obs_time",,,,,,units:mover_sis/EMR/patient_information.csv:PID,
+mover_sis,Ventilator (wide),cache,mover_sis/EMR/patient_ventilator.csv,csv,wide,arrow,PID,,,,"PID,Obs_time",,,,,,units:mover_sis/EMR/patient_information.csv:PID,
+mover_sis,Labs (wide),cache,mover_sis/EMR/patient_labs.csv,csv,wide,arrow,PID,,,,"PID,Obs_time",,,,,,units:mover_sis/EMR/patient_information.csv:PID,
+mover_sis,Medications (drug),cache,mover_sis/EMR/patient_medication.csv,csv,long,arrow,PID,Drug_name,Dose,,,,,,,,units:mover_sis/EMR/patient_information.csv:PID,
+mover_sis,Procedure events,cache,mover_sis/EMR/patient_procedure_events.csv,csv,long,arrow,PID,Event_name,,,,,,,,,units:mover_sis/EMR/patient_information.csv:PID,
+mover_sis,Input/output,cache,mover_sis/EMR/patient_input_output.csv,csv,long,arrow,PID,Type,Volume,,,,,,,,units:mover_sis/EMR/patient_information.csv:PID,
