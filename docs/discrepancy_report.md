@@ -81,3 +81,13 @@ None of the 15 computable values reproduces (e.g. AmsterdamUMCdb ventilation 87%
 **Explained.** The charted values equal first-admission deaths within 30/90/365 days of hospital admission divided by the number of rows in `patients.csv` (364,627) - the same denominator that reproduces the review's in-hospital 3.2% (MATCH 2.106, 3.372, 5.807). About 141,000 of those patients have no row in `admissions.csv` (the cohort here is 223,450 patients with an admission), so the charted rates are lower than the rates among patients with an admission: 3.44% / 5.50% / 9.48% over the 223,450 first admissions (in-hospital 2.16%). The same denominator issue affects the review's MIMIC-IV in-hospital mortality, age IQR (29-65 vs 39-72 among hospitalised patients) and cohort size. `dod` is a date (+/- 1 day) and is recorded only up to one year after the last hospital discharge.
 
 **Mislabelled cells.** In `03_mortality.csv` the INSPIRE 13.3% and Zigong 48.3% under `year1_or_allcause_pct` are all-cause deaths at any follow-up (team code), not one-year landmarks.
+
+## Common-rule results (2026-10-11)
+
+* **Organ support** (any record during the ICU stay, ICU admissions): ventilation SICdb 69.0% (review 38%), HiRID 47.0% (60.8%), MIMIC-IV 41.7% (54%), eICU-CRD 23.9% (30%),
+  AmsterdamUMCdb 87.4% (71.8%); vasopressors MIMIC-IV 31.7% (29%), eICU 12.3% (15%), HiRID 38.8% (39.3%), SICdb 63.6% (51%), Amsterdam 70.4% (58.8%), Zigong 55.1% (57.2%); RRT MIMIC-IV 3.6% (2.6%),
+  NWICU 3.4% (3%), SICdb 3.6% (3.8%), Amsterdam 5.2% (4.9%). 0 of 15 match; the closest are HiRID vasopressors (0.5 points) and SICdb/Amsterdam RRT (0.2-0.3 points).
+* **Granularity** (per-stay records per hour / day, median): see `docs/review_reproducibility.md`. Amsterdam vital signs are bimodal (hourly-charted stays vs minute-level monitor stays): median 1.0/h but mean
+  about 14-15/h (review 13.7-16.2/h); SICdb stores hourly aggregates, so rows give 1/h; the review's SICdb heart rate of 56.9/h equals the raw samples behind each hourly row (`cnt`, mean 58.8 for heart rate, checked on the first 6 million rows), whereas its SICdb SpO2 and systolic BP (1.0/h) are hourly rows - the charted SICdb column mixes two counting rules; HiRID and MIMIC-IV vital signs agree with the review
+  (HiRID FiO2 14.92 vs 14.9, MIMIC-IV SpO2/HR 1.0).
+* **INSPIRE v1.4.2**: all charted values reproduce on v1.4.2 except the ICU length of stay (1.04 -> 1.01 d).

@@ -59,6 +59,7 @@ stream_file_arrow <- function(path, fn, col_types, delim, label, arrow_filter, m
   con <- if (grepl("[.]gz$", path, ignore.case = TRUE)) gzfile(path, "rt") else file(path, "rt")
   hdr <- readLines(con, n = 1L, warn = FALSE); close(con)
   hdr <- gsub("\"", "", sub("^﻿", "", strsplit(hdr, delim, fixed = TRUE)[[1]]), fixed = TRUE)
+  hdr[!nzchar(hdr)] <- paste0("V", which(!nzchar(hdr)))        # R-generated index column ("") would break dplyr filters
   spec <- col_types$cols
   atype <- function(cl) switch(class(cl)[1], collector_double = arrow::float64(), collector_integer = arrow::int32(),
                                collector_logical = arrow::boolean(), arrow::string())

@@ -93,17 +93,20 @@ adapter_build <- function(cfg) {
   index <- cs[, .(unit_key = CaseID, index_hours = 0)]
   fm <- mp[source == "float", .(item, analyte, source_unit)]
   vent_hit <- list()
-  float_ids <- c(fm$item, as.character(SIC_VENT_SIGNALS)); max_off <- win * 3600
+  vent_ids <- as.character(SIC_VENT_SIGNALS)
+  float_ids <- c(fm$item, vent_ids); max_off <- win * 3600
   fl <- stream_file(db_file_any("sicdb", "data_float_h.csv"), function(ch) {
+    # ventilation = ventilator signal > 0 at ANY time during the ICU stay (common rule across databases: whole ICU stay)
+    vh <- ch[DataID %in% as.character(SIC_VENT_SIGNALS) & Val > 0 & Offset >= 0]
+    if (nrow(vh)) vent_hit[[length(vent_hit) + 1L]] <<- unique(vh[stay_end, on = "CaseID", nomatch = 0L][Offset <= end_s, CaseID])
     ch <- ch[Offset <= win * 3600]
     if (!nrow(ch)) return(NULL)
-    vent_hit[[length(vent_hit) + 1L]] <<- unique(ch[DataID %in% as.character(SIC_VENT_SIGNALS) & Val > 0, CaseID])
     ch <- ch[DataID %in% fm$item]
     if (!nrow(ch)) return(NULL)
     reduce_chunk_first_in_window(ch[, .(unit_key = CaseID, item = DataID, time_hours = Offset / 3600, value = Val, unit = NA_character_)],
                                  fm, index, win, pre)
   }, col_types = readr::cols_only(CaseID = "c", DataID = "c", Offset = "d", Val = "d"), label = "SICdb data_float_h",
-  arrow_filter = function(d) dplyr::filter(d, DataID %in% float_ids & Offset <= max_off))
+  arrow_filter = function(d) dplyr::filter(d, (DataID %in% float_ids & Offset <= max_off) | DataID %in% vent_ids))
   lm <- mp[source == "lab", .(item, analyte, source_unit)]
   lab_ids <- lm$item
   lb <- stream_file(db_file_any("sicdb", "laboratory.csv"), function(ch) {
@@ -125,7 +128,7 @@ adapter_build <- function(cfg) {
       measurement_analytes_available = unique(measurements$analyte),
       support_available = c("mech_vent", "rrt", "vasopressor", "intubation", "tracheostomy"), support_scope = "icu",
       support_definition = list(
-        mech_vent = "ventilator signal recorded (PEEP or peak airway pressure > 0) in the first 24 h of the ICU stay; first-24h only, signal-based proxy",
+        mech_vent = "ventilator signal recorded (PEEP or peak airway pressure > 0) at any time during the ICU stay; signal-based proxy",
         rrt = "cases.HoursOfCRRT > 0 (continuous RRT only; intermittent haemodialysis not captured)",
         vasopressor = "medication record of norepinephrine/epinephrine/vasopressin/phenylephrine/dopamine/dobutamine/milrinone during the ICU stay",
         intubation = "endotracheal-tube airway interval overlapping the ICU stay",

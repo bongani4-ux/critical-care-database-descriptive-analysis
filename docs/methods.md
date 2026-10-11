@@ -159,3 +159,14 @@ No stochastic procedure exists in v0.1; a seed is set anyway (`project.seed`).
 | "Any recorded procedure" | `surgery_flag` = named operation | procedure rows include ventilation, lumbar puncture, acupuncture |
 | Ethnicity, marital status, insurance | not harmonised | not comparable across jurisdictions |
 | Microbiology, imaging, anaesthesia drugs, KDIGO AKI | domain availability only | not part of a cross-database descriptive framework in v0.1 |
+
+## 12. Common rules adopted for definitions the review does not state (2026-10-11)
+
+The review gives no definition for organ-support percentages or recording frequency. Where the databases already used one convention for
+most of the cases, that convention is applied to all of them; nothing is chosen to make a number agree with the review.
+
+| Item | Rule (applied to every database) | Where |
+|---|---|---|
+| INSPIRE version | **v1.4.2** is the analysed version (v1.3 only as a version check). The review's charted values are updated with `scripts/inspire_version_update.R`: only the ICU length of stay changes (1.04 -> **1.01** days); every other charted INSPIRE value is identical on both versions | `outputs/tables/inspire_v1_4_2_update.csv` |
+| Organ support (mechanical ventilation, vasopressor, RRT) | an event record at **any time during the ICU stay**; denominator = **ICU admissions**; whole-stay was already used by MIMIC-IV, eICU, AmsterdamUMCdb, Zigong, NWICU and the vasopressor/RRT definitions of SICdb and HiRID; the two exceptions (SICdb and HiRID ventilation, first 24 h) were moved to whole-stay | adapters' `support_definition` |
+| Recording frequency | per ICU stay: records inside the stay / stay hours (vital signs) or / stay days (laboratory); a record = one source row (wide tables: one non-empty cell); all items of a parameter pooled; **median over stays with >= 1 record** (mean, quartiles and pooled sum(records)/sum(hours) are also reported) | `R/16_granularity.R`, `dictionaries/granularity_specs.csv`, `scripts/run_granularity.R` |

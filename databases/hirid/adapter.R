@@ -80,7 +80,7 @@ adapter_build <- function(cfg) {
   red <- stream_parquet_dir(obs_dir, function(ch) {
     ch[, `:=`(unit_key = as.character(patientid), th = as.numeric(datetime) / 3600)]
     v <- merge(ch[variableid == HIRID_VENT_MODE, .(unit_key, th)], index, by = "unit_key")
-    vent_hit[[length(vent_hit) + 1L]] <<- unique(v[th >= index_hours & th <= index_hours + win, unit_key])
+    vent_hit[[length(vent_hit) + 1L]] <<- unique(v[th >= index_hours, unit_key])      # any time during the ICU stay (observations end at ICU discharge)
     ch <- ch[variableid %in% ids]
     if (!nrow(ch)) return(NULL)
     reduce_chunk_first_in_window(ch[, .(unit_key, item = as.character(variableid), time_hours = th,
@@ -110,7 +110,7 @@ adapter_build <- function(cfg) {
       measurement_index = "first_icu_admission", measurement_analytes_available = unique(measurements$analyte),
       support_available = c("mech_vent", "vasopressor"), support_scope = "icu",
       support_definition = list(
-        mech_vent = "'Ventilator mode' (variable 3845) recorded in the first 24 h of the ICU stay - invasive and non-invasive modes cannot be separated",
+        mech_vent = "'Ventilator mode' (variable 3845) recorded at any time during the ICU stay - invasive and non-invasive modes cannot be separated",
         vasopressor = "pharma record with dose > 0 of noradrenaline, adrenaline, vasopressin or dobutamine during the ICU stay"),
       support_unavailable_note = "no renal-replacement records in the released tables (Haemofiltration has no pharma rows); tracheostomy/intubation not coded",
       hosp_death_definition = "NOT RECORDED (discharge_status is the ICU discharge status)",

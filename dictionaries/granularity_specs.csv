@@ -1,0 +1,98 @@
+db_id,parameter,group,root,table,format,kind,link,key_col,item_col,items,time_col,time_unit,filter_col,filter_regex,note,engine
+mimic_iv,spo2,vital,db,icu/chartevents.csv,csv,long,skey,stay_id,itemid,220277,charttime,datetime,,,,arrow
+mimic_iv,fio2,vital,db,icu/chartevents.csv,csv,long,skey,stay_id,itemid,223835,charttime,datetime,,,,arrow
+mimic_iv,peep,vital,db,icu/chartevents.csv,csv,long,skey,stay_id,itemid,220339|224700,charttime,datetime,,,,arrow
+mimic_iv,hr,vital,db,icu/chartevents.csv,csv,long,skey,stay_id,itemid,220045,charttime,datetime,,,,arrow
+mimic_iv,sbp,vital,db,icu/chartevents.csv,csv,long,skey,stay_id,itemid,220179|220050|225309,charttime,datetime,,,,arrow
+mimic_iv,co,vital,db,icu/chartevents.csv,csv,long,skey,stay_id,itemid,220088|224842|228369,charttime,datetime,,,,arrow
+mimic_iv,medications,vital,db,icu/inputevents.csv,csv,long,skey,stay_id,itemid,*,starttime,datetime,,,ICU infusion / administration rows,arrow
+mimic_iv,fluids_out,vital,db,icu/outputevents.csv,csv,long,skey,stay_id,itemid,*,charttime,datetime,,,,arrow
+mimic_iv,lactate,lab,db,hosp/labevents.csv,csv,long,akey,hadm_id,itemid,50813,charttime,datetime,,,,arrow
+mimic_iv,pao2,lab,db,hosp/labevents.csv,csv,long,akey,hadm_id,itemid,50821,charttime,datetime,,,,arrow
+mimic_iv,sodium,lab,db,hosp/labevents.csv,csv,long,akey,hadm_id,itemid,50983|50824,charttime,datetime,,,,arrow
+mimic_iv,hemoglobin,lab,db,hosp/labevents.csv,csv,long,akey,hadm_id,itemid,51222|50811,charttime,datetime,,,,arrow
+mimic_iv,crp,lab,db,hosp/labevents.csv,csv,long,akey,hadm_id,itemid,50889,charttime,datetime,,,,arrow
+mimic_iv,creatinine,lab,db,hosp/labevents.csv,csv,long,akey,hadm_id,itemid,50912,charttime,datetime,,,,arrow
+mimic_iv,alt,lab,db,hosp/labevents.csv,csv,long,akey,hadm_id,itemid,50861,charttime,datetime,,,,arrow
+nwicu,spo2,vital,db,data/nw_icu/chartevents.csv,csv,long,skey,stay_id,itemid,320277,charttime,datetime,,,,arrow
+nwicu,hr,vital,db,data/nw_icu/chartevents.csv,csv,long,skey,stay_id,itemid,320045,charttime,datetime,,,,arrow
+nwicu,sbp,vital,db,data/nw_icu/chartevents.csv,csv,long,skey,stay_id,itemid,320050|320179,charttime,datetime,,,,arrow
+nwicu,medications,vital,db,data/nw_hosp/emar.csv,csv,long,akey,hadm_id,medication,*,charttime,datetime,,,eMAR rows (no ICU infusion table in NWICU),arrow
+nwicu,lactate,lab,db,data/nw_hosp/labevents.csv,csv,long,akey,hadm_id,itemid,100031,charttime,datetime,,,,arrow
+nwicu,sodium,lab,db,data/nw_hosp/labevents.csv,csv,long,akey,hadm_id,itemid,100010|100050,charttime,datetime,,,,arrow
+nwicu,hemoglobin,lab,db,data/nw_hosp/labevents.csv,csv,long,akey,hadm_id,itemid,100007,charttime,datetime,,,,arrow
+nwicu,crp,lab,db,data/nw_hosp/labevents.csv,csv,long,akey,hadm_id,itemid,100053,charttime,datetime,,,,arrow
+nwicu,creatinine,lab,db,data/nw_hosp/labevents.csv,csv,long,akey,hadm_id,itemid,100002,charttime,datetime,,,,arrow
+nwicu,alt,lab,db,data/nw_hosp/labevents.csv,csv,long,akey,hadm_id,itemid,100042,charttime,datetime,,,,arrow
+eicu_crd,spo2,vital,db,vitalPeriodic.csv,csv,wide,skey,patientunitstayid,,sao2,observationoffset,min,,,,arrow
+eicu_crd,hr,vital,db,vitalPeriodic.csv,csv,wide,skey,patientunitstayid,,heartrate,observationoffset,min,,,,arrow
+eicu_crd,sbp,vital,db,vitalPeriodic.csv,csv,wide,skey,patientunitstayid,,systemicsystolic,observationoffset,min,,,invasive,arrow
+eicu_crd,sbp,vital,db,vitalAperiodic.csv,csv,wide,skey,patientunitstayid,,noninvasivesystolic,observationoffset,min,,,non-invasive,arrow
+eicu_crd,co,vital,db,vitalAperiodic.csv,csv,wide,skey,patientunitstayid,,cardiacoutput,observationoffset,min,,,,arrow
+eicu_crd,fio2,vital,db,respiratoryCharting.csv,csv,long,skey,patientunitstayid,respchartvaluelabel,FiO2|FIO2 (%),respchartoffset,min,,,,arrow
+eicu_crd,peep,vital,db,respiratoryCharting.csv,csv,long,skey,patientunitstayid,respchartvaluelabel,PEEP|PEEP/CPAP,respchartoffset,min,,,,arrow
+eicu_crd,medications,vital,db,medication.csv,csv,long,skey,patientunitstayid,drugname,*,drugstartoffset,min,,,medication orders with a start offset,arrow
+eicu_crd,fluids_out,vital,db,intakeOutput.csv,csv,long,skey,patientunitstayid,celllabel,*,intakeoutputoffset,min,cellpath,\|Output,,arrow
+eicu_crd,lactate,lab,db,lab.csv,csv,long,skey,patientunitstayid,labname,lactate,labresultoffset,min,,,,arrow
+eicu_crd,pao2,lab,db,lab.csv,csv,long,skey,patientunitstayid,labname,paO2,labresultoffset,min,,,,arrow
+eicu_crd,sodium,lab,db,lab.csv,csv,long,skey,patientunitstayid,labname,sodium,labresultoffset,min,,,,arrow
+eicu_crd,hemoglobin,lab,db,lab.csv,csv,long,skey,patientunitstayid,labname,Hgb,labresultoffset,min,,,,arrow
+eicu_crd,crp,lab,db,lab.csv,csv,long,skey,patientunitstayid,labname,CRP|CRP-hs,labresultoffset,min,,,,arrow
+eicu_crd,creatinine,lab,db,lab.csv,csv,long,skey,patientunitstayid,labname,creatinine,labresultoffset,min,,,,arrow
+eicu_crd,alt,lab,db,lab.csv,csv,long,skey,patientunitstayid,labname,ALT (SGPT),labresultoffset,min,,,,arrow
+sicdb,spo2,vital,db,data_float_h.csv,csv,long,skey,CaseID,DataID,710,Offset,sec,,,hourly aggregate rows,arrow
+sicdb,fio2,vital,db,data_float_h.csv,csv,long,skey,CaseID,DataID,2283,Offset,sec,,,hourly aggregate rows,arrow
+sicdb,peep,vital,db,data_float_h.csv,csv,long,skey,CaseID,DataID,2278,Offset,sec,,,hourly aggregate rows,arrow
+sicdb,hr,vital,db,data_float_h.csv,csv,long,skey,CaseID,DataID,707,Offset,sec,,,hourly aggregate rows,arrow
+sicdb,sbp,vital,db,data_float_h.csv,csv,long,skey,CaseID,DataID,701|704,Offset,sec,,,hourly aggregate rows,arrow
+sicdb,fluids_out,vital,db,data_float_h.csv,csv,long,skey,CaseID,DataID,725,Offset,sec,,,hourly aggregate rows,arrow
+sicdb,medications,vital,db,medication.csv,csv,long,skey,CaseID,DrugID,*,Offset,sec,,,,arrow
+sicdb,lactate,lab,db,laboratory.csv,csv,long,skey,CaseID,LaboratoryID,657|465,Offset,sec,,,,arrow
+sicdb,pao2,lab,db,laboratory.csv,csv,long,skey,CaseID,LaboratoryID,689,Offset,sec,,,,arrow
+sicdb,sodium,lab,db,laboratory.csv,csv,long,skey,CaseID,LaboratoryID,469,Offset,sec,,,,arrow
+sicdb,hemoglobin,lab,db,laboratory.csv,csv,long,skey,CaseID,LaboratoryID,289|658,Offset,sec,,,,arrow
+sicdb,crp,lab,db,laboratory.csv,csv,long,skey,CaseID,LaboratoryID,341,Offset,sec,,,,arrow
+sicdb,creatinine,lab,db,laboratory.csv,csv,long,skey,CaseID,LaboratoryID,367|368,Offset,sec,,,,arrow
+sicdb,alt,lab,db,laboratory.csv,csv,long,skey,CaseID,LaboratoryID,617,Offset,sec,,,,arrow
+amsterdamumcdb,spo2,vital,cache,amsterdam_numericitems/numericitems.csv,csv,long,skey,admissionid,item,Saturatie (Monitor),measuredat,ms,,,,arrow
+amsterdamumcdb,fio2,vital,cache,amsterdam_numericitems/numericitems.csv,csv,long,skey,admissionid,item,FiO2 %,measuredat,ms,,,,arrow
+amsterdamumcdb,peep,vital,cache,amsterdam_numericitems/numericitems.csv,csv,long,skey,admissionid,item,PEEP (Set),measuredat,ms,,,,arrow
+amsterdamumcdb,hr,vital,cache,amsterdam_numericitems/numericitems.csv,csv,long,skey,admissionid,item,Hartfrequentie,measuredat,ms,,,,arrow
+amsterdamumcdb,sbp,vital,cache,amsterdam_numericitems/numericitems.csv,csv,long,skey,admissionid,item,ABP systolisch|Niet invasieve bloeddruk systolisch,measuredat,ms,,,,arrow
+amsterdamumcdb,co,vital,cache,amsterdam_numericitems/numericitems.csv,csv,long,skey,admissionid,item,Cardiac Output,measuredat,ms,,,,arrow
+amsterdamumcdb,fluids_out,vital,cache,amsterdam_numericitems/numericitems.csv,csv,long,skey,admissionid,item,*,measuredat,ms,fluidout,^1$,numericitems flagged fluidout,arrow
+amsterdamumcdb,medications,vital,db,drugitems.csv,csv,long,skey,admissionid,item,*,start,ms,,,,arrow
+amsterdamumcdb,lactate,lab,cache,amsterdam_numericitems/numericitems.csv,csv,long,skey,admissionid,item,Lactaat (bloed),measuredat,ms,,,,arrow
+amsterdamumcdb,pao2,lab,cache,amsterdam_numericitems/numericitems.csv,csv,long,skey,admissionid,item,PO2 (bloed),measuredat,ms,,,,arrow
+amsterdamumcdb,sodium,lab,cache,amsterdam_numericitems/numericitems.csv,csv,long,skey,admissionid,item,Natrium (bloed)|Na (onv.ISE) (bloed),measuredat,ms,,,,arrow
+amsterdamumcdb,hemoglobin,lab,cache,amsterdam_numericitems/numericitems.csv,csv,long,skey,admissionid,item,Hb (bloed)|Hb(v.Bgs) (bloed),measuredat,ms,,,,arrow
+amsterdamumcdb,crp,lab,cache,amsterdam_numericitems/numericitems.csv,csv,long,skey,admissionid,item,CRP (bloed),measuredat,ms,,,,arrow
+amsterdamumcdb,creatinine,lab,cache,amsterdam_numericitems/numericitems.csv,csv,long,skey,admissionid,item,Kreatinine (bloed),measuredat,ms,,,,arrow
+amsterdamumcdb,alt,lab,cache,amsterdam_numericitems/numericitems.csv,csv,long,skey,admissionid,item,ALAT (bloed),measuredat,ms,,,,arrow
+hirid,spo2,vital,cfg:hirid_parquet_dir,,parquet,long,skey,patientid,variableid,4000|8280,datetime,datetime,,,,arrow
+hirid,fio2,vital,cfg:hirid_parquet_dir,,parquet,long,skey,patientid,variableid,2010,datetime,datetime,,,,arrow
+hirid,hr,vital,cfg:hirid_parquet_dir,,parquet,long,skey,patientid,variableid,200,datetime,datetime,,,,arrow
+hirid,sbp,vital,cfg:hirid_parquet_dir,,parquet,long,skey,patientid,variableid,100|600,datetime,datetime,,,,arrow
+hirid,co,vital,cfg:hirid_parquet_dir,,parquet,long,skey,patientid,variableid,1000,datetime,datetime,,,,arrow
+hirid,fluids_out,vital,cfg:hirid_parquet_dir,,parquet,long,skey,patientid,variableid,10020000,datetime,datetime,,,,arrow
+hirid,lactate,lab,cfg:hirid_parquet_dir,,parquet,long,skey,patientid,variableid,24000524|24000732|24000485,datetime,datetime,,,,arrow
+hirid,pao2,lab,cfg:hirid_parquet_dir,,parquet,long,skey,patientid,variableid,20000200,datetime,datetime,,,,arrow
+hirid,sodium,lab,cfg:hirid_parquet_dir,,parquet,long,skey,patientid,variableid,20000400|24000835,datetime,datetime,,,,arrow
+hirid,hemoglobin,lab,cfg:hirid_parquet_dir,,parquet,long,skey,patientid,variableid,20000900|24000548|24000836,datetime,datetime,,,,arrow
+hirid,crp,lab,cfg:hirid_parquet_dir,,parquet,long,skey,patientid,variableid,20002200,datetime,datetime,,,,arrow
+hirid,creatinine,lab,cfg:hirid_parquet_dir,,parquet,long,skey,patientid,variableid,20000600,datetime,datetime,,,,arrow
+hirid,alt,lab,cfg:hirid_parquet_dir,,parquet,long,skey,patientid,variableid,20002600,datetime,datetime,,,,arrow
+hirid,medications,vital,cache,hirid_pharma/pharma_records/parquet,parquet,long,skey,patientid,pharmaid,*,givenat,datetime,,,,arrow
+zigong,spo2,vital,db,dtNursingChart.csv,csv,wide,akey,INP_NO,,Blood_oxygen_saturation,ChartTime,hours,,,,readr
+zigong,fio2,vital,db,dtNursingChart.csv,csv,wide,akey,INP_NO,,FIO2,ChartTime,hours,,,,readr
+zigong,hr,vital,db,dtNursingChart.csv,csv,wide,akey,INP_NO,,heart_rate,ChartTime,hours,,,,readr
+zigong,sbp,vital,db,dtNursingChart.csv,csv,wide,akey,INP_NO,,Blood_pressure_high|Invasive_SBP,ChartTime,hours,,,,readr
+zigong,fluids_out,vital,db,dtNursingChart.csv,csv,wide,akey,INP_NO,,Urine_volume,ChartTime,hours,,,,readr
+zigong,medications,vital,db,dtDrugs.csv,csv,long,pkey,PATIENT_ID,DrugName,*,Drug_time,hours,,,,arrow
+zigong,lactate,lab,db,dtLab.csv,csv,long,akey,INP_NO,Item,Lactic acid (LAC)|Lactic acid concentration (CLAC),LabTime,hours,,,,arrow
+zigong,pao2,lab,db,dtLab.csv,csv,long,akey,INP_NO,Item,Arterial oxygen partial pressure (PO2),LabTime,hours,,,,arrow
+zigong,sodium,lab,db,dtLab.csv,csv,long,akey,INP_NO,Item,Sodium (NA)|Sodium ion (Na +),LabTime,hours,,,,arrow
+zigong,hemoglobin,lab,db,dtLab.csv,csv,long,akey,INP_NO,Item,Hemoglobin (Hgb),LabTime,hours,,,,arrow
+zigong,crp,lab,db,dtLab.csv,csv,long,akey,INP_NO,Item,C-reactive protein (CRP),LabTime,hours,,,,arrow
+zigong,creatinine,lab,db,dtLab.csv,csv,long,akey,INP_NO,Item,Creatinine (enzymatic method) (CRE),LabTime,hours,,,,arrow
+zigong,alt,lab,db,dtLab.csv,csv,long,akey,INP_NO,Item,Alanine aminotransferase (ALT),LabTime,hours,,,,arrow

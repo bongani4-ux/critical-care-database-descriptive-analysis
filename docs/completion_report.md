@@ -19,7 +19,7 @@
 | AmsterdamUMCdb v1.0.2 | cohort, ICU outcome, organ support | vitals (88% of ICU admissions) and labs added; severity covers only ~1.5% of ICU admissions |
 
 ## Needs a human decision
-1. Update the review for INSPIRE (v1.4.2 analysed per project decision; review numbers were charted on v1.3).
+1. Update the review for INSPIRE to v1.4.2 (done in the repository; in the review change ICU LOS 1.04 -> 1.01 d and the version label).
 2. Decide whether to report AmsterdamUMCdb severity (NICE-registry scores cover ~1.5% of ICU admissions).
 3. Correct the review's mis-labelled numbers (list in `docs/discrepancy_report.md`).
 
