@@ -110,3 +110,8 @@ version decision (v1.4.2 analysed; the review's numbers were charted on v1.3) is
 Code: MIT (`LICENSE`) - the licence covers the code only; **each database keeps its own data-use agreement**. Cite the code via
 `CITATION.cff` and each database via the primary citations in [docs/database_coverage.md](docs/database_coverage.md).
 Contributions: [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Reproducing the review
+
+* `review_reproduction/` - the review's own charted values and figure code (Supplemental file 6) with a consistency check; `python check_charted_values.py`, `python make_figures.py`.
+* `docs/review_reproducibility.md` - how each charted value was produced and which ones this pipeline reproduces (and which need the authors' definitions).

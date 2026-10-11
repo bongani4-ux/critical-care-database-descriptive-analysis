@@ -1,0 +1,675 @@
+{
+ "rows": [
+  [
+   "MIMIC-IV",
+   "ICU, CC, EHR",
+   "Include",
+   "—"
+  ],
+  [
+   "eICU Collaborative Research Database",
+   "CC",
+   "Include",
+   "—"
+  ],
+  [
+   "INSPIRE, a publicly available research dataset for perioperative medicine",
+   "ICU, Anaes, Surg",
+   "Include",
+   "—"
+  ],
+  [
+   "HiRID, a high time-resolution ICU dataset",
+   "ICU, CC",
+   "Include",
+   "—"
+  ],
+  [
+   "Northwestern ICU (NWICU) database",
+   "CC",
+   "Include",
+   "—"
+  ],
+  [
+   "Salzburg Intensive Care database (SICdb)",
+   "ICU, CC, Surg",
+   "Include",
+   "—"
+  ],
+  [
+   "Paediatric Intensive Care database",
+   "ICU, CC",
+   "Include",
+   "—"
+  ],
+  [
+   "VitalDB, a high-fidelity multi-parameter vital signs database",
+   "Anaes",
+   "Include",
+   "—"
+  ],
+  [
+   "Critical care database comprising patients with infection at Zigong Fourth People's Hospital",
+   "ICU, CC",
+   "Include",
+   "—"
+  ],
+  [
+   "Medical Information Mart for Intensive Care Brazil (MIMIC-BR)",
+   "ICU, CC",
+   "Flag",
+   "—"
+  ],
+  [
+   "Establishment of a Chinese critical care database (Zhejiang PPH)",
+   "CC",
+   "Flag",
+   "—"
+  ],
+  [
+   "SCRIPT CarpeDiem Dataset",
+   "CC",
+   "Exclude",
+   "Curated analytic dataset assembled for a specific study rather than a general-purpose database of routine care episodes"
+  ],
+  [
+   "I-CARE: International Cardiac Arrest REsearch consortium Database",
+   "ICU",
+   "Exclude",
+   "Physiological-signal or imaging repository without linked patient-level clinical context"
+  ],
+  [
+   "Multimodal Clinical Monitoring in the Emergency Department (MC-MED)",
+   "EHR",
+   "Exclude",
+   "Not an anesthesia or critical-care episode"
+  ],
+  [
+   "Kingston ICU AF Dataset",
+   "ICU",
+   "Exclude",
+   "Restricted access, not obtainable through open credentialing"
+  ],
+  [
+   "EchoNotes Structured Database derived from MIMIC-III",
+   "ICU",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "Phenotype Annotations for Patient Notes in MIMIC-III",
+   "ICU, CC, EHR",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "MIMIC-IV-Ext-CLIF",
+   "ICU, CC, EHR",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "A Temporal Dataset for Respiratory Support in Critically Ill Patients",
+   "ICU, CC",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "BOLD, a blood-gas and oximetry linked dataset",
+   "ICU, EHR",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "MIT Critical Datathon 2023 pulse oximetry correction",
+   "ICU, CC",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "Synthetic Acute Hypotension and Sepsis Datasets (Health Gym)",
+   "ICU",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "Immunosuppressive Condition and Medication Annotations, MIMIC-III",
+   "ICU, CC, EHR",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "TherLid: A Thermometry Linked Dataset",
+   "ICU, EHR",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "Annotation dataset of problematic opioid use, MIMIC-III",
+   "CC, EHR",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "GOSSIS-1-eICU",
+   "CC",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "Clinical Time Series Datasets for Trajectory Flow Matching Evaluation",
+   "CC",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "Nosocomial Risk Datasets from MIMIC-III",
+   "CC",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "MIMIC-III and eICU-CRD: FIDDLE Preprocessing",
+   "CC, EHR",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "MIMIC-III - SequenceExamples for TensorFlow modeling",
+   "CC, EHR",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "Clinical data from MIMIC-II, indwelling arterial catheters",
+   "CC, EHR",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "MIMIC-IV-Ext-MDS-ED",
+   "CC",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "MIMIC-III-Ext-PPG",
+   "CC",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "MIMIC-IV demo data in the Medical Event Data Standard (MEDS)",
+   "CC, EHR",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "MIMIC-IV-Note: deidentified free-text clinical notes",
+   "CC, EHR",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "MIMIC-IV Waveform Database",
+   "ICU, CC",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "AIPatient KG (MIMIC-III and CORAL knowledge graph)",
+   "EHR",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "MIMIC-III-Ext-VeriFact-BHC",
+   "EHR",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "Annotation dataset of social determinants of health, MIMIC-III",
+   "EHR",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "NIHSS Annotations for the MIMIC-III Database",
+   "EHR",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "MIMIC-IV-Ext-MedicalBench",
+   "EHR",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "MIMIC-Ext-DrugDetection",
+   "EHR",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "MIMIC-IV-Ext-Instr",
+   "EHR",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "SCRIPT X2B8 Dataset (next-day extubation features)",
+   "EHR",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "Clinical BERT Models Trained on Pseudo Re-identified MIMIC-III Notes",
+   "EHR",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "What's in a Note? Predictive Value in Clinical Note Representations",
+   "EHR",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "MIMIC-IV on FHIR",
+   "EHR",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "MIMIC-Ext-MIMIC-CXR-VQA",
+   "EHR",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "MIMIC Database (2000)",
+   "CC",
+   "Exclude",
+   "Demonstration subset or superseded version of an identified resource"
+  ],
+  [
+   "MIMIC-II Clinical Database",
+   "ICU, CC",
+   "Exclude",
+   "Demonstration subset or superseded version of an identified resource"
+  ],
+  [
+   "MIMIC-III Clinical Database",
+   "ICU, CC",
+   "Exclude",
+   "Demonstration subset or superseded version of an identified resource"
+  ],
+  [
+   "MIMIC-III Clinical Database CareVue subset",
+   "ICU, CC",
+   "Exclude",
+   "Demonstration subset or superseded version of an identified resource"
+  ],
+  [
+   "MIMIC-III Clinical Database Demo",
+   "CC, EHR",
+   "Exclude",
+   "Demonstration subset or superseded version of an identified resource"
+  ],
+  [
+   "MIMIC-IV Clinical Database Demo",
+   "CC, EHR",
+   "Exclude",
+   "Demonstration subset or superseded version of an identified resource"
+  ],
+  [
+   "MIMIC-IV Clinical Database Demo on FHIR",
+   "EHR",
+   "Exclude",
+   "Demonstration subset or superseded version of an identified resource"
+  ],
+  [
+   "eICU Collaborative Research Database Demo",
+   "CC",
+   "Exclude",
+   "Demonstration subset or superseded version of an identified resource"
+  ],
+  [
+   "VTaC: Ventricular Tachycardia Alarms from ICU Monitors",
+   "ICU",
+   "Exclude",
+   "Physiological-signal or imaging repository without linked patient-level clinical context"
+  ],
+  [
+   "Preterm Infant Cardio-Respiratory Signals Database",
+   "ICU",
+   "Exclude",
+   "Physiological-signal or imaging repository without linked patient-level clinical context"
+  ],
+  [
+   "Reducing False Arrhythmia Alarms in the ICU (CinC Challenge 2015)",
+   "ICU, CC",
+   "Exclude",
+   "Physiological-signal or imaging repository without linked patient-level clinical context"
+  ],
+  [
+   "MGH/MF Waveform Database",
+   "CC",
+   "Exclude",
+   "Physiological-signal or imaging repository without linked patient-level clinical context"
+  ],
+  [
+   "Leipzig Heart Center ECG-Database",
+   "CC",
+   "Exclude",
+   "Physiological-signal or imaging repository without linked patient-level clinical context"
+  ],
+  [
+   "Dataset for Segmentation and Classification of Cardiac Implantable Electronic Devices in Chest X-Rays",
+   "CC",
+   "Exclude",
+   "Physiological-signal or imaging repository without linked patient-level clinical context"
+  ],
+  [
+   "Multitaper spectra during GABAergic anesthetic unconsciousness",
+   "Anaes",
+   "Exclude",
+   "Physiological-signal or imaging repository without linked patient-level clinical context"
+  ],
+  [
+   "Electroencephalogram dynamics during GABAergic anaesthetic unconsciousness",
+   "Anaes",
+   "Exclude",
+   "Physiological-signal or imaging repository without linked patient-level clinical context"
+  ],
+  [
+   "Behavioral and autonomic dynamics during propofol-induced unconsciousness",
+   "Anaes",
+   "Exclude",
+   "Physiological-signal or imaging repository without linked patient-level clinical context"
+  ],
+  [
+   "Electrodermal Activity of Healthy Volunteers",
+   "Anaes",
+   "Exclude",
+   "Physiological-signal or imaging repository without linked patient-level clinical context"
+  ],
+  [
+   "Pulse Amplitudes from electrodermal activity under controlled sedation",
+   "Anaes",
+   "Exclude",
+   "Physiological-signal or imaging repository without linked patient-level clinical context"
+  ],
+  [
+   "EEG and Eye-Gaze Datasets for Fundamentals of Laparoscopic Surgery Tasks",
+   "Surg",
+   "Exclude",
+   "Physiological-signal or imaging repository without linked patient-level clinical context"
+  ],
+  [
+   "EEG and eye-gaze datasets for robot-assisted surgery performance",
+   "Surg",
+   "Exclude",
+   "Physiological-signal or imaging repository without linked patient-level clinical context"
+  ],
+  [
+   "Endoscapes2023 surgical scene segmentation",
+   "Surg",
+   "Exclude",
+   "Physiological-signal or imaging repository without linked patient-level clinical context"
+  ],
+  [
+   "Paroxysmal Atrial Fibrillation Events Detection (CPSC 2021)",
+   "Surg",
+   "Exclude",
+   "Physiological-signal or imaging repository without linked patient-level clinical context"
+  ],
+  [
+   "Shiraz University Fetal Heart Sounds Database",
+   "Surg",
+   "Exclude",
+   "Physiological-signal or imaging repository without linked patient-level clinical context"
+  ],
+  [
+   "Surface electromyographic signals during ground walking",
+   "Surg",
+   "Exclude",
+   "Physiological-signal or imaging repository without linked patient-level clinical context"
+  ],
+  [
+   "Continuous Cuffless Monitoring of Arterial Blood Pressure via Graphene Bioimpedance Tattoos",
+   "EHR",
+   "Exclude",
+   "Physiological-signal or imaging repository without linked patient-level clinical context"
+  ],
+  [
+   "ArchEHR-QA",
+   "ICU, CC, EHR",
+   "Exclude",
+   "Task-, benchmark- or annotation-specific dataset rather than a database of care episodes"
+  ],
+  [
+   "Progress Note Understanding Suite of Tasks 1 and 3",
+   "ICU, CC, EHR",
+   "Exclude",
+   "Task-, benchmark- or annotation-specific dataset rather than a database of care episodes"
+  ],
+  [
+   "C-REACT: Contextualized Race and Ethnicity Annotations",
+   "CC",
+   "Exclude",
+   "Task-, benchmark- or annotation-specific dataset rather than a database of care episodes"
+  ],
+  [
+   "EHRCon",
+   "EHR",
+   "Exclude",
+   "Task-, benchmark- or annotation-specific dataset rather than a database of care episodes"
+  ],
+  [
+   "DrugEHRQA",
+   "EHR",
+   "Exclude",
+   "Task-, benchmark- or annotation-specific dataset rather than a database of care episodes"
+  ],
+  [
+   "EHRXQA",
+   "EHR",
+   "Exclude",
+   "Task-, benchmark- or annotation-specific dataset rather than a database of care episodes"
+  ],
+  [
+   "EHRNoteQA",
+   "EHR",
+   "Exclude",
+   "Task-, benchmark- or annotation-specific dataset rather than a database of care episodes"
+  ],
+  [
+   "ODD: Opioid Related Aberrant Behavior Detection",
+   "EHR",
+   "Exclude",
+   "Task-, benchmark- or annotation-specific dataset rather than a database of care episodes"
+  ],
+  [
+   "BioNLP Workshop 2023 Shared Task 1A",
+   "EHR",
+   "Exclude",
+   "Task-, benchmark- or annotation-specific dataset rather than a database of care episodes"
+  ],
+  [
+   "Learning to Ask Like a Physician (DiSCQ)",
+   "EHR",
+   "Exclude",
+   "Task-, benchmark- or annotation-specific dataset rather than a database of care episodes"
+  ],
+  [
+   "RadQA",
+   "EHR",
+   "Exclude",
+   "Task-, benchmark- or annotation-specific dataset rather than a database of care episodes"
+  ],
+  [
+   "PatientSim",
+   "EHR",
+   "Exclude",
+   "Task-, benchmark- or annotation-specific dataset rather than a database of care episodes"
+  ],
+  [
+   "CORAL: expert-Curated medical Oncology Reports",
+   "EHR",
+   "Exclude",
+   "Task-, benchmark- or annotation-specific dataset rather than a database of care episodes"
+  ],
+  [
+   "Shareable Artificial Intelligence to Extract Cancer Outcomes",
+   "EHR",
+   "Exclude",
+   "Task-, benchmark- or annotation-specific dataset rather than a database of care episodes"
+  ],
+  [
+   "CARMEN-I (Spanish and Catalan clinical records)",
+   "EHR",
+   "Exclude",
+   "Task-, benchmark- or annotation-specific dataset rather than a database of care episodes"
+  ],
+  [
+   "Fine-tuning foundational models to code veterinary records",
+   "EHR",
+   "Exclude",
+   "Task-, benchmark- or annotation-specific dataset rather than a database of care episodes"
+  ],
+  [
+   "Curated Data for Describing Blood Glucose Management in the ICU",
+   "ICU, CC, EHR",
+   "Exclude",
+   "Derivative, extension, annotation layer or re-format of an already identified resource"
+  ],
+  [
+   "NCH Sleep DataBank",
+   "EHR",
+   "Exclude",
+   "Not an anesthesia or critical-care episode"
+  ],
+  [
+   "ARMD-MGB: Antibiotic Resistance Microbiology Dataset",
+   "EHR",
+   "Exclude",
+   "Not an anesthesia or critical-care episode"
+  ],
+  [
+   "AMR-UTI: Antimicrobial Resistance in Urinary Tract Infections",
+   "EHR",
+   "Exclude",
+   "Not an anesthesia or critical-care episode"
+  ],
+  [
+   "ENCoDE (skin tone and pulse oximetry, acute care)",
+   "EHR",
+   "Exclude",
+   "Not an anesthesia or critical-care episode"
+  ],
+  [
+   "Predictors of Hospital Onset Infection",
+   "EHR",
+   "Exclude",
+   "Not an anesthesia or critical-care episode"
+  ],
+  [
+   "MIMIC-IV-ED",
+   "EHR",
+   "Exclude",
+   "Not an anesthesia or critical-care episode"
+  ],
+  [
+   "Wearable-based signals after open-heart surgery",
+   "Surg",
+   "Exclude",
+   "Not an anesthesia or critical-care episode"
+  ],
+  [
+   "Response to Valsalva Maneuver in Humans",
+   "Surg",
+   "Exclude",
+   "Not an anesthesia or critical-care episode"
+  ],
+  [
+   "A Wearable Exam Stress Dataset",
+   "Surg",
+   "Exclude",
+   "Not an anesthesia or critical-care episode"
+  ],
+  [
+   "Regulation of Brain Cognitive States",
+   "Surg",
+   "Exclude",
+   "Not an anesthesia or critical-care episode"
+  ],
+  [
+   "Cerebral Vasoregulation in Diabetes",
+   "Surg",
+   "Exclude",
+   "Not an anesthesia or critical-care episode"
+  ],
+  [
+   "Cerebromicrovascular Disease in Elderly with Diabetes",
+   "Surg, Periop",
+   "Exclude",
+   "Not an anesthesia or critical-care episode"
+  ],
+  [
+   "Neurophysiological Dataset of Stress Resilience",
+   "Surg",
+   "Exclude",
+   "Not an anesthesia or critical-care episode"
+  ],
+  [
+   "Multimodal Physiological Indices During Surgery Under Anesthesia",
+   "Anaes, CC, Surg",
+   "Exclude",
+   "Restricted access, not obtainable through open credentialing"
+  ],
+  [
+   "Hospitalized patients with heart failure (restricted)",
+   "EHR",
+   "Exclude",
+   "Restricted access, not obtainable through open credentialing"
+  ],
+  [
+   "Vital File Web Viewer",
+   "Surg",
+   "Exclude",
+   "Software tool rather than a dataset"
+  ],
+  [
+   "MOVER (University of California, Irvine)",
+   "Not indexed",
+   "Include",
+   "—"
+  ],
+  [
+   "AmsterdamUMCdb (Amsterdam UMC portal)",
+   "Not indexed",
+   "Include",
+   "—"
+  ],
+  [
+   "K-MIMIC (IMPACT consortium, Republic of Korea)",
+   "Not indexed",
+   "Flag",
+   "—"
+  ]
+ ],
+ "topics": {
+  "intensive care unit": 28,
+  "critical care": 42,
+  "anesthesia": 8,
+  "surgery": 18,
+  "electronic health records": 51,
+  "perioperative": 1
+ },
+ "raw": 148,
+ "uniq": 107,
+ "extra": 3
+}

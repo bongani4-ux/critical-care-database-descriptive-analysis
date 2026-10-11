@@ -76,6 +76,17 @@ decimals_of <- function(txt) {
   nchar(s)
 }
 
+#' Percentage of ICU admissions (ICU stays at level "icu_stay") with an organ-support type; NA when the
+#' database does not record that support type. Denominator: ICU admissions of the analysed base.
+support_pct <- function(ds, type, level, base, icu) {
+  if (!type %in% (ds$meta$support_available %||% character())) return(NA_real_)
+  ids <- ds$support[support_type == type & value == 1L, unique(admission_id)]
+  if (level == "icu_stay") return(100 * mean(icu$admission_id %in% ids))
+  den <- base[icu_flag == 1L, admission_id]
+  if (!length(den)) return(NA_real_)
+  100 * mean(den %in% ids)
+}
+
 #' Compute one review metric from the harmonised dataset. Returns NA_real_ if the
 #' metric cannot be computed from this database (reported as NOT_COMPUTABLE).
 compute_review_metric <- function(ds, metric, level) {
@@ -111,6 +122,11 @@ compute_review_metric <- function(ds, metric, level) {
                       },
     icu_los_median_hours = if (level == "icu_stay") 24 * stats::median(icu$icu_los_days, na.rm = TRUE)
                            else 24 * stats::median(base[icu_flag == 1L]$icu_los_days, na.rm = TRUE),
+    age_q1          = unname(stats::quantile(base$age_years, 0.25, na.rm = TRUE)),
+    age_q3          = unname(stats::quantile(base$age_years, 0.75, na.rm = TRUE)),
+    mech_vent_pct   = support_pct(ds, "mech_vent", level, base, icu),
+    vasopressor_pct = support_pct(ds, "vasopressor", level, base, icu),
+    rrt_pct         = support_pct(ds, "rrt", level, base, icu),
     hosp_los_median_days = stats::median(base$hosp_los_days, na.rm = TRUE),
     icu_los_median_days  = if (level == "icu_stay") stats::median(icu$icu_los_days, na.rm = TRUE)
                            else stats::median(base[icu_flag == 1L]$icu_los_days, na.rm = TRUE),

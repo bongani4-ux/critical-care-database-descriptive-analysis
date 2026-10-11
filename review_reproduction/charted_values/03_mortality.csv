@@ -1,0 +1,12 @@
+database,icu_mortality_pct,in_hospital_mortality_pct,last_followup_mortality_pct,day30_pct,day90_pct,year1_or_allcause_pct
+MIMIC-IV,,3.2,,2.1,3.4,5.8
+INSPIRE,,0.9,,0.3,0.9,13.3
+MOVER,,1.5,,,,
+HiRID,6.1,,,,,
+eICU-CRD,2.3,3.9,,,,
+SICdb,3.8,,7.8,,,
+NWICU,11.9,13.7,,,,
+AmsterdamUMCdb,,,31.0,,,
+PIC,,7.2,,,,
+VitalDB,,,,,,
+Zigong (ZFPH),,5.8,,35.6,39.5,48.3

@@ -1,0 +1,8 @@
+database,mechanical_ventilation_pct,vasopressors_pct,renal_replacement_pct
+MIMIC-IV,54.0,29.0,2.6
+eICU-CRD,30.0,15.0,
+NWICU,35.0,25.0,3.0
+HiRID,60.8,39.3,5.2
+SICdb,38.0,51.0,3.8
+AmsterdamUMCdb,71.8,58.8,4.9
+Zigong (ZFPH),56.0,57.2,

@@ -71,3 +71,8 @@ Thumbs.db
 renv/library/
 renv/staging/
 renv/local/
+
+# ---- regenerated review figures / python caches
+review_reproduction/code/figures/
+__pycache__/
+*.pyc

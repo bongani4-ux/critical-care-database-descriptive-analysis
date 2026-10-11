@@ -1,0 +1,132 @@
+{
+ "lines": [
+  [
+   "S1",
+   "\"intensive care database\"[ti]",
+   29
+  ],
+  [
+   "S2",
+   "\"critical care database\"[ti]",
+   21
+  ],
+  [
+   "S3",
+   "\"ICU database\"[ti] OR \"intensive care dataset\"[ti]",
+   25
+  ],
+  [
+   "S4",
+   "\"anesthesia database\"[ti] OR \"anaesthesia database\"[ti]",
+   11
+  ],
+  [
+   "S5",
+   "\"perioperative database\"[ti] OR \"operating room database\"[ti]",
+   5
+  ],
+  [
+   "S6",
+   "\"vital signs database\"[ti] OR \"waveform database\"[ti]",
+   4
+  ]
+ ],
+ "records_retrieved": 95,
+ "new_resources": [
+  [
+   "JinhuaNSICU, an open accessible Neurosurgical Intensive Care Database",
+   "Flag",
+   "—"
+  ],
+  [
+   "BlendedICU, the first harmonised international intensive care dataset",
+   "Exclude",
+   "Derivative, extension or re-format of an already identified resource"
+  ],
+  [
+   "CEDAR, Critical carE Database for Advanced Research",
+   "Exclude",
+   "Method, tool or project description rather than a released dataset"
+  ],
+  [
+   "ELISE evolutionary open paediatric intensive care dataset",
+   "Exclude",
+   "Method, tool or project description rather than a released dataset"
+  ],
+  [
+   "Danish Intensive Care Database",
+   "Exclude",
+   "National, consortium or institutional registry without public patient-level release"
+  ],
+  [
+   "Danish Anaesthesia Database",
+   "Exclude",
+   "National, consortium or institutional registry without public patient-level release"
+  ],
+  [
+   "Australian and New Zealand binational adult patient ICU database",
+   "Exclude",
+   "National, consortium or institutional registry without public patient-level release"
+  ],
+  [
+   "Critical Care Health Informatics Collaborative (CCHIC), United Kingdom",
+   "Exclude",
+   "National, consortium or institutional registry without public patient-level release"
+  ],
+  [
+   "ICNARC national critical care database, United Kingdom",
+   "Exclude",
+   "National, consortium or institutional registry without public patient-level release"
+  ],
+  [
+   "Epimed Monitor ICU Database, Brazil",
+   "Exclude",
+   "National, consortium or institutional registry without public patient-level release"
+  ],
+  [
+   "Japanese national ICU database (JIPAD)",
+   "Exclude",
+   "National, consortium or institutional registry without public patient-level release"
+  ],
+  [
+   "Spanish multicentre ICU database",
+   "Exclude",
+   "National, consortium or institutional registry without public patient-level release"
+  ],
+  [
+   "Critical care database of a Saudi Arabian tertiary hospital",
+   "Exclude",
+   "National, consortium or institutional registry without public patient-level release"
+  ],
+  [
+   "TRIPLE-A perioperative database, Eastern Denmark",
+   "Exclude",
+   "National, consortium or institutional registry without public patient-level release"
+  ],
+  [
+   "Paediatric cardiac anaesthesia and intensive care database",
+   "Exclude",
+   "National, consortium or institutional registry without public patient-level release"
+  ],
+  [
+   "Critical care database built on specialised hospital information systems, China",
+   "Exclude",
+   "National, consortium or institutional registry without public patient-level release"
+  ],
+  [
+   "CHECKLIST-ICU trial database",
+   "Exclude",
+   "Trial or study cohort assembled for a single investigation"
+  ],
+  [
+   "COVID-ICU prospective cohort database",
+   "Exclude",
+   "Trial or study cohort assembled for a single investigation"
+  ],
+  [
+   "UnoViS, the MedIT public unobtrusive vital signs database",
+   "Exclude",
+   "Not an anesthesia or critical-care episode"
+  ]
+ ]
+}

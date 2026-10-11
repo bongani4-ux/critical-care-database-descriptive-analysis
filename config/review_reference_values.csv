@@ -66,3 +66,48 @@ mover_epic,hosp_los_median_records,admission,2.0,relative,Review Table 3,publish
 mimic_iv,n_patients_table_rows,patient,364627,exact,Review Table 1,published,"HYPOTHESIS TEST: 364,627 = rows of hosp/patients.csv (every patient incl. those with no hospital admission); only 223,452 patients have a hospital admission (546,028 admissions; 94,458 ICU stays)"
 mimic_iv,age_median_patients_table,patient,48,relative,Review Results text,published,"HYPOTHESIS TEST: 48 = median anchor_age over ALL rows of patients.csv, not over admitted patients (58) or ICU patients (65)"
 mimic_iv,hosp_death_over_patients_table_pct,patient,3.2,pct_points,Review Table 3,published,"HYPOTHESIS TEST: 3.2% = in-hospital deaths (11,801 admissions) / 364,627 patients-table rows - numerator and denominator are different units; admission-level mortality is 2.16%"
+sicdb,age_median,patient,70,relative,Review Supplemental file 6 (02_demographics.csv),charted,Charted value; basis in Supplemental file 4
+sicdb,age_q1,patient,55,relative,Review Supplemental file 6 (02_demographics.csv),charted,Charted IQR lower bound
+sicdb,age_q3,patient,75,relative,Review Supplemental file 6 (02_demographics.csv),charted,Charted IQR upper bound
+zigong,age_median,patient,69,relative,Review Supplemental file 6 (02_demographics.csv),charted,Charted value; basis in Supplemental file 4
+zigong,age_q1,patient,56,relative,Review Supplemental file 6 (02_demographics.csv),charted,Charted IQR lower bound
+zigong,age_q3,patient,78,relative,Review Supplemental file 6 (02_demographics.csv),charted,Charted IQR upper bound
+amsterdamumcdb,age_median,patient,65,relative,Review Supplemental file 6 (02_demographics.csv),charted,Charted value; basis in Supplemental file 4
+amsterdamumcdb,age_q1,patient,50,relative,Review Supplemental file 6 (02_demographics.csv),charted,Charted IQR lower bound
+amsterdamumcdb,age_q3,patient,75,relative,Review Supplemental file 6 (02_demographics.csv),charted,Charted IQR upper bound
+hirid,age_q1,patient,55,relative,Review Supplemental file 6 (02_demographics.csv),charted,Charted IQR lower bound
+hirid,age_q3,patient,75,relative,Review Supplemental file 6 (02_demographics.csv),charted,Charted IQR upper bound
+nwicu,age_median,patient,65,relative,Review Supplemental file 6 (02_demographics.csv),charted,Charted value; basis in Supplemental file 4
+nwicu,age_q1,patient,52,relative,Review Supplemental file 6 (02_demographics.csv),charted,Charted IQR lower bound
+nwicu,age_q3,patient,75,relative,Review Supplemental file 6 (02_demographics.csv),charted,Charted IQR upper bound
+eicu_crd,age_q1,patient,53,relative,Review Supplemental file 6 (02_demographics.csv),charted,Charted IQR lower bound
+eicu_crd,age_q3,patient,76,relative,Review Supplemental file 6 (02_demographics.csv),charted,Charted IQR upper bound
+vitaldb,age_q1,patient,48,relative,Review Supplemental file 6 (02_demographics.csv),charted,Charted IQR lower bound
+vitaldb,age_q3,patient,68,relative,Review Supplemental file 6 (02_demographics.csv),charted,Charted IQR upper bound
+inspire,age_median,patient,55,relative,Review Supplemental file 6 (02_demographics.csv),charted,Charted value; basis in Supplemental file 4
+inspire,age_q1,patient,45,relative,Review Supplemental file 6 (02_demographics.csv),charted,Charted IQR lower bound
+inspire,age_q3,patient,65,relative,Review Supplemental file 6 (02_demographics.csv),charted,Charted IQR upper bound
+mimic_iv,age_q1,patient,29,relative,Review Supplemental file 6 (02_demographics.csv),charted,Charted IQR lower bound
+mimic_iv,age_q3,patient,65,relative,Review Supplemental file 6 (02_demographics.csv),charted,Charted IQR upper bound
+pic,age_median,patient,0.7,relative,Review Supplemental file 6 (02_demographics.csv),charted,Charted value; basis in Supplemental file 4
+pic,age_q1,patient,0.1,relative,Review Supplemental file 6 (02_demographics.csv),charted,Charted IQR lower bound
+pic,age_q3,patient,3.4,relative,Review Supplemental file 6 (02_demographics.csv),charted,Charted IQR upper bound
+mimic_iv,mech_vent_pct,patient,54.0,pct_points,Review Supplemental file 6 (04_organ_support.csv),charted,Denominator not stated in the review: ICU admissions of the first-admission cohort; other levels reported as also_matches_at_level
+mimic_iv,vasopressor_pct,patient,29.0,pct_points,Review Supplemental file 6 (04_organ_support.csv),charted,Denominator not stated in the review: ICU admissions of the first-admission cohort; other levels reported as also_matches_at_level
+mimic_iv,rrt_pct,patient,2.6,pct_points,Review Supplemental file 6 (04_organ_support.csv),charted,Denominator not stated in the review: ICU admissions of the first-admission cohort; other levels reported as also_matches_at_level
+eicu_crd,mech_vent_pct,patient,30.0,pct_points,Review Supplemental file 6 (04_organ_support.csv),charted,Denominator not stated in the review: ICU admissions of the first-admission cohort; other levels reported as also_matches_at_level
+eicu_crd,vasopressor_pct,patient,15.0,pct_points,Review Supplemental file 6 (04_organ_support.csv),charted,Denominator not stated in the review: ICU admissions of the first-admission cohort; other levels reported as also_matches_at_level
+nwicu,mech_vent_pct,patient,35.0,pct_points,Review Supplemental file 6 (04_organ_support.csv),charted,Denominator not stated in the review: ICU admissions of the first-admission cohort; other levels reported as also_matches_at_level
+nwicu,vasopressor_pct,patient,25.0,pct_points,Review Supplemental file 6 (04_organ_support.csv),charted,Denominator not stated in the review: ICU admissions of the first-admission cohort; other levels reported as also_matches_at_level
+nwicu,rrt_pct,patient,3.0,pct_points,Review Supplemental file 6 (04_organ_support.csv),charted,Denominator not stated in the review: ICU admissions of the first-admission cohort; other levels reported as also_matches_at_level
+hirid,mech_vent_pct,patient,60.8,pct_points,Review Supplemental file 6 (04_organ_support.csv),charted,Denominator not stated in the review: ICU admissions of the first-admission cohort; other levels reported as also_matches_at_level
+hirid,vasopressor_pct,patient,39.3,pct_points,Review Supplemental file 6 (04_organ_support.csv),charted,Denominator not stated in the review: ICU admissions of the first-admission cohort; other levels reported as also_matches_at_level
+hirid,rrt_pct,patient,5.2,pct_points,Review Supplemental file 6 (04_organ_support.csv),charted,Denominator not stated in the review: ICU admissions of the first-admission cohort; other levels reported as also_matches_at_level
+sicdb,mech_vent_pct,patient,38.0,pct_points,Review Supplemental file 6 (04_organ_support.csv),charted,Denominator not stated in the review: ICU admissions of the first-admission cohort; other levels reported as also_matches_at_level
+sicdb,vasopressor_pct,patient,51.0,pct_points,Review Supplemental file 6 (04_organ_support.csv),charted,Denominator not stated in the review: ICU admissions of the first-admission cohort; other levels reported as also_matches_at_level
+sicdb,rrt_pct,patient,3.8,pct_points,Review Supplemental file 6 (04_organ_support.csv),charted,Denominator not stated in the review: ICU admissions of the first-admission cohort; other levels reported as also_matches_at_level
+amsterdamumcdb,mech_vent_pct,patient,71.8,pct_points,Review Supplemental file 6 (04_organ_support.csv),charted,Denominator not stated in the review: ICU admissions of the first-admission cohort; other levels reported as also_matches_at_level
+amsterdamumcdb,vasopressor_pct,patient,58.8,pct_points,Review Supplemental file 6 (04_organ_support.csv),charted,Denominator not stated in the review: ICU admissions of the first-admission cohort; other levels reported as also_matches_at_level
+amsterdamumcdb,rrt_pct,patient,4.9,pct_points,Review Supplemental file 6 (04_organ_support.csv),charted,Denominator not stated in the review: ICU admissions of the first-admission cohort; other levels reported as also_matches_at_level
+zigong,mech_vent_pct,patient,56.0,pct_points,Review Supplemental file 6 (04_organ_support.csv),charted,Denominator not stated in the review: ICU admissions of the first-admission cohort; other levels reported as also_matches_at_level
+zigong,vasopressor_pct,patient,57.2,pct_points,Review Supplemental file 6 (04_organ_support.csv),charted,Denominator not stated in the review: ICU admissions of the first-admission cohort; other levels reported as also_matches_at_level

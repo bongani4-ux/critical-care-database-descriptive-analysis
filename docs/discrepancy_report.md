@@ -69,3 +69,7 @@ or defined on a subset that the review does not describe; they cannot be reprodu
 ## 6. Full machine-generated comparison
 
 `docs/generated/review_comparison.md` (local; regenerate with `scripts/build_docs_tables.R`).
+
+## Organ-support percentages (review Supplemental file 6, file 04)
+
+None of the 15 computable values reproduces (e.g. AmsterdamUMCdb ventilation 87% vs 71.8%, SICdb ventilation 67% vs 38%, MIMIC-IV ventilation 42% vs 54%, HiRID ventilation 46% vs 60.8%). The review states no definition or denominator, and no variant was tuned to match. Open: analysts to supply definitions (see `docs/review_reproducibility.md`).

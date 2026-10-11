@@ -1,0 +1,12 @@
+database,median_age_years,iqr_low,iqr_high,percent_male
+SICdb,70.0,55,75,62.4
+Zigong (ZFPH),69.0,56,78,60.0
+AmsterdamUMCdb,65.0,50,75,65.2
+HiRID,65.0,55,75,64.2
+NWICU,65.0,52,75,56.0
+eICU-CRD,65.0,53,76,54.0
+VitalDB,59.0,48,68,51.0
+MOVER,56.0,37,68,52.0
+INSPIRE,55.0,45,65,43.3
+MIMIC-IV,48.0,29,65,47.0
+PIC,0.7,0.1,3.4,58.0

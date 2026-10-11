@@ -1,0 +1,12 @@
+database,region,country,care_setting,cohort_size,denominator_basis
+MIMIC-IV,USA,United States,Mixed (hospital + ICU),364627,patients
+eICU-CRD,USA,United States,Adult ICU (multicentre),139367,patients
+INSPIRE,Asia,South Korea,Perioperative,99886,patients
+MOVER,USA,United States,Perioperative,58799,patients
+HiRID,Europe,Switzerland,Adult ICU,33905,patients
+NWICU,USA,United States,Adult ICU (COVID-rich),25923,patients
+SICdb,Europe,Austria,Adult ICU,21583,patients
+AmsterdamUMCdb,Europe,Netherlands,Adult ICU,20109,patients
+PIC,Asia,China,Pediatric ICU,12881,patients
+VitalDB,Asia,South Korea,Perioperative,6388,cases
+Zigong (ZFPH),Asia,China,Adult ICU (infection),2790,patients

@@ -1,0 +1,18 @@
+domain_group,n_subdomains,MOVER,INSPIRE,VitalDB,MIMIC-IV,SICdb,eICU-CRD,AmsterdamUMCdb,PIC,NWICU,Zigong (ZFPH),HiRID
+Identifiers / administrative,6,83,67,33,67,83,67,50,83,50,50,33
+Demographics,5,80,60,60,100,60,80,60,60,100,60,60
+Diagnoses & coding,4,75,25,50,75,50,75,50,75,50,50,25
+Surgery / anesthesia,5,80,100,80,40,60,40,,60,,,
+Vital signs — intraoperative,11,91,73,100,73,73,64,73,64,64,36,73
+Waveforms (≥125 Hz),5,60,,100,,,,,,,,
+Ward / ICU vital signs,4,,50,25,75,75,75,75,50,50,75,50
+Ventilator / respiratory,5,100,100,80,60,60,60,60,60,60,60,60
+Laboratory,9,100,89,56,100,100,100,100,89,100,89,89
+Microbiology,2,,,,100,100,100,,100,,100,
+Medications,6,83,100,67,67,67,67,67,50,67,50,33
+Fluids / transfusion,3,67,100,100,67,67,67,67,67,67,67,67
+Intake / output,3,100,67,33,100,100,100,100,100,100,100,100
+Lines / devices / procedures,5,60,100,60,100,100,80,100,60,100,80,100
+Severity scores,3,,,,67,100,100,100,,67,33,100
+Outcomes,6,83,67,50,67,67,50,50,50,50,67,50
+Imaging / free-text notes,3,33,,,33,,33,33,33,,33,

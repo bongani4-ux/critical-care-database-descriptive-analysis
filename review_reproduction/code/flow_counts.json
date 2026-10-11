@@ -1,0 +1,54 @@
+{
+ "identified": 1678,
+ "repo_raw": 148,
+ "pubmed_raw": 95,
+ "wos_raw": 1231,
+ "epmc_raw": 185,
+ "arxiv_raw": 16,
+ "other_raw": 3,
+ "dupes": 49,
+ "screened": 1629,
+ "screen_excluded": 1439,
+ "assessed": 190,
+ "excluded": 174,
+ "not_charted": 5,
+ "included": 11,
+ "reasons": [
+  [
+   "Derivative of an already included resource",
+   41
+  ],
+  [
+   "Registry without public patient-level release",
+   33
+  ],
+  [
+   "Physiological-signal or imaging repository",
+   27
+  ],
+  [
+   "Task or benchmark dataset",
+   23
+  ],
+  [
+   "Outside the anesthesia or critical care setting",
+   22
+  ],
+  [
+   "Method, tool or project description",
+   11
+  ],
+  [
+   "Demonstration subset or superseded version",
+   8
+  ],
+  [
+   "Not publicly obtainable",
+   5
+  ],
+  [
+   "Trial or single-study cohort",
+   4
+  ]
+ ]
+}
