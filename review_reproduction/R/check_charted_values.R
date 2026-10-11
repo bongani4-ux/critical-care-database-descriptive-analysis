@@ -32,7 +32,7 @@ for (d in dbs) {
   chk(isTRUE(all.equal(round(100 * k / N, 1), ovr$percent_of_85[ovr$database == d])), paste("percent of 85 differs for", d))
 }
 # search-flow integrity (the review's own assertions)
-fc <- jsonlite::read_json(file.path(ROOT, "data", "flow_counts.json"), simplifyVector = TRUE)
+fc <- jsonlite::read_json(file.path(ROOT, "search_flow", "flow_counts.json"), simplifyVector = TRUE)
 chk(fc$identified == fc$repo_raw + fc$pubmed_raw + fc$wos_raw + fc$epmc_raw + fc$arxiv_raw + fc$other_raw, "identified != sum of sources")
 chk(fc$dupes == fc$repo_dupes + fc$epmc_dupes, "duplicates != repository + preprint duplicates")
 chk(fc$screened == fc$identified - fc$dupes, "screened != identified - duplicates")

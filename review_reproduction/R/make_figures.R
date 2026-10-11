@@ -233,7 +233,7 @@ figure_s2 <- function() {
 
 # ============================================================ Figure S1: search flow ==============================================
 figure_s1 <- function() {
-  fc <- jsonlite::read_json(file.path(ROOT, "data", "flow_counts.json"), simplifyVector = TRUE)
+  fc <- jsonlite::read_json(file.path(ROOT, "search_flow", "flow_counts.json"), simplifyVector = TRUE)
   reasons <- fc$reasons; if (is.matrix(reasons)) reasons <- data.frame(label = reasons[, 1], n = as.integer(reasons[, 2])) else reasons <- data.frame(label = reasons[[1]], n = as.integer(reasons[[2]]))
   n <- function(v) format(v, big.mark = ",", trim = TRUE)
   SLATE <- "#616E7C"; SIDEBG <- "#F3F5F7"; INCBG <- "#DCE6F2"; HAIRC <- "#B9C2CC"

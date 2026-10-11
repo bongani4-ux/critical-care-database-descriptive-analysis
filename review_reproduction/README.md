@@ -16,7 +16,7 @@ and the R re-implementation.
 
 ```
 charted_values/   01_cohort ... 08_overall_coverage .csv  (database-level summary statistics only; no patient-level data)
-data/              flow_counts.json (search-flow counts), screen_records.json, pubmed_records.json (screening records)
+search_flow/       flow_counts.json (search-flow counts), screen_records.json, pubmed_records.json (screening records)
 R/make_figures.R  Figure_1 cohort size, Figure_2 age and sex, Figure_3 domain coverage, Figure_4 mortality, Figure_5 organ support,
                   FigureS1_flow (search flow), FigureS2_granularity   ->  PNG + TIFF (LZW) + PDF, 600 dpi
 R/check_charted_values.R   internal consistency (shared databases, ranges, 85-subdomain arithmetic, search-flow integrity)
@@ -36,6 +36,6 @@ box corners are approximate. Values, ordering, panels and labels are identical. 
 
 ## Provenance and licence
 
-`charted_values/` and `data/` are copied unchanged from the review's Supplemental file 6 (version of 2 September 2026), except `data/flow_counts.json`, which gained
+`charted_values/` and `search_flow/` are copied unchanged from the review's Supplemental file 6 (version of 2 September 2026), except `search_flow/flow_counts.json`, which gained
 `repo_dupes` (41) and `epmc_dupes` (8) - the two duplicate counts the original Python computed from its record files (41 + 8 = 49 = `dupes`).
 Confirm the licence the authors want for these files before making the repository public (the repository root is MIT).
