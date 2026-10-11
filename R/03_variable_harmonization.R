@@ -209,6 +209,12 @@ validate_harmonized <- function(ds, stop_on_fail = TRUE) {
     add("measurements within plausible range", if (nbad) "FAIL" else "PASS", if (nbad) paste(nbad, "outside") else "")
   }
 
+  if (!is.null(ds$followup_death)) {
+    fd <- ds$followup_death
+    add("followup_death columns", if (all(c("admission_id", "death_h", "discharge_h", "surgery_end_h") %in% names(fd))) "PASS" else "FAIL")
+    add("followup_death admission_id unique and known", if (!anyDuplicated(fd$admission_id) && all(fd$admission_id %in% adm$admission_id)) "PASS" else "FAIL")
+  }
+
   # values
   add("sex coding (M/F/NA)", if (all(adm$sex %in% c("M", "F", NA))) "PASS" else "FAIL")
   add("hosp_death coding (0/1/NA)", if (all(adm$hosp_death %in% c(0L, 1L, NA))) "PASS" else "FAIL")
@@ -234,6 +240,10 @@ empty_diagnosis    <- function() data.table::data.table(admission_id = character
 empty_measurements <- function() data.table::data.table(admission_id = character(), stay_id = character(), analyte = character(), value = numeric(), hours_from_index = numeric(), n_in_window = integer())
 empty_support      <- function() data.table::data.table(admission_id = character(), support_type = character(), value = integer())
 empty_severity     <- function() data.table::data.table(admission_id = character(), score = character(), value = numeric())
+#' Optional dated follow-up deaths (hours relative to the database's own admission time-zero, `meta$followup_admission_label`).
+#' death_h: hours from admission to the recorded death (any source; NA = no death recorded); discharge_h: hours from admission to
+#' discharge; surgery_end_h: hours from admission to the end of the index operation (perioperative databases only).
+empty_followup_death <- function() data.table::data.table(admission_id = character(), death_h = numeric(), discharge_h = numeric(), surgery_end_h = numeric())
 empty_icu_stay     <- function() data.table::data.table(db_id = character(), patient_id = character(), admission_id = character(), stay_id = character(), stay_seq = integer(), icu_los_days = numeric(), icu_unit = character(), icu_death = integer())
 
 #' Read an item-mapping CSV shipped with an adapter (editable without touching code).

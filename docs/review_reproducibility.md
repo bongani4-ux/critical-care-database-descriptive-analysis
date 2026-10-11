@@ -26,9 +26,10 @@ Statuses below are from `docs/generated/review_comparison.md` (regenerate with `
 | Overall coverage 08 | arithmetic on domain table 07 | **Yes** (checked) |
 | Domain coverage 07 (85 subdomains) | documentation scoring | **Not independently** - the item-level checklist is not published; publishing it as a CSV would make this fully reproducible |
 | Cohort size (01) | direct query / documentation | **19 of 22** count checks match (patients, admissions, stays); see discrepancy report for the rest (MIMIC-IV, VitalDB, ...) |
-| Age median / IQR, % male (02) | direct query | median 9/11 match, IQR 15/20 match, sex 6/7 match; AmsterdamUMCdb has age groups only (not computable) |
-| Mortality, LOS (03, Table 3) | direct query | 11/20 mortality and 10/19 LOS checks match; the mismatches are denominator/definition issues explained in `discrepancy_report.md` (and four unresolved: MIMIC-IV LOS, SICdb ICU mortality, HiRID ICU LOS, eICU mortality/LOS) |
-| 30/90-day and 1-year mortality (03) | direct query | **Not implemented** (needs registry/follow-up dates; only MIMIC-IV, INSPIRE, Zigong chart them) |
+| Age median / IQR, % male (02) | direct query | median 10/12 match, IQR 17/22 match, sex 6/7 match (counts include the INSPIRE v1.3 version-check run); AmsterdamUMCdb has age groups only (not computable) |
+| Mortality, LOS (03, Table 3) | direct query | 12/21 mortality and 10/19 LOS checks match; the mismatches are denominator/definition issues explained in `discrepancy_report.md` (and four unresolved: MIMIC-IV LOS, SICdb ICU mortality, HiRID ICU LOS, eICU mortality/LOS) |
+| 30/90-day mortality (03) | team code (INSPIRE: from end of the first operation; Zigong: from admission) | **Yes** - INSPIRE 0.28/0.87 and Zigong 35.56/39.53 match 0.3/0.9 and 35.6/39.5; see `docs/team_code_review.md` |
+| 'One-year or all-cause' mortality (03) | INSPIRE 13.3% and Zigong 48.3% are all-cause at any follow-up (team code), MIMIC-IV 5.8% a 1-year value | INSPIRE and Zigong **match** as all-cause; MIMIC-IV 2.1/3.4/5.8 **reproduce** from hospital admission over the patients-table denominator (364,627); over hospitalised first-admission patients (223,450) the rates are 3.4/5.5/9.5% (see `docs/discrepancy_report.md`) |
 | Organ support (04) | direct query | **Not reproduced: 0 of 15 computable values match** (4 not computable: NWICU/Zigong ventilation, NWICU vasopressor, HiRID RRT) - e.g. Amsterdam ventilation 87% here vs 71.8% charted. The review gives no definition or denominator, so no choice of definition was tuned to match; the analysts' definitions are needed |
 | Granularity (05, 06) | direct query | **Not implemented** - no extraction rule; needs the authors' definition (see section 3) |
 

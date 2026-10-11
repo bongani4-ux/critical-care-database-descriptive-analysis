@@ -24,7 +24,7 @@ adapter_build <- function(cfg) {
           colClasses = list(character = c("PATIENT_ID", "INP_NO")))
   assert_unique(b, "INP_NO", "Zigong baseline"); assert_no_missing(b, c("PATIENT_ID", "INP_NO"), "Zigong baseline")
   ic <- rd("dtICD.csv", select = c("INP_NO", "ICD_Code", "Status_Discharge"), colClasses = list(character = c("INP_NO", "ICD_Code")))
-  oc <- rd("dtOutCome.csv", select = c("PATIENT_ID", "Follow_Vital"), colClasses = list(character = "PATIENT_ID"))
+  oc <- rd("dtOutCome.csv", select = c("PATIENT_ID", "Follow_Vital", "Death_Date"), colClasses = list(character = "PATIENT_ID"))
   dead <- unique(ic[Status_Discharge == "Dead", INP_NO])
   has_status <- unique(ic[!is.na(Status_Discharge), INP_NO])
   b <- merge(b, oc, by = "PATIENT_ID", all.x = TRUE, sort = FALSE)
@@ -35,6 +35,9 @@ adapter_build <- function(cfg) {
                admit_sort_key = as.numeric(INP_NO), admission_urgency = NA_character_,
                admission_source = AdmitDept, discharge_disposition = NA_character_, period = NA_character_,
                death_any_followup = data.table::fcase(Follow_Vital == "Death", 1L, Follow_Vital == "Alive", 0L, default = NA_integer_))]
+  # dated deaths: dtOutCome.Death_Date = hours from hospital admission (missing for some patients with Follow_Vital == "Death")
+  followup_death <- b[, .(admission_id = INP_NO, death_h = as.numeric(Death_Date), discharge_h = as.numeric(DISCHARGE_DATE_TIME),
+                          surgery_end_h = NA_real_)]
   flow <- flow_add(flow, "Admissions in dtBaseline", admission = adm)
 
   # ---- ICU stays from consecutive ICU-department transfer rows --------------------------------------------------
@@ -114,8 +117,11 @@ adapter_build <- function(cfg) {
       icu_death_definition = NA_character_,
       age_note = "integer years; 2 missing; maximum 120 retained as recorded",
       followup_note = "dtOutCome.Follow_Vital (Alive/Death; 553 missing); follow-up length variable",
+      # the review's 48.3% 'one-year or all-cause' is the research team's composite: dated death OR in-hospital death OR follow-up status 'Death'
+      extra_metrics = list(death_allcause_composite_pct = 100 * mean(!is.na(b$Death_Date) | b$INP_NO %in% dead | b$Follow_Vital %in% "Death")),
       comorbidity_note = "Chinese-extended ICD-10 from dtICD (discharge diagnoses)",
       icu_by_construction = TRUE),
+    followup_death = followup_death,
     flow = flow, admission = adm, icu_stay = icu, diagnosis = dx,
     direct_flags = data.table::data.table(admission_id = character(), comorbidity = character(), value = integer()),
     measurements = measurements, support = support, severity = empty_severity(),

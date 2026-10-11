@@ -135,6 +135,9 @@ adapter_build <- function(cfg) {
                admission_urgency = data.table::fcase(urgency == 1L, "emergency", urgency == 0L, "elective", default = NA_character_),
                admission_source = origin, discharge_disposition = NA_character_, period = admissionyeargroup,
                death_any_followup = as.integer(!is.na(dateofdeath)))]
+  # dated deaths: dateofdeath is on the same patient clock as admittedat (ms; date resolution)
+  followup_death <- a[, .(admission_id = admissionid, death_h = (as.numeric(dateofdeath) - as.numeric(admittedat)) / 3.6e6,
+                          discharge_h = (as.numeric(dischargedat) - as.numeric(admittedat)) / 3.6e6, surgery_end_h = NA_real_)]
   flow <- flow_add(flow, "Admissions (ICU and medium-care)", admission = adm,
                    note = "includes MC-only admissions, which are not ICU")
   icu <- a[is_icu == TRUE, .(db_id = "amsterdamumcdb", patient_id = patientid, admission_id = admissionid, stay_id = admissionid,
@@ -185,7 +188,9 @@ adapter_build <- function(cfg) {
       comorbidity_note = "no diagnosis codes in the local tables (diagnoses are APACHE categories in listitems; not harmonised)",
       support_unavailable_note = "not applicable",
       extra_metrics = list(los_all_locations_median_hours = stats::median(a[admissioncount == 1L]$lengthofstay, na.rm = TRUE)),
+      followup_admission_label = "ICU/medium-care admission",
       icu_by_construction = FALSE),
+    followup_death = followup_death,
     flow = flow, admission = adm, icu_stay = icu, diagnosis = empty_diagnosis(),
     direct_flags = data.table::data.table(admission_id = character(), comorbidity = character(), value = integer()),
     measurements = measurements, support = support, severity = severity,

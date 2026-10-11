@@ -18,6 +18,27 @@ adapter_meta <- list(
   db_id = "inspire",
   required_files = c("operations.csv", "diagnosis.csv", "labs.csv", "vitals.csv", "ward_vitals.csv", "parameters.csv"))
 
+# Item-level audit for the data dictionary (labs, monitoring items, drugs, ATC classes, ICD-10 codes): patients with >= 1 value.
+adapter_item_audit <- function(cfg, ds) {
+  N <- data.table::uniqueN(ds$admission$patient_id)
+  par <- data.table::fread(db_file_any(ds$meta$db_id, "parameters.csv"), encoding = "UTF-8"); names(par) <- tolower(names(par))
+  info <- function(tb) par[table %in% tb, .(item = label, description = description, unit = unit)]
+  labs <- audit_long_items(db_file_any(ds$meta$db_id, "labs.csv"), "subject_id", "item_name", "value", "INSPIRE labs")
+  vit <- audit_long_items(db_file_any(ds$meta$db_id, "vitals.csv"), "subject_id", "item_name", "value", "INSPIRE vitals")
+  wv <- audit_long_items(db_file_any(ds$meta$db_id, "ward_vitals.csv"), "subject_id", "item_name", "value", "INSPIRE ward_vitals")
+  med <- audit_long_items(db_file_any(ds$meta$db_id, "medications.csv"), "subject_id", "drug_name", NULL, "INSPIRE medications (drug)")
+  atc <- audit_long_items(db_file_any(ds$meta$db_id, "medications.csv"), "subject_id", "atc_code", NULL, "INSPIRE medications (ATC)")
+  dxc <- audit_long_items(db_file_any(ds$meta$db_id, "diagnosis.csv"), "subject_id", "icd10_cm", NULL, "INSPIRE diagnosis")
+  list(sheets = list(`Labs (all items)` = items_dictionary(labs, N, info("labs")),
+                     `Monitor (all items)` = items_dictionary(rbind(vit, wv), N, info(c("vitals", "ward_vitals"))),
+                     `Medications (Drug)` = items_dictionary(med, N),
+                     `Medications (ATC)` = items_dictionary(atc, N, upper = FALSE),
+                     `Diagnosis (ICD-10 codes)` = items_dictionary(dxc, N, upper = FALSE)),
+       source = c(`Labs (all items)` = "labs.csv", `Monitor (all items)` = "vitals.csv + ward_vitals.csv", `Medications (Drug)` = "medications.csv",
+                  `Medications (ATC)` = "medications.csv", `Diagnosis (ICD-10 codes)` = "diagnosis.csv"),
+       n_rows = c(`Labs (all items)` = N, `Monitor (all items)` = N, `Medications (Drug)` = N, `Medications (ATC)` = N, `Diagnosis (ICD-10 codes)` = N))
+}
+
 INSPIRE_VASO_ITEMS <- c("nepi", "epii", "dopai", "pepi", "vaso")
 
 adapter_build <- function(cfg) {
@@ -45,6 +66,12 @@ adapter_build <- function(cfg) {
                admission_urgency = data.table::fifelse(emop == 1L, "emergency", "elective"),
                admission_source = dept, discharge_disposition = NA_character_, period = NA_character_,
                death_any_followup = as.integer(allcause), surgery_flag = 1L)]
+  # dated deaths (minutes on the patient clock): first allcause_death_time of the patient; index operation = first operation of the admission
+  pdeath <- o[, .(allc = suppressWarnings(as.numeric(min(allcause_death_time, na.rm = TRUE)))), by = subject_id][is.infinite(allc), allc := NA_real_]
+  fop <- o[order(hadm_id, opstart_time), .(op_end = as.numeric(opend_time[1])), by = hadm_id]
+  followup_death <- merge(merge(h[, .(hadm_id, subject_id = patient_id, adm, dis)], pdeath, by = "subject_id", sort = FALSE),
+                          fop, by = "hadm_id", sort = FALSE)[, .(admission_id = hadm_id, death_h = (allc - adm) / 60,
+                                                                 discharge_h = (dis - adm) / 60, surgery_end_h = (op_end - adm) / 60)]
   flow <- flow_add(flow, "Hospital admissions with >= 1 operation", admission = adm)
 
   icu_rows <- unique(o[!is.na(icuin_time), .(subject_id, hadm_id, icuin_time, icuout_time)])
@@ -127,6 +154,7 @@ adapter_build <- function(cfg) {
       age_note = "age at operation (years; 5-year top-code 90)", followup_note = "allcause_death_time (variable follow-up; NOT a fixed landmark)",
       comorbidity_note = "ICD-10-CM codes recorded up to the end of the admission (history + current); 3-character resolution",
       extra_metrics = extra_metrics, icu_by_construction = FALSE),
+    followup_death = followup_death,
     flow = flow, admission = adm, icu_stay = icu, diagnosis = diagnosis,
     direct_flags = data.table::data.table(admission_id = character(), comorbidity = character(), value = integer()),
     measurements = measurements, support = support, severity = severity,

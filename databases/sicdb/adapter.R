@@ -46,6 +46,9 @@ adapter_build <- function(cfg) {
                 admission_urgency = NA_character_, admission_source = as.character(ReferringUnit),
                 discharge_disposition = NA_character_, period = as.character(AdmissionYear),
                 death_any_followup = as.integer(!is.na(OffsetOfDeath)))]
+  # dated deaths: OffsetOfDeath = seconds from ICU admission (the database's time-zero); recorded within 6 months / 1 year only
+  followup_death <- cs[, .(admission_id = CaseID, death_h = as.numeric(OffsetOfDeath) / 3600,
+                           discharge_h = as.numeric(TimeOfStay) / 3600, surgery_end_h = NA_real_)]
   flow <- flow_add(flow, "Cases in cases table", admission = adm)
 
   unit_name <- ref[ReferenceName == "HospitalUnit", stats::setNames(ReferenceValue, as.character(ReferenceGlobalID))]
@@ -133,7 +136,9 @@ adapter_build <- function(cfg) {
       age_note = "5-year age bins (15, 20, ... 90 = lower bound / top-coded); medians are approximate",
       followup_note = "OffsetOfDeath recorded within 6 months (3,143 cases) or 1 year (24,243 cases) of observation",
       comorbidity_note = "diabetes and hypertension from the database's own Yes/No flags; all other groups only via the single principal ICD-10-GM diagnosis (not comorbid history)",
+      followup_admission_label = "ICU admission",
       icu_by_construction = TRUE),
+    followup_death = followup_death,
     flow = flow, admission = adm, icu_stay = icu, diagnosis = diagnosis, direct_flags = direct_flags,
     measurements = measurements, support = support, severity = severity,
     availability = data.table::data.table(

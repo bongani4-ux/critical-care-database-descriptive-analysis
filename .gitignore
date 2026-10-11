@@ -43,6 +43,7 @@ cache/
 outputs/tables/*
 outputs/figures/*
 outputs/logs/*
+outputs/dictionaries/*
 !outputs/tables/.gitkeep
 !outputs/figures/.gitkeep
 !outputs/logs/.gitkeep

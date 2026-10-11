@@ -43,6 +43,7 @@ run_database <- function(db_id, rebuild = FALSE, figures = TRUE, gt_table = TRUE
   qc <- run_quality_checks(ds, results)
   td <- ccdb_output_dir("tables")
   safe_write_csv(qc, file.path(td, paste0(db_id, "_quality_checks.csv")))
+  tryCatch(write_data_dictionary(ds), error = function(e) log_msg("WARN", "[", db_id, "] data dictionary not written: ", conditionMessage(e)))
   rv <- compare_to_review(ds)
   if (nrow(rv)) safe_write_csv(rv, file.path(td, paste0(db_id, "_review_comparison.csv")))
 

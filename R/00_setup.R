@@ -85,7 +85,7 @@ ccdb_derived_dir <- function(db_id = NULL) {
   d
 }
 
-ccdb_output_dir <- function(kind = c("tables", "figures", "logs")) {
+ccdb_output_dir <- function(kind = c("tables", "figures", "logs", "dictionaries")) {
   kind <- match.arg(kind)
   d <- ccdb_path("outputs", kind)
   dir.create(d, recursive = TRUE, showWarnings = FALSE)

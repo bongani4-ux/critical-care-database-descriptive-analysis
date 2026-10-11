@@ -11,7 +11,8 @@ compute_all_results <- function(ds) {
     summarise_measurements(ds),
     summarise_comorbidities(ds),
     summarise_support(ds),
-    summarise_outcomes(ds))
+    summarise_outcomes(ds),
+    summarise_mortality_horizons(ds))
   r <- data.table::rbindlist(parts, use.names = TRUE, fill = TRUE)
   r[, row_order := seq_len(.N)]
   # small-cell flag: counts below the configured threshold are flagged, not suppressed

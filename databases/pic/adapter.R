@@ -24,7 +24,7 @@ adapter_build <- function(cfg) {
   assert_unique(ad, "HADM_ID", "PIC admissions"); assert_unique(pt, "SUBJECT_ID", "PIC patients")
   assert_fk(ad, pt, "SUBJECT_ID", "PIC admissions -> patients")
   ad[, `:=`(admit_t = ts(ADMITTIME), disch_t = ts(DISCHTIME), death_t = ts(DEATHTIME))]
-  a <- merge(ad, pt[, .(SUBJECT_ID, GENDER, dob = ts(DOB))], by = "SUBJECT_ID", all.x = TRUE, sort = FALSE)
+  a <- merge(ad, pt[, .(SUBJECT_ID, GENDER, dob = ts(DOB), dod = ts(DOD))], by = "SUBJECT_ID", all.x = TRUE, sort = FALSE)
   adm <- a[, .(db_id = "pic", patient_id = as.character(SUBJECT_ID), admission_id = as.character(HADM_ID),
                # newborns admitted a few hours 'before' the recorded DOB time-of-day give tiny negative ages
                # (68 admissions, all > -0.002 y): clamped to 0. Any age below -0.01 y would be left as is and flagged.
@@ -36,6 +36,10 @@ adapter_build <- function(cfg) {
                admission_urgency = NA_character_, admission_source = ADMISSION_DEPARTMENT,
                discharge_disposition = NA_character_, period = NA_character_,
                death_t = death_t)]
+  # dated deaths: DEATHTIME (in-hospital) else PATIENTS.DOD
+  death_num <- data.table::fifelse(!is.na(a$death_t), as.numeric(a$death_t), as.numeric(a$dod))
+  followup_death <- data.table::data.table(admission_id = as.character(a$HADM_ID), death_h = (death_num - as.numeric(a$admit_t)) / 3600,
+                                           discharge_h = as.numeric(difftime(a$disch_t, a$admit_t, units = "hours")), surgery_end_h = NA_real_)
   flow <- flow_add(flow, "Hospital admissions", admission = adm)
 
   ic <- rd("ICUSTAYS.csv", select = c("SUBJECT_ID", "HADM_ID", "ICUSTAY_ID", "FIRST_CAREUNIT", "INTIME", "OUTTIME"))
@@ -101,6 +105,7 @@ adapter_build <- function(cfg) {
       age_note = "(ADMITTIME - DOB) / 365.25; paediatric - all units are <18 years; most are infants",
       comorbidity_note = "Chinese-extended ICD-10 (DIAGNOSES_ICD); 3-character prefix matching",
       icu_by_construction = TRUE),
+    followup_death = followup_death,
     flow = flow, admission = adm, icu_stay = icu[, .(db_id, patient_id, admission_id, stay_id, stay_seq, icu_los_days, icu_unit, icu_death)],
     diagnosis = diagnosis,
     direct_flags = data.table::data.table(admission_id = character(), comorbidity = character(), value = integer()),

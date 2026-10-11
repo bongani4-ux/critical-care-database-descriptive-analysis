@@ -62,3 +62,45 @@ summarise_outcomes <- function(ds) {
     data.table::rbindlist(out, use.names = TRUE, fill = TRUE)
   })
 }
+
+# ---- mortality horizons: 30 / 90 / 365 days ---------------------------------------------------------------------------------
+# Death within H days of an index event, over ALL units of the stratum (no censoring adjustment: follow-up completeness differs by
+# database and is stated in meta$followup_note). A death recorded BEFORE the index is counted as a death within the horizon
+# (this is the rule of the review team's INSPIRE/Zigong code: `(death - index) <= H`); the number is reported in the note.
+# Index events: "admission" (database time-zero), "discharge", "surgery_end" (index operation; perioperative databases).
+HORIZON_DAYS <- c(30L, 90L, 365L)
+HORIZON_INDEX_LABEL <- function(ds, idx) switch(idx, admission = ds$meta$followup_admission_label %||% "hospital admission",
+                                                discharge = "hospital discharge", surgery_end = "the end of the index operation")
+
+#' For admissions `ids`: list(dead = 0/1 vector, ok = index known, n_before = deaths dated before the index).
+death_within <- function(ds, ids, H, idx) {
+  fd <- ds$followup_death
+  f <- fd[match(ids, fd$admission_id)]
+  ih <- switch(idx, admission = rep(0, length(ids)), discharge = f$discharge_h, surgery_end = f$surgery_end_h)
+  delta <- f$death_h - ih
+  list(dead = as.integer(!is.na(delta) & delta <= H * 24), ok = !is.na(ih) & !is.na(f$admission_id),
+       n_before = sum(!is.na(delta) & delta < 0))
+}
+
+summarise_mortality_horizons <- function(ds) {
+  db <- ds$meta$db_id; fd <- ds$followup_death
+  by_stratum(ds, function(a, st) {
+    if (is.null(fd) || !nrow(fd) || !any(!is.na(fd$death_h)))
+      return(stat_unavailable(db, st, "Mortality horizons", "Death within 30 / 90 / 365 days of an index event",
+                              "no dated post-discharge deaths in this database"))
+    out <- list()
+    for (idx in c("admission", "discharge", "surgery_end")) {
+      f <- fd[match(a$admission_id, fd$admission_id)]
+      has_idx <- switch(idx, admission = TRUE, discharge = any(!is.na(f$discharge_h)), surgery_end = any(!is.na(f$surgery_end_h)))
+      if (!has_idx) next
+      for (H in HORIZON_DAYS) {
+        r <- death_within(ds, a$admission_id, H, idx)
+        out[[length(out) + 1L]] <- stat_binary(r$dead[r$ok], db, st, "Mortality horizons",
+          sprintf("Death within %d days of %s", H, HORIZON_INDEX_LABEL(ds, idx)), denominator = sum(r$ok),
+          note = sprintf("%d death(s) dated before the index are counted; no censoring adjustment; %s",
+                         r$n_before, ds$meta$followup_note %||% ""))
+      }
+    }
+    data.table::rbindlist(out, use.names = TRUE, fill = TRUE)
+  })
+}

@@ -98,6 +98,22 @@ compute_review_metric <- function(ds, metric, level) {
   base <- if (level %in% c("patient", "patient_any")) adm[is_first_admission == 1L] else adm
   hd <- adm[, .(admission_id, hosp_death)]
   icu2 <- merge(icu, hd, by = "admission_id", all.x = TRUE)
+  # MIMIC-IV: the review's denominator is the patients TABLE (all anchor patients, incl. those without an admission row)
+  hp <- regmatches(metric, regexec("^death_([0-9]+)d_(admission|discharge)_over_patients_table_pct$", metric))[[1]]
+  if (length(hp) == 3L) {
+    np <- ds$meta$extra_metrics$n_patients_table_rows
+    if (is.null(np) || is.null(ds$followup_death)) return(NA_real_)
+    fa <- adm[is_first_admission == 1L, admission_id]
+    r <- death_within(ds, fa, as.integer(hp[2]), hp[3])
+    return(100 * sum(r$dead[r$ok]) / np)
+  }
+  hm <- regmatches(metric, regexec("^death_([0-9]+)d_(admission|discharge|surgery_end)_pct$", metric))[[1]]
+  if (length(hm) == 3L) {
+    if (is.null(ds$followup_death)) return(NA_real_)
+    ids <- if (level == "icu_stay") icu$admission_id else base$admission_id
+    r <- death_within(ds, ids, as.integer(hm[2]), hm[3])
+    return(if (any(r$ok)) 100 * mean(r$dead[r$ok]) else NA_real_)
+  }
   switch(metric,
     n_patients      = data.table::uniqueN(adm$patient_id),
     n_admissions    = nrow(adm),

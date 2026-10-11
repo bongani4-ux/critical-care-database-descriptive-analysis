@@ -48,6 +48,13 @@ build_mimic_like <- function(db_id, opts, cfg) {
                period = anchor_year_group,
                death_any_followup = as.integer(!is.na(dod) | hospital_expire_flag == 1L),
                death_t = death_t)]
+  # dated deaths: in-hospital deathtime (exact) else patients.dod (a DATE: taken at 00:00, +/- 1 day)
+  dod_t <- as.POSIXct(as.character(a$dod), tz = "UTC", format = "%Y-%m-%d")
+  death_num <- data.table::fifelse(!is.na(a$death_t), as.numeric(a$death_t), as.numeric(dod_t))
+  followup_death <- data.table::data.table(admission_id = as.character(a$hadm_id),
+                                           death_h = (death_num - as.numeric(a$admit_t)) / 3600,
+                                           discharge_h = as.numeric(difftime(a$disch_t, a$admit_t, units = "hours")),
+                                           surgery_end_h = NA_real_)
   flow <- flow_add(flow, "Hospital admissions in admissions table", admission = adm)
 
   # ---- ICU stays ---------------------------------------------------------------------------
@@ -158,6 +165,7 @@ build_mimic_like <- function(db_id, opts, cfg) {
       extra_metrics = list(n_patients_table_rows = nrow(pt), age_median_patients_table = stats::median(pt$anchor_age),
                            hosp_death_over_patients_table_pct = 100 * sum(adm$hosp_death == 1L, na.rm = TRUE) / nrow(pt)),
       icu_by_construction = FALSE), opts$notes),
+    followup_death = followup_death,
     flow = flow, admission = adm, icu_stay = icu[, .(db_id, patient_id, admission_id, stay_id, stay_seq, icu_los_days, icu_unit, icu_death)],
     diagnosis = diagnosis,
     direct_flags = data.table::data.table(admission_id = character(), comorbidity = character(), value = integer()),
