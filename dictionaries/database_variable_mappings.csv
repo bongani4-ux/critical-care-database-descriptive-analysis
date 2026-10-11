@@ -122,14 +122,14 @@ amsterdamumcdb,icu_death,admissions.destination == 'Overleden',directly comparab
 amsterdamumcdb,death_any_followup,admissions.dateofdeath non-missing,partially comparable,registry follow-up up to ~14 years
 amsterdamumcdb,discharge_disposition,-,unavailable,destination is an ICU discharge destination (coded)
 amsterdamumcdb,comorbidities_coded,-,unavailable,APACHE diagnosis categories in listitems; not harmonised
-amsterdamumcdb,vital_signs_first24h,numericitems (MISSING from local copy),unavailable,BLOCKED: obtain numericitems.csv
-amsterdamumcdb,laboratory_first24h,numericitems (MISSING from local copy),unavailable,BLOCKED: obtain numericitems.csv
+amsterdamumcdb,vital_signs_first24h,numericitems (itemids in databases/amsterdamumcdb/mapping_numericitems.csv; measuredat = ms from ICU/MC admission),partially comparable,"first charted monitor value; invasive + non-invasive pressures pooled; core temperature sites only; needs a COMPLETE numericitems.csv (extract_numericitems.py)"
+amsterdamumcdb,laboratory_first24h,numericitems (islabresult items; itemids in mapping_numericitems.csv),directly comparable,"Hb converted from mmol/L (Fe basis); needs a COMPLETE numericitems.csv"
 amsterdamumcdb,mech_vent,processitems 'Beademen',directly comparable,
 amsterdamumcdb,rrt,processitems 'CVVH',directly comparable,
 amsterdamumcdb,vasopressor,"drugitems (noradrenaline, dopamine, dobutamine, adrenaline, phenylephrine, terlipressin)",directly comparable,
 amsterdamumcdb,intubation,processitems 'Tube',partially comparable,
 amsterdamumcdb,tracheostomy,processitems 'Tracheostoma',partially comparable,
-amsterdamumcdb,severity_score,-,unavailable,APACHE scores in numericitems (missing)
+amsterdamumcdb,severity_score,numericitems 19499/19500/19503 (NICE registry APACHE II / APACHE IV / SAPS II),partially comparable,"first recorded value; different scores from other databases; coverage reported at build time"
 amsterdamumcdb,surgery_flag,admissions.specialty,unavailable,specialty only
 hirid,patient_id,reference_data/general_table.patientid,directly comparable,one admission per patient
 hirid,admission_id,general_table.patientid,directly comparable,

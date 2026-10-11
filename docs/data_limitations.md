@@ -84,7 +84,7 @@ for units with no measurement. Several domains are *structurally* unavailable (s
 
 ## 8. Access and completeness of the local copies
 
-* **AmsterdamUMCdb**: `numericitems.csv` is missing from the local folder, so vitals, laboratory values and APACHE scores are **blocked** for this database (not absent from the database itself).
+* **AmsterdamUMCdb**: vitals, laboratory values and NICE-registry APACHE II/IV and SAPS II come from `numericitems`, which is distributed as a nested Deflate64 zip. The copy supplied on 2026-10-11 (`numericitems(1).zip`, 7.87 GB) is **truncated** (only ~35% of the file is populated; no central directory), so these domains stay **blocked** until a complete copy is extracted with `databases/amsterdamumcdb/extract_numericitems.py`. The adapter and item mapping are implemented and were exercised on a truncated sample for code correctness only; no result from it is reported. Core temperature sites only (blood, rectal, oesophageal) are harmonised; the nurse-chart `A_Apache_Score` items are not used.
 * **VitalDB**: only the intra-operative *numeric* monitor tracks are used (first 24 h of each recording, index = recording start); waveforms are not parsed. Laboratory index is hospital admission, so the two domains use different, declared indices.
 * **MOVER**: tables are unpacked from archives outside the repository; EPIC procedure/medication/post-operative-complication tables are not used.
 * **Jinhua / MOVER**: data-use terms were confirmed by the project lead (2026-10-11); `outputs/` stays git-ignored until each release is logged in `docs/data_governance.md`.

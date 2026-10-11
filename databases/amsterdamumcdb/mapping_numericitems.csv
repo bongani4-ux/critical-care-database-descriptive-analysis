@@ -1,0 +1,27 @@
+item,analyte,source_unit,expect_label,expect_unit,note
+6640,hr,/min,^Hartfrequentie$,^/min$,bedside monitor
+6641,sbp,mmHg,^ABP systolisch$,^mmhg$,invasive arterial
+6678,sbp,mmHg,^Niet invasieve bloeddruk systolisch$,^mmhg$,non-invasive
+6643,dbp,mmHg,^ABP diastolisch$,^mmhg$,invasive arterial
+6680,dbp,mmHg,^Niet invasieve bloeddruk diastolisch$,^mmhg$,non-invasive
+6642,map,mmHg,^ABP gemiddeld$,^mmhg$,invasive arterial
+6679,map,mmHg,^Niet invasieve bloeddruk gemiddeld$,^mmhg$,non-invasive
+8874,rr,/min,^Ademfrequentie Monitor$,^(none|geen)?$,monitor-derived respiratory rate (unit not recorded in the item)
+6709,spo2,%,^Saturatie \(Monitor\)$,^(none|geen)?$,pulse oximetry (unit not recorded in the item)
+8658,temp,degC,^Temp Bloed$,^c$,core (intravascular)
+13058,temp,degC,^Temp Rectaal$,^c$,core (rectal)
+16110,temp,degC,^Temp Oesophagus$,^c$,core (oesophageal); axillary/ear/groin/peripheral temperatures are not harmonised
+9941,creatinine,umol/L,^Kreatinine \(bloed\)$,^mol/l$,
+9960,hemoglobin,mmol/L,^Hb \(bloed\)$,^mmol/l$,laboratory; mmol/L is the Hb (Fe) basis
+10286,hemoglobin,mmol/L,^Hb\(v\.Bgs\) \(bloed\)$,^mmol/l$,blood-gas analyser
+9965,wbc,10^9/L,^Leuco's \(bloed\)$,^10\^9/l$,
+9964,platelets,10^9/L,^Thrombo's \(bloed\)$,^10\^9/l$,
+9924,sodium,mmol/L,^Natrium \(bloed\)$,^mmol/l$,
+10284,sodium,mmol/L,^Na \(onv\.ISE\) \(bloed\)$,^mmol/l$,blood-gas ISE
+9927,potassium,mmol/L,^Kalium \(bloed\)$,^mmol/l$,
+10285,potassium,mmol/L,^K \(onv\.ISE\) \(bloed\)$,^mmol/l$,blood-gas ISE
+10053,lactate,mmol/L,^Lactaat \(bloed\)$,^mmol/l$,
+9945,bilirubin_total,umol/L,^Bilirubine \(bloed\)$,^mol/l$,
+9947,glucose,mmol/L,^Glucose \(bloed\)$,^mmol/l$,
+9937,albumin,g/L,^Alb\.Chem \(bloed\)$,^g/l$,
+9992,bicarbonate,mmol/L,^Act\.HCO3 \(bloed\)$,^mmol/l$,actual bicarbonate (blood gas)

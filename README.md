@@ -99,7 +99,7 @@ version decision (v1.4.2 analysed; the review's numbers were charted on v1.3) is
 | Symptom | Cause / fix |
 |---|---|
 | `config/paths.local.yml not found` | copy `config/paths.example.yml` and set `data_root` |
-| `BLOCKED_MISSING_FILES` in `check_setup.R` | a required file is absent (the `missing` column names it); AmsterdamUMCdb needs `numericitems.csv` for vitals/labs |
+| `BLOCKED_MISSING_FILES` in `check_setup.R` | a required file is absent (the `missing` column names it); AmsterdamUMCdb vitals/labs/severity need a complete `numericitems.csv` (extract with `databases/amsterdamumcdb/extract_numericitems.py`; the pipeline still runs without it and reports those domains as blocked) |
 | `mapping does not match the item dictionary` | an item id in `databases/<db>/mapping_*.csv` does not carry the expected label in *your* version of the database - fix the mapping, do not relax the check |
 | very slow MIMIC/eICU/HiRID run | install `arrow` and `dplyr`; keep `io.use_arrow: true` |
 | `tar failed` unpacking MOVER/HiRID | needs the system `tar` (bsdtar, included in Windows 10/11); check free space in `cache_dir` |
