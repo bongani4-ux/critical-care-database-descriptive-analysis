@@ -74,6 +74,6 @@ renv/staging/
 renv/local/
 
 # ---- regenerated review figures / python caches
-review_reproduction/code/figures/
+review_reproduction/R/figures*/
 __pycache__/
 *.pyc

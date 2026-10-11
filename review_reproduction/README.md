@@ -1,42 +1,41 @@
-# Reproducing the review (figures, charted values and how each value was produced)
+# Reproducing the review: charted values and figures (R)
 
-This folder holds the **code and data that the review itself published** as its Supplemental file 6
-("Charted data file and figure-generating source code"), plus a consistency check. It answers two different questions:
+This folder holds the numbers the review charted (its Supplemental file 6) and **R code that redraws every figure from them**.
+The review is still being revised, so nothing is typed into the code: change a CSV (or point `--values` at an updated copy) and the figures follow.
 
 | Question | Where |
 |---|---|
-| Can the review's **figures** be regenerated from its charted values? | here (`code/`): yes - `make_figures.py`, `figure_flow.py` |
-| Can the review's **charted values** be regenerated from the databases? | the R pipeline in this repository (`R/`, `databases/`, `scripts/`); the value-by-value status is in [`docs/review_reproducibility.md`](../docs/review_reproducibility.md) |
+| Can the review's **figures** be regenerated from its charted values? | here: `Rscript review_reproduction/R/make_figures.R` |
+| Can the charted values be regenerated from the databases? | the pipeline in this repository (`R/`, `databases/`, `scripts/`); status per value in [`docs/review_reproducibility.md`](../docs/review_reproducibility.md) |
 
-**Important:** the review's own code does not compute any statistic. `dbdata.py` and the CSVs in `charted_values/` are
-hard-coded numbers that the authors charted from each database (patient-level queries where access allowed, otherwise source
-documentation - basis per value in the review's Supplemental file 4). The only computation in the review's code is arithmetic
-on those numbers (totals, overall coverage = documented subdomains / 85) and the screening-flow counts.
+The review's own code does not compute any statistic: its values are hard-coded numbers charted from each database (patient-level queries
+where access allowed, otherwise documentation). The original matplotlib code is in the review's Supplemental file 6; this folder keeps only the data
+and the R re-implementation.
 
 ## Contents
 
 ```
-charted_values/   01_cohort ... 08_overall_coverage .csv (database-level summary statistics only; no patient-level data)
-code/             dbdata.py (the same values as a Python module + figure styling), make_figures.py (Figures 1-5, S2),
-                  figure_flow.py + flow_data.py + physionet_records.py + pubmed_records.py + *.json (Figure S1 and screening record),
-                  check_charted_values.py (new: checks CSVs == dbdata.py and the 85-subdomain arithmetic)
+charted_values/   01_cohort ... 08_overall_coverage .csv  (database-level summary statistics only; no patient-level data)
+data/              flow_counts.json (search-flow counts), screen_records.json, pubmed_records.json (screening records)
+R/make_figures.R  Figure_1 cohort size, Figure_2 age and sex, Figure_3 domain coverage, Figure_4 mortality, Figure_5 organ support,
+                  FigureS1_flow (search flow), FigureS2_granularity   ->  PNG + TIFF (LZW) + PDF, 600 dpi
+R/check_charted_values.R   internal consistency (shared databases, ranges, 85-subdomain arithmetic, search-flow integrity)
 ```
 
-## Run (any OS; Python >= 3.9)
+## Run (R >= 4.1; packages ggplot2, patchwork, ragg, data.table, jsonlite)
 
 ```bash
-python -m pip install "matplotlib>=3.8" numpy
-cd review_reproduction/code
-python check_charted_values.py     # CSVs, dbdata.py and coverage arithmetic agree
-python make_figures.py             # Figures 1-5 and S2 -> ./figures/ (git-ignored), 600 dpi PNG/TIFF/PDF
-python figure_flow.py              # Figure S1 (PRISMA-ScR flow), counts computed from the screening records
+Rscript review_reproduction/R/check_charted_values.R
+Rscript review_reproduction/R/make_figures.R                       # -> review_reproduction/R/figures/ (git-ignored)
+Rscript review_reproduction/R/make_figures.R --values=<dir>        # figures from an updated copy of the CSVs
+Rscript review_reproduction/R/make_figures.R --granularity=pipeline  # Figure S2 from this pipeline's own results (needs scripts/run_granularity.R first)
 ```
 
-Run these as normal scripts from `code/` (they import `dbdata`); do not use `python -I`. The figures use a serif font
-metrically compatible with Times New Roman and fall back to DejaVu Serif if it is missing - layout is unchanged, glyph shapes differ slightly.
+Differences from the matplotlib originals: the infection-specific and mixed-setting bars are shown as lighter tints instead of hatching, and label offsets and
+box corners are approximate. Values, ordering, panels and labels are identical. The serif face is the system serif (Times New Roman on Windows).
 
 ## Provenance and licence
 
-The files were authored by the review team and are copied unchanged from Supplemental file 6 (version of 2 September 2026),
-except for the added `check_charted_values.py` and this README. Add the licence the authors want for them before making the repository public
-(the repository root is MIT; confirm that this also applies to the review's code and charted values).
+`charted_values/` and `data/` are copied unchanged from the review's Supplemental file 6 (version of 2 September 2026), except `data/flow_counts.json`, which gained
+`repo_dupes` (41) and `epmc_dupes` (8) - the two duplicate counts the original Python computed from its record files (41 + 8 = 49 = `dupes`).
+Confirm the licence the authors want for these files before making the repository public (the repository root is MIT).

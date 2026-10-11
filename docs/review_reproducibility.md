@@ -11,7 +11,7 @@ Statuses below are from `docs/generated/review_comparison.md` (regenerate with `
   are **not** part of the supplement, and no common harmonised code produced the cross-database table.
 * **Supplemental file 6 is figure code over hard-coded values.** `dbdata.py` / the 8 CSVs contain the charted numbers; `make_figures.py`
   only draws them; the only arithmetic is totals and overall coverage (documented subdomains / 85). Copied to `review_reproduction/`,
-  where `check_charted_values.py` verifies CSVs == module and the coverage arithmetic (passes).
+  the Python was replaced by R (`review_reproduction/R/make_figures.R`, `check_charted_values.R`: ranges, coverage arithmetic and search-flow integrity all pass).
 * **Cohort size** = unique patients (first admission retained), with the native denominator (encounter / admission / case) stated alongside.
 * **Granularity** = records per hour (8 vital-sign items) and records per day (7 laboratory items), following Sauer 2022 / Jagesar 2025.
   The review gives no exact extraction rule (window, denominator, which item ids).
@@ -21,8 +21,8 @@ Statuses below are from `docs/generated/review_comparison.md` (regenerate with `
 
 | Element (review file) | Source of the values in the review | Reproduced here? |
 |---|---|---|
-| Figures 1-5, S2 (`make_figures.py`) | charted values | **Yes** - regenerate from `review_reproduction/code` |
-| Figure S1 / search flow (`figure_flow.py`) | screening records; counts computed | **Yes** (1,678 identified -> 1,629 screened -> 190 assessed -> 11 charted, 5 not charted, 174 excluded) |
+| Figures 1-5, S2 (`make_figures.R`) | charted values | **Yes** - redrawn in R from `review_reproduction/charted_values` (any updated copy via `--values`) |
+| Figure S1 / search flow (`make_figures.R`) | screening records; counts computed | **Yes** (1,678 identified -> 1,629 screened -> 190 assessed -> 11 charted, 5 not charted, 174 excluded) |
 | Overall coverage 08 | arithmetic on domain table 07 | **Yes** (checked) |
 | Domain coverage 07 (85 subdomains) | documentation scoring | **Not independently** - the item-level checklist is not published; publishing it as a CSV would make this fully reproducible |
 | Cohort size (01) | direct query / documentation | **19 of 22** count checks match (patients, admissions, stays); see discrepancy report for the rest (MIMIC-IV, VitalDB, ...) |

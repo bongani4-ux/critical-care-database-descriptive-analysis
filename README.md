@@ -113,6 +113,6 @@ Contributions: [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Reproducing the review
 
-* `review_reproduction/` - the review's own charted values and figure code (Supplemental file 6) with a consistency check; `python check_charted_values.py`, `python make_figures.py`.
+* `review_reproduction/` - the review's own charted values (Supplemental file 6) and R code that redraws every figure from them (`Rscript review_reproduction/R/make_figures.R`), `python make_figures.py`.
 * `docs/review_reproducibility.md` - how each charted value was produced and which ones this pipeline reproduces (and which need the authors' definitions).
 * `scripts/run_granularity.R`, `scripts/inspire_version_update.R`, `scripts/build_data_dictionaries.R`, `scripts/diagnose_support_denominators.R` - recording frequency (one common rule), INSPIRE v1.4.2 update table, INSPIRE-style data dictionaries, organ-support denominator test.
